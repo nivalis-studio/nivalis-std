@@ -7,6 +7,10 @@
 			"import": "./dist/arrays/index.mjs",
 			"require": "./dist/arrays/index.cjs"
 		},
+		"./dates": {
+			"import": "./dist/dates/index.mjs",
+			"require": "./dist/dates/index.cjs"
+		},
     "./non-nullable": {
       "import": "./dist/non-nullable/index.mjs",
       "require": "./dist/non-nullable/index.cjs"
