@@ -6,6 +6,10 @@
     "./non-nullable": {
       "import": "./dist/non-nullable/index.mjs",
       "require": "./dist/non-nullable/index.cjs"
+    },
+    "./result": {
+      "import": "./dist/result/index.mjs",
+      "require": "./dist/result/index.cjs"
     }
   },
   "files": [
@@ -35,6 +39,9 @@
     "*": "biome check --apply"
   },
 	"unbuild":{
-		"declaration": true
+		"declaration": true,
+		"exports": "named",
+		"preserveModules": true,
+		"sourcemap": true
 	}
 }
