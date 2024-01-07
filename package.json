@@ -3,6 +3,10 @@
 	"version": "0.0.1",
   "type": "module",
   "exports": {
+		"./arrays": {
+			"import": "./dist/arrays/index.mjs",
+			"require": "./dist/arrays/index.cjs"
+		},
     "./non-nullable": {
       "import": "./dist/non-nullable/index.mjs",
       "require": "./dist/non-nullable/index.cjs"
