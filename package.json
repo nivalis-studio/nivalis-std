@@ -2,6 +2,12 @@
   "name": "@nivalis/std",
 	"version": "0.0.1",
   "type": "module",
+  "exports": {
+    "./non-nullable": {
+      "import": "./dist/non-nullable/index.mjs",
+      "require": "./dist/non-nullable/index.cjs"
+    }
+  },
   "files": [
     "dist",
     "README.md",
