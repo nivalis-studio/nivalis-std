@@ -22,6 +22,10 @@
     "./sleep": {
       "import": "./dist/sleep/index.mjs",
       "require": "./dist/sleep/index.cjs"
+    },
+    "./strings": {
+      "import": "./dist/strings/index.mjs",
+      "require": "./dist/strings/index.cjs"
     }
   },
   "files": [
