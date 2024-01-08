@@ -1,8 +1,12 @@
 {
-  "name": "@nivalis/std",
+	"name": "@nivalis/std",
 	"version": "0.0.1",
-  "type": "module",
-  "exports": {
+	"type": "module",
+	"description": "Set of utilities used in Nivalis projects",
+	"publishConfig": {
+		"access": "public"
+	},
+	"exports": {
 		"./arrays": {
 			"import": "./dist/arrays/index.mjs",
 			"require": "./dist/arrays/index.cjs"
@@ -11,53 +15,55 @@
 			"import": "./dist/dates/index.mjs",
 			"require": "./dist/dates/index.cjs"
 		},
-    "./non-nullable": {
-      "import": "./dist/non-nullable/index.mjs",
-      "require": "./dist/non-nullable/index.cjs"
-    },
-    "./result": {
-      "import": "./dist/result/index.mjs",
-      "require": "./dist/result/index.cjs"
-    },
-    "./sleep": {
-      "import": "./dist/sleep/index.mjs",
-      "require": "./dist/sleep/index.cjs"
-    },
-    "./strings": {
-      "import": "./dist/strings/index.mjs",
-      "require": "./dist/strings/index.cjs"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "scripts": {
+		"./non-nullable": {
+			"import": "./dist/non-nullable/index.mjs",
+			"require": "./dist/non-nullable/index.cjs"
+		},
+		"./result": {
+			"import": "./dist/result/index.mjs",
+			"require": "./dist/result/index.cjs"
+		},
+		"./sleep": {
+			"import": "./dist/sleep/index.mjs",
+			"require": "./dist/sleep/index.cjs"
+		},
+		"./strings": {
+			"import": "./dist/strings/index.mjs",
+			"require": "./dist/strings/index.cjs"
+		}
+	},
+	"files": ["dist", "README.md", "LICENSE"],
+	"scripts": {
 		"build": "unbuild",
 		"prepublishOnly": "unbuild",
-    "lint": "biome check .",
-    "lint:fix": "biome check --apply .",
-    "ts": "tsc",
-    "prepare": "husky install"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.4.1",
-    "@types/bun": "latest",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
+		"lint": "biome check .",
+		"lint:fix": "biome check --apply .",
+		"ts": "tsc",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.4.1",
+		"@types/bun": "latest",
+		"husky": "^8.0.3",
+		"lint-staged": "^15.2.0",
 		"unbuild": "^2.0.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "lint-staged": {
-    "*": "biome check --apply"
-  },
-	"unbuild":{
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"lint-staged": {
+		"*": "biome check --apply"
+	},
+	"unbuild": {
 		"declaration": true,
 		"exports": "named",
 		"preserveModules": true,
 		"sourcemap": true
-	}
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/nivalis-studio/nivalis-std#readme",
+	"bugs": {
+		"url": "https://github.com/nivalis-studio/nivalis-std/issues"
+	},
+	"repository": "https://github.com/nivalis-studio/nivalis-std"
 }
