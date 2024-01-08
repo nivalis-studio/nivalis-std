@@ -1,38 +1,22 @@
 {
 	"name": "@nivalis/std",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"type": "module",
 	"description": "Set of utilities used in Nivalis projects",
 	"publishConfig": {
 		"access": "public"
 	},
-	"exports": {
-		"./arrays": {
-			"import": "./dist/arrays/index.mjs",
-			"require": "./dist/arrays/index.cjs"
-		},
-		"./dates": {
-			"import": "./dist/dates/index.mjs",
-			"require": "./dist/dates/index.cjs"
-		},
-		"./non-nullable": {
-			"import": "./dist/non-nullable/index.mjs",
-			"require": "./dist/non-nullable/index.cjs"
-		},
-		"./result": {
-			"import": "./dist/result/index.mjs",
-			"require": "./dist/result/index.cjs"
-		},
-		"./sleep": {
-			"import": "./dist/sleep/index.mjs",
-			"require": "./dist/sleep/index.cjs"
-		},
-		"./strings": {
-			"import": "./dist/strings/index.mjs",
-			"require": "./dist/strings/index.cjs"
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": ["README.md", "LICENSE", "dist"],
+	"exports":{
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
 		}
 	},
-	"files": ["dist", "README.md", "LICENSE"],
 	"scripts": {
 		"build": "unbuild",
 		"prepublishOnly": "unbuild",
