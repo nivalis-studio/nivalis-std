@@ -1,8 +1,38 @@
-export class Ok<T = unknown> {
+import type {ResultInterface} from './types';
+
+export class Ok<T, E> implements ResultInterface<T, E> {
 	#inner: T;
 
 	constructor(inner: T) {
 		this.#inner = inner;
+	}
+
+	get value(): T {
+		return this.#inner;
+	}
+
+	/**
+	 * Type guard for `Ok`
+	 * @returns `true` if `Ok`, `false` if `Err`
+	 */
+	isOk(): this is Ok<T, E> {
+		return true;
+	}
+
+	/**
+	 * Type guard for `Err`
+	 * @returns `true` if `Err`, `false` if `Ok`
+	 */
+	isErr(): false {
+		return false;
+	}
+
+	/**
+	 * Returns an iterator over the possibly contained value
+	 * @yields `this.inner` if `Ok`
+	 */
+	*[Symbol.iterator](): Iterator<T, void> {
+		yield this.#inner;
 	}
 
 	/**
@@ -15,26 +45,13 @@ export class Ok<T = unknown> {
 	}
 
 	/**
-	 * Returns an iterator over the possibly contained value
-	 * @yields `this.inner` if `Ok`
+	 * Unwrap the `Ok` value, or return the default if there is an `Err`
+	 *
+	 * @param val the default value to return if there is an `Err`
 	 */
-	*[Symbol.iterator](): Iterator<T, void> {
-		yield this.#inner;
-	}
-
-	/**
-	 * Type guard for `Ok`
-	 * @returns `true` if `Ok`, `false` if `Err`
-	 */
-	isOk(): this is Ok<T> {
-		return true;
-	}
-
-	/**
-	 * Type guard for `Err`
-	 * @returns `true` if `Err`, `false` if `Ok`
-	 */
-	isErr(): false {
-		return false;
+	unwrapOr<K>(_val: K): T | K {
+		return this.#inner;
 	}
 }
+
+export const ok = <T, E = never>(value: T): Ok<T, E> => new Ok(value);

@@ -1,17 +1,30 @@
-export class Err<T = unknown> {
-	#inner: T;
+import type {ResultInterface} from './types';
 
-	constructor(inner: T) {
+export class Err<T, E> implements ResultInterface<T, E> {
+	#inner: E;
+
+	constructor(inner: E) {
 		this.#inner = inner;
 	}
 
+	get value(): E {
+		return this.#inner;
+	}
+
 	/**
-	 * Get the inner value or panic
-	 * @returns `this.inner` if `Ok`
-	 * @throws `this.inner` if `Err`
+	 * Used to check if a `Result` is an `OK`
+	 * @returns `true` if `Ok`, `false` if `Err`
 	 */
-	unwrap(): never {
-		throw this.#inner;
+	isOk(): false {
+		return false;
+	}
+
+	/**
+	 * Used to check if a `Result` is an `Err`
+	 * @returns `true` if `Err`, `false` if `Ok`
+	 */
+	isErr(): this is Err<T, E> {
+		return true;
 	}
 
 	/**
@@ -24,18 +37,22 @@ export class Err<T = unknown> {
 	}
 
 	/**
-	 * Type guard for `Ok`
-	 * @returns `true` if `Ok`, `false` if `Err`
+	 * Get the inner value or panic
+	 * @returns `this.inner` if `Ok`
+	 * @throws `this.inner` if `Err`
 	 */
-	isOk(): false {
-		return false;
+	unwrap(): never {
+		throw this.#inner;
 	}
 
 	/**
-	 * Type guard for `Err`
-	 * @returns `true` if `Err`, `false` if `Ok`
+	 * Unwrap the `Ok` value, or return the default if there is an `Err`
+	 *
+	 * @param val the default value to return if there is an `Err`
 	 */
-	isErr(): this is Err<T> {
-		return true;
+	unwrapOr<K>(val: K): T | K {
+		return val;
 	}
 }
+
+export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
