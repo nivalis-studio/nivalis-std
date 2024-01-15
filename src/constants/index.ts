@@ -1,0 +1,1 @@
+export const EARTH_RADIUS_IN_METERS = 6_378_137;
