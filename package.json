@@ -49,5 +49,7 @@
 	"bugs": {
 		"url": "https://github.com/nivalis-studio/nivalis-std/issues"
 	},
-	"repository": "https://github.com/nivalis-studio/nivalis-std"
+	"repository": {
+		"url":"git+https://github.com/nivalis-studio/nivalis-std.git"
+	}
 }
