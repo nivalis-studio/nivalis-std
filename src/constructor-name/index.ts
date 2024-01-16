@@ -32,18 +32,22 @@ import {RE_FUNCTION_NAME} from '../regexp';
 // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
 export const constructorName = (v: any): string => {
 	const name = nativeClass(v).slice(8, -1);
+
 	if ((name === 'Object' || name === 'Error') && v.constructor) {
 		const ctor = v.constructor;
 		if (typeof ctor.name === 'string') {
 			return ctor.name;
 		}
+
 		const match = RE_FUNCTION_NAME.exec(ctor.toString());
 		if (match) {
 			return match[1];
 		}
 	}
+
 	if (isBuffer(v)) {
 		return 'Buffer';
 	}
+
 	return name;
 };
