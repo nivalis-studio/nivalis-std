@@ -10,3 +10,5 @@ export const isHttpStatusOk = (status: number): status is HttpStatusOk =>
 
 export const isHttpStatusError = (status: number): status is HttpStatusError =>
 	httpStatusError.has(status as HttpStatusError);
+
+export type {HttpStatus, HttpStatusError, HttpStatusOk} from './types';
