@@ -12,7 +12,9 @@ export const clone = <T>(obj: T): T => {
 	if (type === 'Map') {
 		return new Map(
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			[...(obj as Map<any, any>)].map((kv) => [clone(kv[0]), clone(kv[1])]),
+			[...(obj as Map<any, any>)].map(
+				(kv) => [clone(kv[0]), clone(kv[1])] as const,
+			),
 		) as T;
 	}
 	if (type === 'Date') {

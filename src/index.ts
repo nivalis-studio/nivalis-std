@@ -1,4 +1,5 @@
 export * from './arrays';
+export * from './clone';
 export * from './constants';
 export * from './constructor-name';
 export * from './currency';
