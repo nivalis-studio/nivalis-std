@@ -1,4 +1,6 @@
-import {type Result, err, ok} from '.';
+import {err} from './err';
+import {ok} from './ok';
+import type {Result} from './types';
 
 /**
  * Wraps an `async` function with a try catch, creating a new function with the same
