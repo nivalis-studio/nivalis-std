@@ -6,7 +6,7 @@ export * from './currency';
 export * from './dates';
 export * from './exceptions';
 export * from './future';
-// export * from './generate';
+export * from './generate';
 export * from './http-status';
 export * from './is';
 export * from './math';

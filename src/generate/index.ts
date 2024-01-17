@@ -1,6 +1,12 @@
 const urlAlphabet =
 	'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
+/**
+ * Get a random id ex: 3n4j8a9j3n4j8a9j3n4j8a9j
+ * @param size Number of char (default 21)
+ * @param alphabet The alphabet to use (default urlAlphabet)
+ * @returns string value
+ */
 export const generateId = (size = 21, alphabet = urlAlphabet) => {
 	let code = '';
 	let idx = size;
@@ -12,6 +18,11 @@ export const generateId = (size = 21, alphabet = urlAlphabet) => {
 	return code;
 };
 
+/**
+ * Get a random char ex: 3N4J8A
+ * @param len Number of char (default 6)
+ * @returns string value
+ */
 export const generateRandomChar = (len = 6) =>
 	generateId(len, '123456789ACEFHJKLMNPRTUVWXY');
 

@@ -1,6 +1,6 @@
 {
 	"name": "@nivalis/std",
-	"version": "0.3.1",
+	"version": "0.5.0",
 	"type": "module",
 	"description": "Set of utilities used in Nivalis projects",
 	"publishConfig": {
@@ -10,7 +10,7 @@
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
 	"files": ["README.md", "LICENSE", "dist"],
-	"exports":{
+	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.mjs",
@@ -50,6 +50,6 @@
 		"url": "https://github.com/nivalis-studio/nivalis-std/issues"
 	},
 	"repository": {
-		"url":"git+https://github.com/nivalis-studio/nivalis-std.git"
+		"url": "git+https://github.com/nivalis-studio/nivalis-std.git"
 	}
 }
