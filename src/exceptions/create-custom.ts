@@ -14,7 +14,7 @@ interface Exception extends Error {
 	timestamp: number;
 }
 
-interface ExceptionConstructor {
+export interface ExceptionConstructor {
 	new (message?: string, options?: ExceptionOptions): Exception;
 	readonly prototype: Exception;
 }

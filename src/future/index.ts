@@ -2,8 +2,8 @@
  * Just like a Promise but you can manually resolve or reject it
  */
 export class Future<T> {
-	#resolve: (value: T) => void;
-	#reject: (value: unknown) => void;
+	#resolve!: (value: T) => void;
+	#reject!: (value: unknown) => void;
 	promise: Promise<T>;
 
 	constructor() {
