@@ -18,6 +18,7 @@
 		}
 	},
 	"scripts": {
+		"test": "exit 0",
 		"build": "unbuild",
 		"prepublishOnly": "unbuild",
 		"lint": "biome check .",
