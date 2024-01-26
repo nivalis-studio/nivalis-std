@@ -8,7 +8,7 @@ type ExceptionOptions = {
 	traceId?: string;
 };
 
-interface Exception extends Error {
+export interface Exception extends Error {
 	traceId: string;
 	status: HttpStatusError;
 	timestamp: number;
