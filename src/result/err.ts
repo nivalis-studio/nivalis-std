@@ -11,6 +11,10 @@ export class Err<T, E> implements ResultInterface<T, E> {
 		return this.#inner;
 	}
 
+	get error(): E {
+		return this.#inner;
+	}
+
 	/**
 	 * Used to check if a `Result` is an `OK`
 	 * @returns `true` if `Ok`, `false` if `Err`

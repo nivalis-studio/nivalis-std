@@ -11,6 +11,10 @@ export class Ok<T, E> implements ResultInterface<T, E> {
 		return this.#inner;
 	}
 
+	get error(): null {
+		return null;
+	}
+
 	/**
 	 * Type guard for `Ok`
 	 * @returns `true` if `Ok`, `false` if `Err`
