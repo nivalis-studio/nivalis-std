@@ -15,7 +15,9 @@ export const wrap =
 		<Fn extends (...args: readonly any[]) => Promise<any>, E extends Error>(
 			fn: Fn,
 			errorConstructor?: ErrorConstructor | ExceptionConstructor,
-		): ((...args: Parameters<Fn>) => Promise<Result<ReturnType<Fn>, E>>) =>
+		): ((
+			...args: Parameters<Fn>
+		) => Promise<Result<Awaited<ReturnType<Fn>>, E>>) =>
 		async (...args: Parameters<Fn>) => {
 			try {
 				const result = await fn(...args);
