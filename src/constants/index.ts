@@ -1,5 +1,7 @@
 export const EARTH_RADIUS_IN_METERS = 6_378_137;
 
+export const NS_IN_SECOND = 1e9;
+export const NS_IN_MS = 1e6;
 export const MS_IN_SECOND = 1_000;
 export const MS_IN_MINUTE = 60_000;
 export const MS_IN_HOUR = 3_600_000;
