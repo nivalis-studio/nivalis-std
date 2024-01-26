@@ -1,6 +1,6 @@
 {
 	"name": "@nivalis/std",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"type": "module",
 	"description": "Set of utilities used in Nivalis projects",
 	"publishConfig": {
@@ -9,7 +9,11 @@
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
-	"files": ["README.md", "LICENSE", "dist"],
+	"files": [
+		"README.md",
+		"LICENSE",
+		"dist"
+	],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
