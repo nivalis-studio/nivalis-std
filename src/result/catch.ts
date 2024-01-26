@@ -8,13 +8,13 @@ import type {Result} from './types';
  * arguments but returning `Ok` if successful, `Err` if the function throws
  *
  * @param fn function to wrap with ok on success or err on failure
- * @param customError optional `ErrorConstructor`, defaults to `Error`
+ * @param errorConstructor optional `ErrorConstructor`, defaults to `Error`
  */
 export const wrap =
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		<Fn extends (...args: readonly any[]) => Promise<any>, E extends Error>(
 			fn: Fn,
-			customError: ErrorConstructor | ExceptionConstructor,
+			errorConstructor?: ErrorConstructor | ExceptionConstructor,
 		): ((...args: Parameters<Fn>) => Promise<Result<ReturnType<Fn>, E>>) =>
 		async (...args: Parameters<Fn>) => {
 			try {
@@ -22,8 +22,8 @@ export const wrap =
 				return ok(result);
 			} catch (error) {
 				return err(
-					customError
-						? (new customError((error as Error).message, {
+					errorConstructor
+						? (new errorConstructor((error as Error).message, {
 								cause: error,
 						  }) as unknown as E)
 						: (error as E),
@@ -36,13 +36,13 @@ export const wrap =
  * arguments but returning `Ok` if successful, `Err` if the function throws
  *
  * @param fn function to wrap with ok on success or err on failure
- * @param customError optional `ErrorConstructor`, defaults to `Error`
+ * @param errorConstructor optional `ErrorConstructor`, defaults to `Error`
  */
 export const wrapSync =
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		<Fn extends (...args: readonly any[]) => any, E extends Error>(
 			fn: Fn,
-			customError: ErrorConstructor | ExceptionConstructor,
+			errorConstructor?: ErrorConstructor | ExceptionConstructor,
 		): ((...args: Parameters<Fn>) => Result<ReturnType<Fn>, E>) =>
 		(...args: Parameters<Fn>) => {
 			try {
@@ -50,8 +50,8 @@ export const wrapSync =
 				return ok(result);
 			} catch (error) {
 				return err(
-					customError
-						? (new customError((error as Error).message, {
+					errorConstructor
+						? (new errorConstructor((error as Error).message, {
 								cause: error,
 						  }) as unknown as E)
 						: (error as E),
