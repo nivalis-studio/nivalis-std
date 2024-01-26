@@ -1,3 +1,4 @@
+import type {ExceptionConstructor} from '../exceptions';
 import {err} from './err';
 import {ok} from './ok';
 import type {Result} from './types';
@@ -13,7 +14,7 @@ export const wrap =
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		<Fn extends (...args: readonly any[]) => Promise<any>, E extends Error>(
 			fn: Fn,
-			customError: ErrorConstructor,
+			customError: ErrorConstructor | ExceptionConstructor,
 		): ((...args: Parameters<Fn>) => Promise<Result<ReturnType<Fn>, E>>) =>
 		async (...args: Parameters<Fn>) => {
 			try {
@@ -41,7 +42,7 @@ export const wrapSync =
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		<Fn extends (...args: readonly any[]) => any, E extends Error>(
 			fn: Fn,
-			customError: ErrorConstructor,
+			customError: ErrorConstructor | ExceptionConstructor,
 		): ((...args: Parameters<Fn>) => Result<ReturnType<Fn>, E>) =>
 		(...args: Parameters<Fn>) => {
 			try {
