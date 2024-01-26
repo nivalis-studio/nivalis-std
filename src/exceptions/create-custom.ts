@@ -6,12 +6,15 @@ type ExceptionOptions = {
 	cause?: unknown;
 	status?: HttpStatusError;
 	traceId?: string;
+	meta?: Record<string, unknown>;
 };
 
 export interface Exception extends Error {
+	__exception: boolean;
 	traceId: string;
 	status: HttpStatusError;
 	timestamp: number;
+	meta?: Record<string, unknown>;
 }
 
 export interface ExceptionConstructor {
@@ -38,6 +41,8 @@ export const createCustomException = (
 	},
 ): ExceptionConstructor => {
 	return class extends Error implements Exception {
+		__exception = true;
+		meta: Record<string, unknown>;
 		traceId: string;
 		status: HttpStatusError;
 		timestamp = Date.now();
@@ -57,6 +62,11 @@ export const createCustomException = (
 			this.name = options?.name || properties.defaultName || 'Exception';
 			this.cause = options?.cause;
 			this.traceId = options?.traceId || generateId(8);
+			this.meta = Object.assign(
+				{},
+				options?.meta,
+				(options?.cause as Exception | undefined)?.meta,
+			);
 			Object.setPrototypeOf(this, new.target.prototype);
 		}
 	};
