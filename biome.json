@@ -11,6 +11,7 @@
 		}
 	},
 	"formatter": {
+		"ignore": ["dist/**/*"],
 		"enabled": true
 	},
 	"javascript": {
