@@ -1,5 +1,5 @@
-import {Err, Ok, type Result} from '..';
 import {Future} from '../future';
+import {Err, Ok, type Result} from '../result';
 
 export type Promiseable<T> = T | Promise<T>;
 
