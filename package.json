@@ -14,13 +14,6 @@
 		"LICENSE",
 		"dist"
 	],
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
-		}
-	},
 	"scripts": {
 		"test": "exit 0",
 		"build": "unbuild",
@@ -56,5 +49,217 @@
 	},
 	"repository": {
 		"url": "git+https://github.com/nivalis-studio/nivalis-std.git"
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
+		},
+		"./arrays": {
+			"import": {
+				"types": "./dist/arrays/index.d.ts",
+				"default": "./dist/arrays/index.mjs"
+			},
+			"require": {
+				"types": "./dist/arrays/index.d.cts",
+				"default": "./dist/arrays/index.cjs"
+			}
+		},
+		"./clone": {
+			"import": {
+				"types": "./dist/clone/index.d.ts",
+				"default": "./dist/clone/index.mjs"
+			},
+			"require": {
+				"types": "./dist/clone/index.d.cts",
+				"default": "./dist/clone/index.cjs"
+			}
+		},
+		"./constants": {
+			"import": {
+				"types": "./dist/constants/index.d.ts",
+				"default": "./dist/constants/index.mjs"
+			},
+			"require": {
+				"types": "./dist/constants/index.d.cts",
+				"default": "./dist/constants/index.cjs"
+			}
+		},
+		"./constructor-name": {
+			"import": {
+				"types": "./dist/constructor-name/index.d.ts",
+				"default": "./dist/constructor-name/index.mjs"
+			},
+			"require": {
+				"types": "./dist/constructor-name/index.d.cts",
+				"default": "./dist/constructor-name/index.cjs"
+			}
+		},
+		"./currency": {
+			"import": {
+				"types": "./dist/currency/index.d.ts",
+				"default": "./dist/currency/index.mjs"
+			},
+			"require": {
+				"types": "./dist/currency/index.d.cts",
+				"default": "./dist/currency/index.cjs"
+			}
+		},
+		"./dates": {
+			"import": {
+				"types": "./dist/dates/index.d.ts",
+				"default": "./dist/dates/index.mjs"
+			},
+			"require": {
+				"types": "./dist/dates/index.d.cts",
+				"default": "./dist/dates/index.cjs"
+			}
+		},
+		"./exceptions": {
+			"import": {
+				"types": "./dist/exceptions/index.d.ts",
+				"default": "./dist/exceptions/index.mjs"
+			},
+			"require": {
+				"types": "./dist/exceptions/index.d.cts",
+				"default": "./dist/exceptions/index.cjs"
+			}
+		},
+		"./future": {
+			"import": {
+				"types": "./dist/future/index.d.ts",
+				"default": "./dist/future/index.mjs"
+			},
+			"require": {
+				"types": "./dist/future/index.d.cts",
+				"default": "./dist/future/index.cjs"
+			}
+		},
+		"./generate": {
+			"import": {
+				"types": "./dist/generate/index.d.ts",
+				"default": "./dist/generate/index.mjs"
+			},
+			"require": {
+				"types": "./dist/generate/index.d.cts",
+				"default": "./dist/generate/index.cjs"
+			}
+		},
+		"./http-status": {
+			"import": {
+				"types": "./dist/http-status/index.d.ts",
+				"default": "./dist/http-status/index.mjs"
+			},
+			"require": {
+				"types": "./dist/http-status/index.d.cts",
+				"default": "./dist/http-status/index.cjs"
+			}
+		},
+		"./is": {
+			"import": {
+				"types": "./dist/is/index.d.ts",
+				"default": "./dist/is/index.mjs"
+			},
+			"require": {
+				"types": "./dist/is/index.d.cts",
+				"default": "./dist/is/index.cjs"
+			}
+		},
+		"./math": {
+			"import": {
+				"types": "./dist/math/index.d.ts",
+				"default": "./dist/math/index.mjs"
+			},
+			"require": {
+				"types": "./dist/math/index.d.cts",
+				"default": "./dist/math/index.cjs"
+			}
+		},
+		"./mutex": {
+			"import": {
+				"types": "./dist/mutex/index.d.ts",
+				"default": "./dist/mutex/index.mjs"
+			},
+			"require": {
+				"types": "./dist/mutex/index.d.cts",
+				"default": "./dist/mutex/index.cjs"
+			}
+		},
+		"./native-class": {
+			"import": {
+				"types": "./dist/native-class/index.d.ts",
+				"default": "./dist/native-class/index.mjs"
+			},
+			"require": {
+				"types": "./dist/native-class/index.d.cts",
+				"default": "./dist/native-class/index.cjs"
+			}
+		},
+		"./non-nullable": {
+			"import": {
+				"types": "./dist/non-nullable/index.d.ts",
+				"default": "./dist/non-nullable/index.mjs"
+			},
+			"require": {
+				"types": "./dist/non-nullable/index.d.cts",
+				"default": "./dist/non-nullable/index.cjs"
+			}
+		},
+		"./regexp": {
+			"import": {
+				"types": "./dist/regexp/index.d.ts",
+				"default": "./dist/regexp/index.mjs"
+			},
+			"require": {
+				"types": "./dist/regexp/index.d.cts",
+				"default": "./dist/regexp/index.cjs"
+			}
+		},
+		"./result": {
+			"import": {
+				"types": "./dist/result/index.d.ts",
+				"default": "./dist/result/index.mjs"
+			},
+			"require": {
+				"types": "./dist/result/index.d.cts",
+				"default": "./dist/result/index.cjs"
+			}
+		},
+		"./safe-json": {
+			"import": {
+				"types": "./dist/safe-json/index.d.ts",
+				"default": "./dist/safe-json/index.mjs"
+			},
+			"require": {
+				"types": "./dist/safe-json/index.d.cts",
+				"default": "./dist/safe-json/index.cjs"
+			}
+		},
+		"./sleep": {
+			"import": {
+				"types": "./dist/sleep/index.d.ts",
+				"default": "./dist/sleep/index.mjs"
+			},
+			"require": {
+				"types": "./dist/sleep/index.d.cts",
+				"default": "./dist/sleep/index.cjs"
+			}
+		},
+		"./strings": {
+			"import": {
+				"types": "./dist/strings/index.d.ts",
+				"default": "./dist/strings/index.mjs"
+			},
+			"require": {
+				"types": "./dist/strings/index.d.cts",
+				"default": "./dist/strings/index.cjs"
+			}
+		}
 	}
 }
