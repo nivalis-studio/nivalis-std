@@ -1,2 +1,3 @@
 export {capitalize, capitalizeWords} from './capitalize';
-export {ellipsis} from './ellipsis';
+export {truncate} from './truncate';
+export {htmlEscape, htmlUnescape} from './escape';
