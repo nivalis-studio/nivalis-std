@@ -1,3 +1,5 @@
+const DETECT_JSON = /^\s*[{["\-\d]/;
+
 export const SafeJson = {
 	isStringifyable: (value: unknown) => {
 		try {
@@ -10,7 +12,7 @@ export const SafeJson = {
 	},
 
 	isParsable: (value: unknown) => {
-		if (!value) {
+		if (!value || typeof value !== 'string' || !DETECT_JSON.test(value)) {
 			return false;
 		}
 
@@ -21,5 +23,13 @@ export const SafeJson = {
 		} catch {
 			return false;
 		}
+	},
+
+	parseOr: <T>(value: unknown, fallback: T): T => {
+		if (!SafeJson.isParsable(value)) {
+			return fallback;
+		}
+
+		return JSON.parse(value as string);
 	},
 };
