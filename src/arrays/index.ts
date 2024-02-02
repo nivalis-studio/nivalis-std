@@ -57,7 +57,7 @@ export const randomIndex = <T>(array: readonly T[]) => {
  * @param array
  * @returns
  */
-export const random = <T>(array: readonly T[]) => {
+export const pick = <T>(array: readonly T[]) => {
 	if (array.length === 0) {
 		return undefined;
 	}
@@ -67,24 +67,71 @@ export const random = <T>(array: readonly T[]) => {
 
 /**
  * Randomly shuffle an array.
- * https://stackoverflow.com/a/2450976/1293256
+ * Fisher–Yates algorithm.
+ * Based on: https://stackoverflow.com/a/12646864/4919972
+ *
+ * @return Returns the new shuffled array.
  */
 export const shuffle = <T>(array: T[]): T[] => {
-	let currentIndex = array.length;
-	let temporaryValue: T;
-	let randomIndex: number;
+	const a = [...array];
 
-	// While there remain elements to shuffle...
-	while (currentIndex !== 0) {
-		// Pick a remaining element...
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex -= 1;
-
-		// And swap it with the current element.
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j] as T, a[i] as T];
 	}
 
-	return array;
+	return a;
 };
+
+export const sortNumbers = (array: number[], dir = 'asc' as 'asc' | 'desc') =>
+	[...array].sort((a, b) => (a - b) * (dir === 'desc' ? -1 : 1));
+
+/**
+ * Creates an array of elements split into groups the length of size. If collection can’t be split evenly, the
+ * final chunk will be the remaining elements.
+ *
+ * @param array The array to process.
+ * @param size The length of each chunk.
+ * @return Returns the new array containing chunks.
+ *
+ * Based on: https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_chunk
+ */
+export const chunk = <T>(array: readonly T[], size = 1): T[][] => {
+	const chunkedArray: T[][] = [];
+	let currentChunk: T[] = [];
+
+	for (const item of array) {
+		currentChunk.push(item);
+		if (currentChunk.length === size) {
+			chunkedArray.push(currentChunk);
+			currentChunk = [];
+		}
+	}
+
+	if (currentChunk.length) {
+		chunkedArray.push(currentChunk);
+	}
+
+	return chunkedArray;
+};
+
+/**
+ * @example
+ * intersection([2, 1], [2, 3])
+ * // [2]
+ */
+export const intersection = <T>(...arrays: T[][]): T[] =>
+	arrays.length === 0
+		? []
+		: arrays.reduce((a, b) => a.filter((v) => b.includes(v)));
+
+/**
+ * @example
+ * difference([2, 1], [2, 3])
+ * // [1]
+ */
+export const difference = <T>(source: T[], ...diffs: T[][]): T[] =>
+	diffs.reduce((a, b) => a.filter((c) => !b.includes(c)), source);
+
+export const ensureIsArray = <T>(value: T | T[]): T[] =>
+	Array.isArray(value) ? value : [value];
