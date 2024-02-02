@@ -82,3 +82,22 @@ export const rad2deg = (x: number): number => x * CONST_180_DIV_PI;
  * // returns 2.0
  */
 export const abs = (x: number): number => (x < 0.0 ? -x : x);
+
+/**
+ * Clamps a number within the inclusive range specified by the given minimum and maximum bounds.
+ *
+ * @param {number} x - The input value to be clamped.
+ * @param {number} minIncl - The inclusive minimum boundary.
+ * @param {number} maxIncl - The inclusive maximum boundary.
+ * @returns {number} - The clamped value, confined within the range [minIncl, maxIncl].
+ *
+ * @example
+ * var v = clamp( -5, -3, 3 );
+ * // returns -3
+ *
+ * @example
+ * var v = clamp( 4, -3, 3 );
+ * // returns 3
+ */
+export const clamp = (x: number, minIncl: number, maxIncl: number): number =>
+	x <= minIncl ? minIncl : x >= maxIncl ? maxIncl : x;
