@@ -260,6 +260,16 @@
 				"types": "./dist/strings/index.d.cts",
 				"default": "./dist/strings/index.cjs"
 			}
+		},
+		"./time": {
+			"import": {
+				"types": "./dist/time/index.d.ts",
+				"default": "./dist/time/index.mjs"
+			},
+			"require": {
+				"types": "./dist/time/index.d.cts",
+				"default": "./dist/time/index.cjs"
+			}
 		}
 	}
 }
