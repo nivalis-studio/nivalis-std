@@ -1,6 +1,6 @@
 {
 	"name": "@nivalis/std",
-	"version": "0.7.4",
+	"version": "0.8.0",
 	"type": "module",
 	"description": "Set of utilities used in Nivalis projects",
 	"publishConfig": {
