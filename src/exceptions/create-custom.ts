@@ -7,6 +7,7 @@ type ExceptionOptions = {
 	status?: HttpStatusError;
 	traceId?: string;
 	meta?: Record<string, unknown>;
+	readableMessage?: string;
 };
 
 export interface Exception extends Error {
@@ -15,6 +16,7 @@ export interface Exception extends Error {
 	status: HttpStatusError;
 	timestamp: number;
 	meta?: Record<string, unknown>;
+	readableMessage?: string;
 }
 
 export interface ExceptionConstructor {
@@ -46,6 +48,7 @@ export const createCustomException = (
 		traceId: string;
 		status: HttpStatusError;
 		timestamp = Date.now();
+		readableMessage?: string;
 
 		/**
 		 * Constructor for the custom exception.
@@ -62,6 +65,7 @@ export const createCustomException = (
 			this.name = options?.name || properties.defaultName || 'Exception';
 			this.cause = options?.cause;
 			this.traceId = options?.traceId || generateId(8);
+			this.readableMessage = options?.readableMessage;
 			this.meta = Object.assign(
 				{},
 				options?.meta,
