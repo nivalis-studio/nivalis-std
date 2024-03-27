@@ -56,6 +56,13 @@ export class Ok<T, E> implements ResultInterface<T, E> {
 	unwrapOr<K>(_val: K): T | K {
 		return this.#inner;
 	}
+
+	/**
+	 * Apply a callback to the inner value or error
+	 */
+	match<A, B>(ok: (value: T) => A, _: (error: E) => B): A {
+		return ok(this.#inner);
+	}
 }
 
 export const ok = <T, E = never>(value: T): Ok<T, E> => new Ok(value);

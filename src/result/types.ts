@@ -10,4 +10,5 @@ export interface ResultInterface<T, E> {
 	isErr(): this is Err<T, E>;
 	unwrap(): T;
 	unwrapOr<A>(v: A): T | A;
+	match<A, B>(ok: (value: T) => A, err: (error: E) => B): A | B;
 }

@@ -57,6 +57,13 @@ export class Err<T, E> implements ResultInterface<T, E> {
 	unwrapOr<K>(val: K): T | K {
 		return val;
 	}
+
+	/**
+	 * Apply a callback to the inner value or error
+	 */
+	match<A, B>(_: (value: T) => A, err: (error: E) => B): B {
+		return err(this.#inner);
+	}
 }
 
 export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
