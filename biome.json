@@ -5,7 +5,7 @@
 	},
 	"linter": {
 		"enabled": true,
-		"ignore": ["dist/**/*"],
+		"ignore": ["dist/**/*", "src/result/**/*"],
 		"rules": {
 			"all": true
 		}

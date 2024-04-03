@@ -7,4 +7,3 @@ export {
 	fromSafePromise,
 } from './result-async';
 export type {Result} from './result';
-export {wrap, wrapSync} from './catch';

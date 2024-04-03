@@ -1,15 +1,3 @@
-import {
-	combineResultAsyncList,
-	combineResultAsyncListWithAllErrors,
-} from './_internals/utils';
-import type {
-	ExtractErrAsyncTypes,
-	ExtractOkAsyncTypes,
-	InferAsyncErrTypes,
-	InferAsyncOkTypes,
-	InferErrTypes,
-	InferOkTypes,
-} from './_internals/utils';
 import {Err, Ok, Result} from './result';
 import type {
 	Combine,
@@ -19,6 +7,18 @@ import type {
 	MemberListOf,
 	MembersToUnion,
 } from './result';
+import {
+	combineResultAsyncList,
+	combineResultAsyncListWithAllErrors,
+} from './result-utils';
+import type {
+	ExtractErrAsyncTypes,
+	ExtractOkAsyncTypes,
+	InferAsyncErrTypes,
+	InferAsyncOkTypes,
+	InferErrTypes,
+	InferOkTypes,
+} from './result-utils';
 
 export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
 	private _promise: Promise<Result<T, E>>;

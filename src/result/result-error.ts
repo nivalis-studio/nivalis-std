@@ -1,4 +1,4 @@
-import type {Result} from '../result';
+import type {Result} from './result';
 
 export interface ErrorConfig {
 	withStackTrace: boolean;
