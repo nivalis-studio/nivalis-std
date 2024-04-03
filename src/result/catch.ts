@@ -1,7 +1,7 @@
 import type {ExceptionConstructor} from '../exceptions';
-import {err} from './err';
-import {ok} from './ok';
-import type {Result} from './types';
+import {err} from './result';
+import {ok} from './result';
+import type {Result} from './result';
 
 /**
  * Wraps an `async` function with a try catch, creating a new function with the same
