@@ -1,3 +1,5 @@
+import type {Result} from './result';
+
 export {ok, Ok, err, Err, fromThrowable, safeTry} from './result';
 export {
 	ResultAsync,
@@ -7,3 +9,15 @@ export {
 	fromSafePromise,
 } from './result-async';
 export type {Result} from './result';
+
+export const valuesFromResult = <T, E>(results: Array<Result<T, E>>): T[] => {
+	const values = [];
+
+	for (const result of results) {
+		if (result.isOk()) {
+			values.push(result.value);
+		}
+	}
+
+	return values;
+};
