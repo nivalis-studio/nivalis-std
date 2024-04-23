@@ -10,7 +10,7 @@ export {
 } from './result-async';
 export type {Result} from './result';
 
-export const valuesFromResult = <T, E>(results: Array<Result<T, E>>): T[] => {
+export const valuesFromResults = <T, E>(results: Array<Result<T, E>>): T[] => {
 	const values = [];
 
 	for (const result of results) {
