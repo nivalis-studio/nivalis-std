@@ -21,3 +21,11 @@ export const valuesFromResults = <T, E>(results: Array<Result<T, E>>): T[] => {
 
 	return values;
 };
+
+export const unwrap = <T, E>(result: Result<T, E>): T => {
+	if (result.isOk()) {
+		return result.value;
+	}
+
+	throw result.error;
+};
