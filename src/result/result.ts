@@ -1,6 +1,4 @@
 import {ResultAsync, errAsync} from './result-async';
-import {createNeverThrowError} from './result-error';
-import type {ErrorConfig} from './result-error';
 import {
 	combineResultList,
 	combineResultListWithAllErrors,
@@ -243,17 +241,7 @@ interface IResult<T, E> {
 	 *
 	 * @param config
 	 */
-	_unsafeUnwrap(config?: ErrorConfig): T;
-
-	/**
-	 * **This method is unsafe, and should only be used in a test environments**
-	 *
-	 * takes a `Result<T, E>` and returns a `E` when the result is an `Err`,
-	 * otherwise it throws a custom object.
-	 *
-	 * @param config
-	 */
-	_unsafeUnwrapErr(config?: ErrorConfig): E;
+	_unsafeUnwrap(): T;
 }
 
 export class Ok<T, E> implements IResult<T, E> {
@@ -320,16 +308,8 @@ export class Ok<T, E> implements IResult<T, E> {
 		})();
 	}
 
-	_unsafeUnwrap(_?: ErrorConfig): T {
+	_unsafeUnwrap(): T {
 		return this.value;
-	}
-
-	_unsafeUnwrapErr(config?: ErrorConfig): E {
-		throw createNeverThrowError(
-			'Called `_unsafeUnwrapErr` on an Ok',
-			this,
-			config,
-		);
 	}
 }
 
@@ -398,16 +378,8 @@ export class Err<T, E> implements IResult<T, E> {
 		})();
 	}
 
-	_unsafeUnwrap(config?: ErrorConfig): T {
-		throw createNeverThrowError(
-			'Called `_unsafeUnwrap` on an Err',
-			this,
-			config,
-		);
-	}
-
-	_unsafeUnwrapErr(_?: ErrorConfig): E {
-		return this.error;
+	_unsafeUnwrap(): T {
+		throw this.error;
 	}
 }
 
