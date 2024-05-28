@@ -1,6 +1,8 @@
 import {generateId} from '../generate';
 import type {HttpStatusError} from '../http-status';
 
+type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+
 type ExceptionOptions = {
 	name?: string;
 	cause?: unknown;
@@ -21,6 +23,8 @@ type ExceptionOptions = {
 	detail?: string;
 	instance?: string;
 	readableMessage?: string;
+	logLevel?: LogLevel;
+	shouldSendAlert?: boolean;
 };
 
 export interface Exception extends Error {
@@ -33,6 +37,8 @@ export interface Exception extends Error {
 	detail?: string;
 	instance?: string;
 	readableMessage?: string;
+	logLevel: LogLevel;
+	shouldSendAlert: boolean;
 	toJson(): string;
 }
 
@@ -53,10 +59,12 @@ export const createCustomException = (
 		defaultMessage: string;
 		defaultName?: string;
 		defaultStatus?: HttpStatusError;
+		defaultLogLevel?: LogLevel;
 	} = {
 		defaultName: 'Exception',
 		defaultMessage: 'Exception',
 		defaultStatus: 500,
+		defaultLogLevel: 'error',
 	},
 ): ExceptionConstructor => {
 	return class extends Error implements Exception {
@@ -69,6 +77,8 @@ export const createCustomException = (
 		instance?: string | undefined;
 		detail?: string | undefined;
 		type?: string | undefined;
+		logLevel: LogLevel;
+		shouldSendAlert: boolean;
 
 		/**
 		 * Constructor for the custom exception.
@@ -94,6 +104,10 @@ export const createCustomException = (
 				options?.meta,
 				(options?.cause as Exception | undefined)?.meta,
 			);
+			this.logLevel =
+				options?.logLevel ?? properties.defaultLogLevel ?? 'error';
+			this.shouldSendAlert = options?.shouldSendAlert ?? true;
+
 			Object.setPrototypeOf(this, new.target.prototype);
 		}
 
