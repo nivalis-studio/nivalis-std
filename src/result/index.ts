@@ -1,6 +1,7 @@
 import type {Result} from './result';
 
 export {ok, Ok, err, Err, fromThrowable, safeTry} from './result';
+export {wrap, wrapSync} from './wrap';
 export {
 	ResultAsync,
 	okAsync,

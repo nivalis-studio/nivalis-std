@@ -35,3 +35,9 @@ export const GoneException = createCustomException({
 	defaultMessage: 'Gone',
 	defaultStatus: 410,
 });
+
+export const UnknownException = createCustomException({
+	defaultName: 'Unknown',
+	defaultMessage: 'Internal server error',
+	defaultStatus: 500,
+});

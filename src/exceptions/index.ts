@@ -11,4 +11,5 @@ export {
 	NotFoundException,
 	ConflictException,
 	GoneException,
+	UnknownException,
 } from './common-errors';
