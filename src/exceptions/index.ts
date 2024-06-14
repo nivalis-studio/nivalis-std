@@ -4,4 +4,11 @@ export {
 	type ExceptionConstructor,
 	type Exception,
 } from './create-custom';
-export * from './common-errors';
+export {
+	BadRequestException,
+	UnauthorizedException,
+	ForbiddenException,
+	NotFoundException,
+	ConflictException,
+	GoneException,
+} from './common-errors';

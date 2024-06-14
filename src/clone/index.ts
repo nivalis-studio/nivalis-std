@@ -17,12 +17,15 @@ export const clone = <T>(obj: T): T => {
 			),
 		) as T;
 	}
+
 	if (type === 'Date') {
 		return new Date((obj as Date).getTime()) as T;
 	}
+
 	if (type === 'RegExp') {
 		return RegExp((obj as RegExp).source, getRegExpFlags(obj as RegExp)) as T;
 	}
+
 	if (type === 'Array' || type === 'Object') {
 		result = (Array.isArray(obj) ? [] : {}) as T;
 		for (const key in obj) {
@@ -30,6 +33,7 @@ export const clone = <T>(obj: T): T => {
 			result[key] = clone(obj[key]);
 		}
 	}
+
 	// primitives and non-supported objects (e.g. functions) land here
 	return result;
 };

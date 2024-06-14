@@ -48,22 +48,16 @@ export const remove = <T>(array: T[], element: T): T[] => {
  * @param array
  * @returns
  */
-export const randomIndex = <T>(array: readonly T[]) => {
-	return Math.floor(Math.random() * array.length);
-};
+export const randomIndex = <T>(array: readonly T[]) =>
+	Math.floor(Math.random() * array.length);
 
 /**
  * Get a random value with `Math.random()`
  * @param array
  * @returns
  */
-export const pick = <T>(array: readonly T[]) => {
-	if (array.length === 0) {
-		return undefined;
-	}
-
-	return array[randomIndex(array)];
-};
+export const pick = <T>(array: readonly T[]) =>
+	array.length === 0 ? undefined : array[randomIndex(array)];
 
 /**
  * Randomly shuffle an array.
@@ -73,14 +67,14 @@ export const pick = <T>(array: readonly T[]) => {
  * @return Returns the new shuffled array.
  */
 export const shuffle = <T>(array: T[]): T[] => {
-	const a = [...array];
+	const arrayCopy = [...array];
 
-	for (let i = a.length - 1; i > 0; i--) {
+	for (let i = arrayCopy.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
-		[a[i], a[j]] = [a[j] as T, a[i] as T];
+		[arrayCopy[i], arrayCopy[j]] = [arrayCopy[j] as T, arrayCopy[i] as T];
 	}
 
-	return a;
+	return arrayCopy;
 };
 
 export const sortNumbers = (array: number[], dir = 'asc' as 'asc' | 'desc') =>
@@ -133,5 +127,9 @@ export const intersection = <T>(...arrays: T[][]): T[] =>
 export const difference = <T>(source: T[], ...diffs: T[][]): T[] =>
 	diffs.reduce((a, b) => a.filter((c) => !b.includes(c)), source);
 
+/**
+ * @example
+ * ensureIsArray(1) // [1]
+ */
 export const ensureIsArray = <T>(value: T | T[]): T[] =>
 	Array.isArray(value) ? value : [value];
