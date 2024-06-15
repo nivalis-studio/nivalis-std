@@ -457,19 +457,19 @@ type CollectResults<
 > = [Depth] extends [never]
 	? []
 	: T extends [infer H, ...infer Rest]
-	  ? // And test whether the head of the list is a result
-		  H extends Result<infer L, infer R>
+		? // And test whether the head of the list is a result
+			H extends Result<infer L, infer R>
 			? // Continue collecting...
-			  CollectResults<
+				CollectResults<
 					// the rest of the elements
 					Rest,
 					// The collected
 					[...Collected, [L, R]],
 					// and one less of the current depth
 					Prev[Depth]
-			  >
+				>
 			: never // Impossible
-	  : Collected;
+		: Collected;
 
 // Transposes an array
 //
@@ -504,8 +504,8 @@ export type Combine<T, Depth extends number = 5> = Transpose<
 > extends [infer L, infer R]
 	? [UnknownMembersToNever<L>, UnknownMembersToNever<R>]
 	: Transpose<CollectResults<T>, [], Depth> extends []
-	  ? [[], []]
-	  : never;
+		? [[], []]
+		: never;
 
 // Deduplicates the result, as the result type is a union of Err and Ok types.
 export type Dedup<T> = T extends Result<infer RL, infer RR>
@@ -519,7 +519,7 @@ export type MemberListOf<T> = (
 	(T extends unknown ? (t: T) => T : never) extends infer U
 		? (U extends unknown ? (u: U) => unknown : never) extends (
 				v: infer V,
-		  ) => unknown
+			) => unknown
 			? V
 			: never
 		: never
@@ -540,12 +540,12 @@ export type EmptyArrayToNever<
 > = T extends []
 	? never
 	: NeverArrayToNever extends 1
-	  ? T extends [never, ...infer Rest]
+		? T extends [never, ...infer Rest]
 			? [EmptyArrayToNever<Rest>] extends [never]
 				? never
 				: T
 			: T
-	  : T;
+		: T;
 
 // Converts the `unknown` items of an array to `never`s.
 type UnknownMembersToNever<T> = T extends [infer H, ...infer R]

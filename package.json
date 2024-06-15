@@ -9,22 +9,18 @@
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
-	"files": [
-		"README.md",
-		"LICENSE",
-		"dist"
-	],
+	"files": ["README.md", "LICENSE", "dist"],
 	"scripts": {
 		"test": "exit 0",
 		"build": "unbuild",
 		"prepublishOnly": "unbuild",
 		"lint": "biome check .",
-		"lint:fix": "biome check --apply .",
+		"lint:fix": "biome check --write .",
 		"ts": "tsc",
 		"prepare": "husky install"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.4.1",
+		"@biomejs/biome": "^1.8.1",
 		"@types/bun": "latest",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.2.0",

@@ -42,11 +42,11 @@ export const wrap =
 					? (new ErrorConstructor(error.message, {
 							cause: error,
 							meta: {args},
-					  }) as unknown as Exception)
+						}) as unknown as Exception)
 					: (new UnknownException(error.message, {
 							cause: error,
 							meta: {args},
-					  }) as unknown as Exception),
+						}) as unknown as Exception),
 			);
 		}
 	};
@@ -86,11 +86,11 @@ export const wrapSync =
 					? (new ErrorConstructor(error.message, {
 							cause: error,
 							meta: {args},
-					  }) as unknown as Exception)
+						}) as unknown as Exception)
 					: (new UnknownException(error.message, {
 							cause: error,
 							meta: {args},
-					  }) as unknown as Exception),
+						}) as unknown as Exception),
 			);
 		}
 	};

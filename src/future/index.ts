@@ -22,6 +22,7 @@ export class Future<T> implements Promise<T> {
 		return this.#reject;
 	}
 
+	// biome-ignore lint/suspicious/noThenProperty: on purpose to allow chaining
 	then<Result1 = T, Result2 = never>(
 		onfulfilled?: ((value: T) => Result1 | PromiseLike<Result1>) | null,
 		// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here

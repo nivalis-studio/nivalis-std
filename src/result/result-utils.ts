@@ -81,8 +81,8 @@ export const combineResultListWithAllErrors = <T, E>(
 					? err([...acc.error, result.error])
 					: err([result.error])
 				: acc.isErr()
-				  ? acc
-				  : ok([...acc.value, result.value]),
+					? acc
+					: ok([...acc.value, result.value]),
 		ok([]) as Result<T[], E[]>,
 	);
 
