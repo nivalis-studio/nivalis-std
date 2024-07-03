@@ -24,7 +24,7 @@
 	},
 	"javascript": {
 		"formatter": {
-			"bracketSpacing": false,
+			"bracketSpacing": true,
 			"indentStyle": "tab",
 			"indentWidth": 2,
 			"quoteStyle": "single"

@@ -1,4 +1,4 @@
-import {ResultAsync, errAsync} from './result-async';
+import { ResultAsync, errAsync } from './result-async';
 import {
 	combineResultList,
 	combineResultListWithAllErrors,
@@ -556,7 +556,7 @@ type UnknownMembersToNever<T> = T extends [infer H, ...infer R]
 export type MembersToUnion<T> = T extends unknown[] ? T[number] : never;
 
 // Checks if the given type is a literal array.
-export type IsLiteralArray<T> = T extends {length: infer L}
+export type IsLiteralArray<T> = T extends { length: infer L }
 	? L extends number
 		? number extends L
 			? 0

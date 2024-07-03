@@ -1,6 +1,6 @@
-import {err, ok} from './result';
-import type {Result} from './result';
-import {ResultAsync} from './result-async';
+import { err, ok } from './result';
+import type { Result } from './result';
+import { ResultAsync } from './result-async';
 
 // Given a list of Results, this extracts all the different `T` types from that list
 export type ExtractOkTypes<T extends readonly Result<unknown, unknown>[]> = {

@@ -1,4 +1,4 @@
-import {createCustomException} from './create-custom';
+import { createCustomException } from './create-custom';
 
 export const BadRequestException = createCustomException({
 	defaultName: 'BadRequest',

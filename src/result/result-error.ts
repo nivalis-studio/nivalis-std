@@ -1,4 +1,4 @@
-import type {Result} from './result';
+import type { Result } from './result';
 
 export interface ErrorConfig {
 	withStackTrace: boolean;
@@ -30,8 +30,8 @@ export const createNeverThrowError = <T, E>(
 	config: ErrorConfig = defaultErrorConfig,
 ): NeverThrowError<T, E> => {
 	const data = result.isOk()
-		? {type: 'Ok', value: result.value}
-		: {type: 'Err', value: result.error};
+		? { type: 'Ok', value: result.value }
+		: { type: 'Err', value: result.error };
 
 	const maybeStack = config.withStackTrace ? new Error().stack : undefined;
 

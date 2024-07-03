@@ -1,6 +1,6 @@
-import {isBuffer} from '../is';
-import {nativeClass} from '../native-class';
-import {RE_FUNCTION_NAME} from '../regexp';
+import { isBuffer } from '../is';
+import { nativeClass } from '../native-class';
+import { RE_FUNCTION_NAME } from '../regexp';
 
 /**
  * Determines the name of a value's constructor.

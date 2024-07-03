@@ -1,4 +1,4 @@
-export {toDiscord} from './to-discord';
+export { toDiscord } from './to-discord';
 export {
 	createCustomException,
 	type ExceptionConstructor,

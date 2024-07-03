@@ -1,4 +1,4 @@
-import {Err, Ok, Result} from './result';
+import { Err, Ok, Result } from './result';
 import type {
 	Combine,
 	Dedup,

@@ -1,7 +1,7 @@
-import type {Result} from './result';
+import type { Result } from './result';
 
-export {ok, Ok, err, Err, fromThrowable, safeTry} from './result';
-export {wrap, wrapSync} from './wrap';
+export { ok, Ok, err, Err, fromThrowable, safeTry } from './result';
+export { wrap, wrapSync } from './wrap';
 export {
 	ResultAsync,
 	okAsync,
@@ -9,7 +9,7 @@ export {
 	fromPromise,
 	fromSafePromise,
 } from './result-async';
-export type {Result} from './result';
+export type { Result } from './result';
 
 export const valuesFromResults = <T, E>(results: Array<Result<T, E>>): T[] => {
 	const values = [];

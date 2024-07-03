@@ -16,6 +16,7 @@
 		"prepublishOnly": "unbuild",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
+		"lint:fix:fix": "biome check --fix --unsafe .",
 		"ts": "tsc",
 		"prepare": "husky install"
 	},

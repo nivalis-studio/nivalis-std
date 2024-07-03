@@ -3,7 +3,7 @@ import {
 	type ExceptionConstructor,
 	UnknownException,
 } from '../exceptions';
-import {type Result, err, ok} from './result';
+import { type Result, err, ok } from './result';
 
 /**
  * Wraps an `async` function with a try catch, creating a new function with the same
@@ -41,11 +41,11 @@ export const wrap =
 				ErrorConstructor
 					? (new ErrorConstructor(error.message, {
 							cause: error,
-							meta: {args},
+							meta: { args },
 						}) as unknown as Exception)
 					: (new UnknownException(error.message, {
 							cause: error,
-							meta: {args},
+							meta: { args },
 						}) as unknown as Exception),
 			);
 		}
@@ -85,11 +85,11 @@ export const wrapSync =
 				ErrorConstructor
 					? (new ErrorConstructor(error.message, {
 							cause: error,
-							meta: {args},
+							meta: { args },
 						}) as unknown as Exception)
 					: (new UnknownException(error.message, {
 							cause: error,
-							meta: {args},
+							meta: { args },
 						}) as unknown as Exception),
 			);
 		}

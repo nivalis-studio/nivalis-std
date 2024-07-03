@@ -1,4 +1,4 @@
-import {MS_IN_DAY} from '../constants';
+import { MS_IN_DAY } from '../constants';
 
 export const getDaysSince = (date: Date) =>
 	Math.floor((Date.now() - date.getTime()) / MS_IN_DAY);

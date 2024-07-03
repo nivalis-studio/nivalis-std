@@ -1,5 +1,5 @@
-import type {CurrencyCode} from './types';
-export type {CurrencyCode};
+import type { CurrencyCode } from './types';
+export type { CurrencyCode };
 
 type Money = {
 	amount: string;
@@ -7,7 +7,7 @@ type Money = {
 };
 
 export const formatPrice = (
-	{amount, currencyCode}: Money,
+	{ amount, currencyCode }: Money,
 	locale = 'fr',
 	quantity = 1,
 	disableCents = false,

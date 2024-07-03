@@ -1,6 +1,6 @@
 export const toDiscord = (err: {
 	traceId: string;
-	cause: {message: string};
+	cause: { message: string };
 	name: string;
 	stack: string | string[];
 	status: string;

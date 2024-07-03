@@ -1,4 +1,4 @@
-import {isObjectLike} from './is-object-like';
+import { isObjectLike } from './is-object-like';
 
 /**
  * Tests if a value is a Buffer instance.

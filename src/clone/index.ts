@@ -1,5 +1,5 @@
-import {constructorName} from '../constructor-name';
-import {getRegExpFlags} from '../regexp';
+import { constructorName } from '../constructor-name';
+import { getRegExpFlags } from '../regexp';
 
 export const clone = <T>(obj: T): T => {
 	let result = obj;

@@ -1,5 +1,5 @@
-import {generateId} from '../generate';
-import type {HttpStatusError} from '../http-status';
+import { generateId } from '../generate';
+import type { HttpStatusError } from '../http-status';
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 

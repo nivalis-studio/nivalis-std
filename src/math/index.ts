@@ -1,4 +1,4 @@
-import {CONST_180_DIV_PI, PI_DIV_180} from '../constants';
+import { CONST_180_DIV_PI, PI_DIV_180 } from '../constants';
 
 /**
  * Round a number to a chosen precision.

@@ -1,9 +1,5 @@
-import {
-	type HttpStatusError,
-	type HttpStatusOk,
-	httpStatusError,
-	httpStatusOk,
-} from './types';
+import { httpStatusError, httpStatusOk } from './types';
+import type { HttpStatusError, HttpStatusOk } from './types';
 
 export const isHttpStatusOk = (status: number): status is HttpStatusOk =>
 	httpStatusOk.has(status as HttpStatusOk);
@@ -45,4 +41,4 @@ export const httpStatus = {
 	loopDetected: 508,
 } as const;
 
-export type {HttpStatus, HttpStatusError, HttpStatusOk} from './types';
+export type { HttpStatus, HttpStatusError, HttpStatusOk } from './types';
