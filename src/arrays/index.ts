@@ -25,6 +25,7 @@ export const lastIndex = <T>(array: T[]): number => array.length - 1;
  */
 export const last = <T>(array: T[]): T | undefined => {
 	const length = array === null ? 0 : array.length;
+
 	return length ? array[length - 1] : undefined;
 };
 
@@ -40,6 +41,7 @@ export const remove = <T>(array: T[], element: T): T[] => {
 	}
 
 	array_.splice(idx, 1);
+
 	return array_;
 };
 
@@ -71,7 +73,8 @@ export const shuffle = <T>(array: T[]): T[] => {
 
 	for (let i = arrayCopy.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
-		[arrayCopy[i], arrayCopy[j]] = [arrayCopy[j] as T, arrayCopy[i] as T];
+
+		[arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
 	}
 
 	return arrayCopy;
@@ -96,13 +99,14 @@ export const chunk = <T>(array: readonly T[], size = 1): T[][] => {
 
 	for (const item of array) {
 		currentChunk.push(item);
+
 		if (currentChunk.length === size) {
 			chunkedArray.push(currentChunk);
 			currentChunk = [];
 		}
 	}
 
-	if (currentChunk.length) {
+	if (currentChunk.length > 0) {
 		chunkedArray.push(currentChunk);
 	}
 

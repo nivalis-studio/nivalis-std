@@ -17,7 +17,7 @@ export const SafeJson = {
 		}
 
 		try {
-			JSON.parse(value as string);
+			JSON.parse(value);
 
 			return true;
 		} catch {
@@ -30,6 +30,6 @@ export const SafeJson = {
 			return fallback;
 		}
 
-		return JSON.parse(value as string);
+		return JSON.parse(value as string) as T;
 	},
 };

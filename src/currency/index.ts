@@ -1,4 +1,5 @@
 import type { CurrencyCode } from './types';
+
 export type { CurrencyCode };
 
 type Money = {

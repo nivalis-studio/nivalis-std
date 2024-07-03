@@ -6,13 +6,13 @@ export const clone = <T>(obj: T): T => {
 	const type = constructorName(obj);
 
 	if (type === 'Set') {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		return new Set([...(obj as Set<any>)].map((value) => clone(value))) as T;
+		return new Set(
+			[...(obj as Set<unknown>)].map((value) => clone(value)),
+		) as T;
 	}
 	if (type === 'Map') {
 		return new Map(
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			[...(obj as Map<any, any>)].map(
+			[...(obj as Map<unknown, unknown>)].map(
 				(kv) => [clone(kv[0]), clone(kv[1])] as const,
 			),
 		) as T;

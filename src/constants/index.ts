@@ -2,7 +2,7 @@ export const EARTH_RADIUS_IN_METERS = 6_378_137;
 
 export const NS_IN_SECOND = 1e9;
 export const NS_IN_MS = 1e6;
-export const MS_IN_SECOND = 1_000;
+export const MS_IN_SECOND = 1000;
 export const MS_IN_MINUTE = 60_000;
 export const MS_IN_HOUR = 3_600_000;
 export const MS_IN_DAY = 86_400_000;
@@ -25,14 +25,14 @@ export const HOURS_IN_WEEK = 168;
  * π / 180.0
  * ```
  */
-export const PI_DIV_180 = 1.7453292519943295e-2;
+export const PI_DIV_180 = 1.745_329_251_994_329_5e-2;
 
 /**
  * ```tex
  * 180.0 / π
  * ```
  */
-export const CONST_180_DIV_PI = 57.29577951308232;
+export const CONST_180_DIV_PI = 57.295_779_513_082_32;
 
 /**
  * Maximum length of a generic array.
@@ -41,7 +41,7 @@ export const CONST_180_DIV_PI = 57.29577951308232;
  * 2^{32} - 1
  * ```
  */
-export const MAX_ARRAY_LENGTH = 4294967295 >>> 0;
+export const MAX_ARRAY_LENGTH = 4_294_967_295 >>> 0;
 
 /**
  * Maximum length of a typed array.
@@ -50,4 +50,4 @@ export const MAX_ARRAY_LENGTH = 4294967295 >>> 0;
  * 2^{53} - 1
  * ```
  */
-export const MAX_TYPED_ARRAY_LENGTH = 9007199254740991;
+export const MAX_TYPED_ARRAY_LENGTH = 9_007_199_254_740_991;

@@ -35,8 +35,8 @@ export interface Exception extends Error {
 }
 
 export interface ExceptionConstructor {
-	new (message?: string, options?: ExceptionOptions): Exception;
 	readonly prototype: Exception;
+	new (message?: string, options?: ExceptionOptions): Exception;
 }
 
 /**
@@ -46,19 +46,12 @@ export interface ExceptionConstructor {
  * @param properties - Default properties including message and HTTP status.
  * @returns A class that extends Error and implements the Exception interface.
  */
-export const createCustomException = (
-	properties: {
-		defaultMessage: string;
-		defaultName?: string;
-		defaultStatus?: HttpStatusError;
-		defaultLogLevel?: LogLevel;
-	} = {
-		defaultName: 'Exception',
-		defaultMessage: 'Exception',
-		defaultStatus: 500,
-		defaultLogLevel: 'error',
-	},
-): ExceptionConstructor => {
+export const createCustomException = (properties: {
+	defaultMessage: string;
+	defaultName?: string;
+	defaultStatus?: HttpStatusError;
+	defaultLogLevel?: LogLevel;
+}): ExceptionConstructor => {
 	return class extends Error implements Exception {
 		__exception = true;
 		meta: Record<string, unknown>;
@@ -79,7 +72,7 @@ export const createCustomException = (
 			options?: ExceptionOptions,
 		) {
 			super(message);
-			this.status = options?.status || properties.defaultStatus || 500;
+			this.status = options?.status ?? properties.defaultStatus ?? 500;
 			this.name = options?.name || properties.defaultName || 'Exception';
 			this.cause = options?.cause;
 			this.traceId = options?.traceId || generateId(8);
@@ -90,7 +83,7 @@ export const createCustomException = (
 				(options?.cause as Exception | undefined)?.meta,
 			);
 			this.logLevel =
-				options?.logLevel ?? properties.defaultLogLevel ?? 'error';
+				options?.logLevel || properties.defaultLogLevel || 'error';
 
 			Object.setPrototypeOf(this, new.target.prototype);
 		}

@@ -1,6 +1,8 @@
-import {type Exception, createCustomException} from '../exceptions';
-import {Future} from '../future';
-import {Err, Ok, type Result} from '../result';
+import { createCustomException } from '../exceptions';
+import type { Exception } from '../exceptions';
+import { Future } from '../future';
+import { Err, Ok } from '../result';
+import type { Result } from '../result';
 
 type Awaitable<T> = T | Promise<T>;
 
@@ -66,7 +68,7 @@ export class Semaphore<T, N extends number = number> {
 			throw new LockedError();
 		}
 
-		this.#count++;
+		this.#count += 1;
 
 		const promise = Promise.resolve(callback(this.inner))
 			.finally(() => this.#queue.shift()?.resolve())
@@ -87,7 +89,7 @@ export class Semaphore<T, N extends number = number> {
 			return new Err(new LockedError());
 		}
 
-		this.#count++;
+		this.#count += 1;
 
 		const promise = Promise.resolve(callback(this.inner))
 			.finally(() => this.#queue.shift()?.resolve())

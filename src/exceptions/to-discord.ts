@@ -1,3 +1,5 @@
+import { ensureIsArray } from '../arrays';
+
 export const toDiscord = (err: {
 	traceId: string;
 	cause: { message: string };
@@ -28,7 +30,7 @@ export const toDiscord = (err: {
 				{
 					inline: false,
 					name: 'Stack Trace',
-					value: `\`\`\`${err.stack ? err.stack.slice(0, 1014) : 'N/A'}\`\`\``,
+					value: `\`\`\`${err.stack ? ensureIsArray(err.stack).join('').slice(0, 1014) : 'N/A'}\`\`\``,
 				},
 			],
 			footer: {

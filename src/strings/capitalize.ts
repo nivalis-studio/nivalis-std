@@ -8,4 +8,4 @@ export const capitalize = (string: string): string =>
  * Capitalize the first letter of each word in a string.
  */
 export const capitalizeWords = (string: string): string =>
-	string.replace(/(?:^|\s)\S/g, capitalize);
+	string.replaceAll(/(?:^|\s)\S/g, capitalize);

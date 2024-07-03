@@ -5,7 +5,7 @@ import { RE_FUNCTION_NAME } from '../regexp';
 /**
  * Determines the name of a value's constructor.
  *
- * @param {*} v - input value
+ * @param {*} value - input value
  * @returns {string} name of a value's constructor
  *
  * @example
@@ -30,11 +30,11 @@ import { RE_FUNCTION_NAME } from '../regexp';
  */
 
 // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-export const constructorName = (v: any): string => {
-	const name = nativeClass(v).slice(8, -1);
+export const constructorName = (value: any): string => {
+	const name = nativeClass(value).slice(8, -1);
 
-	if ((name === 'Object' || name === 'Error') && v.constructor) {
-		const ctor = v.constructor;
+	if ((name === 'Object' || name === 'Error') && value.constructor) {
+		const ctor = (value as Error).constructor;
 		if (typeof ctor.name === 'string') {
 			return ctor.name;
 		}
@@ -45,7 +45,7 @@ export const constructorName = (v: any): string => {
 		}
 	}
 
-	if (isBuffer(v)) {
+	if (isBuffer(value)) {
 		return 'Buffer';
 	}
 

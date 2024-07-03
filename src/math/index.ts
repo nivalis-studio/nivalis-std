@@ -8,6 +8,7 @@ import { CONST_180_DIV_PI, PI_DIV_180 } from '../constants';
  */
 export const roundNumber = (x: number, precision: number): number => {
 	const factor = 10 ** precision;
+
 	return Math.round(x * factor) / factor;
 };
 
