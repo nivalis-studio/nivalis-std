@@ -242,25 +242,41 @@ interface IResult<T, E> {
 	 * @param config
 	 */
 	_unsafeUnwrap(): T;
+
+	/**
+	 * Used to check if a `Result` has been handled properly.
+	 */
+	[Symbol.dispose]: () => void;
 }
 
 export class Ok<T, E> implements IResult<T, E> {
+	private handled = false;
 	constructor(readonly value: T) {}
 
 	isOk(): this is Ok<T, E> {
+		this.handled = true;
 		return true;
 	}
 
 	isErr(): this is Err<T, E> {
+		this.handled = true;
 		return !this.isOk();
 	}
 
 	map<A>(f: (t: T) => A): Result<A, E> {
+		this.handled = true;
 		return ok(f(this.value));
+	}
+
+	[Symbol.dispose](): void {
+		if (!this.handled) {
+			throw new Error('Result was not handled properly');
+		}
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	mapErr<U>(_f: (e: E) => U): Result<T, U> {
+		this.handled = true;
 		return ok(this.value);
 	}
 
@@ -270,6 +286,7 @@ export class Ok<T, E> implements IResult<T, E> {
 	andThen<U, F>(f: (t: T) => Result<U, F>): Result<U, E | F>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 	andThen(f: any): any {
+		this.handled = true;
 		return f(this.value);
 	}
 
@@ -279,28 +296,34 @@ export class Ok<T, E> implements IResult<T, E> {
 	orElse<A>(_f: (e: E) => Result<T, A>): Result<T, A>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 	orElse(_f: any): any {
+		this.handled = true;
 		return ok(this.value);
 	}
 
 	asyncAndThen<U, F>(f: (t: T) => ResultAsync<U, F>): ResultAsync<U, E | F> {
+		this.handled = true;
 		return f(this.value);
 	}
 
 	asyncMap<U>(f: (t: T) => Promise<U>): ResultAsync<U, E> {
+		this.handled = true;
 		return ResultAsync.fromSafePromise(f(this.value));
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	unwrapOr<A>(_v: A): T | A {
+		this.handled = true;
 		return this.value;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	match<A>(ok: (t: T) => A, _err: (e: E) => A): A {
+		this.handled = true;
 		return ok(this.value);
 	}
 
 	safeUnwrap(): Generator<Err<never, E>, T> {
+		this.handled = true;
 		const value = this.value;
 		/* eslint-disable-next-line require-yield */
 		return (function* () {
@@ -309,27 +332,39 @@ export class Ok<T, E> implements IResult<T, E> {
 	}
 
 	_unsafeUnwrap(): T {
+		this.handled = true;
 		return this.value;
 	}
 }
 
 export class Err<T, E> implements IResult<T, E> {
+	private handled = false;
 	constructor(readonly error: E) {}
 
 	isOk(): this is Ok<T, E> {
+		this.handled = true;
 		return false;
 	}
 
 	isErr(): this is Err<T, E> {
+		this.handled = true;
 		return !this.isOk();
+	}
+
+	[Symbol.dispose](): void {
+		if (!this.handled) {
+			throw new Error('Result was not handled properly');
+		}
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	map<A>(_f: (t: T) => A): Result<A, E> {
+		this.handled = true;
 		return err(this.error);
 	}
 
 	mapErr<U>(f: (e: E) => U): Result<T, U> {
+		this.handled = true;
 		return err(f(this.error));
 	}
 
@@ -339,6 +374,7 @@ export class Err<T, E> implements IResult<T, E> {
 	andThen<U, F>(_f: (t: T) => Result<U, F>): Result<U, E | F>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 	andThen(_f: any): any {
+		this.handled = true;
 		return err(this.error);
 	}
 
@@ -348,28 +384,34 @@ export class Err<T, E> implements IResult<T, E> {
 	orElse<A>(f: (e: E) => Result<T, A>): Result<T, A>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 	orElse(f: any): any {
+		this.handled = true;
 		return f(this.error);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	asyncAndThen<U, F>(_f: (t: T) => ResultAsync<U, F>): ResultAsync<U, E | F> {
+		this.handled = true;
 		return errAsync<U, E>(this.error);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	asyncMap<U>(_f: (t: T) => Promise<U>): ResultAsync<U, E> {
+		this.handled = true;
 		return errAsync<U, E>(this.error);
 	}
 
 	unwrapOr<A>(v: A): T | A {
+		this.handled = true;
 		return v;
 	}
 
 	match<A>(_ok: (t: T) => A, err: (e: E) => A): A {
+		this.handled = true;
 		return err(this.error);
 	}
 
 	safeUnwrap(): Generator<Err<never, E>, T> {
+		this.handled = true;
 		const error = this.error;
 		return (function* () {
 			yield err(error);
@@ -379,6 +421,7 @@ export class Err<T, E> implements IResult<T, E> {
 	}
 
 	_unsafeUnwrap(): T {
+		this.handled = true;
 		throw this.error;
 	}
 }
