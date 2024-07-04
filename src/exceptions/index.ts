@@ -2,7 +2,7 @@ export { toDiscord } from './to-discord';
 export {
 	createCustomException,
 	type ExceptionConstructor,
-	type Exception,
+	Exception,
 } from './create-custom';
 export {
 	BadRequestException,
