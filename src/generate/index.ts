@@ -9,11 +9,10 @@ const urlAlphabet =
  */
 export const generateId = (size = 21, alphabet = urlAlphabet) => {
 	let code = '';
-	let idx = size - 1;
+	let idx = size;
 
-	while (idx) {
-		code += alphabet[Math.trunc(Math.random() * alphabet.length)];
-		idx -= 1;
+	while (idx--) {
+		code += alphabet[(Math.random() * alphabet.length) | 0];
 	}
 
 	return code;
