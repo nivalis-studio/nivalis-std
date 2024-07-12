@@ -92,10 +92,11 @@ export class Exception extends Error {
 			status: this.status,
 			timestamp: this.timestamp,
 			traceId: this.traceId,
-			meta: this.meta,
-			cause: this.cause,
+			meta: SafeJson.isStringifyable(this.meta) ? this.meta : undefined,
+			cause: SafeJson.isStringifyable(this.cause) ? this.cause : undefined,
 			readableMessage: this.readableMessage,
 			stack: this.stack,
+			logLevel: this.logLevel,
 		};
 	}
 
