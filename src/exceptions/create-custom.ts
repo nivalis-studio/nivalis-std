@@ -79,6 +79,37 @@ export class Exception extends Error {
 	toString(): string {
 		return JSON.stringify(this.toJson());
 	}
+
+	get [Symbol.toStringTag](): string {
+		return 'Exception';
+	}
+
+	static from(
+		error: string | Exception | Error,
+		options?: ExceptionOptions,
+	): Exception {
+		if (typeof error === 'string') {
+			return new Exception(error, options);
+		}
+
+		if (error instanceof Exception) {
+			return error;
+		}
+
+		if (error instanceof Error) {
+			return new Exception(error.message, {
+				...error,
+				...options,
+				cause: error,
+			});
+		}
+
+		throw new Exception('Unknown error type', {
+			...options,
+			cause: error,
+			meta: { error: error },
+		});
+	}
 }
 
 export interface ExceptionConstructor {
