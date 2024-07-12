@@ -33,7 +33,7 @@ type ExceptionOptions = {
 	stack?: string;
 };
 
-type FormattedException = ReturnType<typeof Exception.prototype.toJson>;
+export type FormattedException = ReturnType<typeof Exception.prototype.toJson>;
 
 export class Exception extends Error {
 	__exception = true;
