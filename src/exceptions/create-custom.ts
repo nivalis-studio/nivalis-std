@@ -68,7 +68,12 @@ export class Exception extends Error {
 			traceId: this.traceId,
 			meta: this.meta,
 			readableMessage: this.readableMessage,
+			stack: this.stack,
 		};
+	}
+
+	toString(): string {
+		return JSON.stringify(this.toJson());
 	}
 }
 
