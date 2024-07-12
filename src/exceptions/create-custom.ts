@@ -41,10 +41,10 @@ export class Exception extends Error {
 	constructor(message: string, options?: ExceptionOptions) {
 		super(message);
 		this.status = options?.status ?? 500;
-		this.cause = options?.cause;
+		this.cause = options?.cause ?? undefined;
 		this.name = options?.name || new.target.name;
 		this.traceId = options?.traceId || generateId(8);
-		this.readableMessage = options?.readableMessage;
+		this.readableMessage = options?.readableMessage ?? undefined;
 		this.meta = Object.assign(
 			{},
 			options?.meta,
@@ -52,8 +52,12 @@ export class Exception extends Error {
 		);
 		this.logLevel = options?.logLevel ?? 'error';
 
-		if (Error.captureStackTrace) {
-			Error.captureStackTrace(this, new.target);
+		if ((options?.cause as Error)?.stack) {
+			this.stack = (options?.cause as Error)?.stack;
+		} else if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, this.constructor);
+		} else {
+			this.stack = new Error().stack;
 		}
 
 		Object.setPrototypeOf(this, new.target.prototype);
