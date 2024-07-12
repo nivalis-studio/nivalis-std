@@ -59,8 +59,8 @@ export class Exception extends Error {
 		Object.setPrototypeOf(this, new.target.prototype);
 	}
 
-	toJson(): string {
-		return JSON.stringify({
+	toJson() {
+		return {
 			message: this.message,
 			name: this.name,
 			status: this.status,
@@ -68,7 +68,7 @@ export class Exception extends Error {
 			traceId: this.traceId,
 			meta: this.meta,
 			readableMessage: this.readableMessage,
-		});
+		};
 	}
 }
 
