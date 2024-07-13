@@ -5,6 +5,7 @@ export * from './constructor-name';
 export * from './currency';
 export * from './dates';
 export * from './exceptions';
+export * from './functions';
 export * from './future';
 export * from './generate';
 export * from './http-status';

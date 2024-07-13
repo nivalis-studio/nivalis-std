@@ -48,6 +48,7 @@
 		"url": "git+https://github.com/nivalis-studio/nivalis-std.git"
 	},
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"import": {
 				"types": "./dist/index.d.ts",
@@ -126,6 +127,16 @@
 			"require": {
 				"types": "./dist/exceptions/index.d.cts",
 				"default": "./dist/exceptions/index.cjs"
+			}
+		},
+		"./functions": {
+			"import": {
+				"types": "./dist/functions/index.d.ts",
+				"default": "./dist/functions/index.mjs"
+			},
+			"require": {
+				"types": "./dist/functions/index.d.cts",
+				"default": "./dist/functions/index.cjs"
 			}
 		},
 		"./future": {
