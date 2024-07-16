@@ -11,3 +11,7 @@ export { chunk } from './chunk';
 export { intersection } from './intersection';
 export { difference } from './difference';
 export { ensureIsArray } from './ensure-is-array';
+export { union } from './union';
+export { uniq } from './uniq';
+export { toFilled } from './to-filled';
+export { tail } from './tail';
