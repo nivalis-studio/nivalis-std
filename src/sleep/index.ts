@@ -5,7 +5,7 @@ export const sleep = async (
 	ms: number,
 	{
 		signal,
-	}: {
+	}?: {
 		signal?: AbortSignal;
 	},
 ) =>
