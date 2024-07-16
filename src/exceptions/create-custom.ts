@@ -108,6 +108,11 @@ export class Exception extends Error {
 		return 'Exception';
 	}
 
+	addMeta(meta: Record<string, unknown>): this {
+		this.meta = Object.assign({}, this.meta, meta);
+		return this;
+	}
+
 	static from(
 		error: string | Exception | Error | FormattedException,
 		options?: ExceptionOptions,
