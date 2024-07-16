@@ -279,6 +279,16 @@
 				"default": "./dist/time/index.cjs"
 			}
 		},
+		"./predicates": {
+			"import": {
+				"types": "./dist/predicates/index.d.ts",
+				"default": "./dist/predicates/index.mjs"
+			},
+			"require": {
+				"types": "./dist/predicates/index.d.cts",
+				"default": "./dist/predicates/index.cjs"
+			}
+		},
 		"./units": {
 			"import": {
 				"types": "./dist/units/index.d.ts",
