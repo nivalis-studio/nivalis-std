@@ -1,13 +1,13 @@
+type SleepOptions = {
+	signal?: AbortSignal;
+};
+
 /**
  * Sleep for a given amount of time
  */
 export const sleep = async (
 	ms: number,
-	{
-		signal,
-	}?: {
-		signal?: AbortSignal;
-	},
+	{ signal }: SleepOptions | undefined = {},
 ) =>
 	new Promise((resolve, reject) => {
 		if (signal?.aborted) {
