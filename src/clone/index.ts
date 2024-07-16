@@ -1,6 +1,9 @@
 import { constructorName } from '../constructor-name';
 import { getRegExpFlags } from '../regexp';
 
+/**
+ * @deprecated use `import { clone } from '@nivalis/std/objects';`
+ */
 export const clone = <T>(obj: T): T => {
 	let result = obj;
 	const type = constructorName(obj);
