@@ -1,18 +1,6 @@
 import { CONST_180_DIV_PI, PI_DIV_180 } from '../constants';
 
 /**
- * Round a number to a chosen precision.
- * @param {number} x - input value
- * @param {number} precision
- * @returns rounded number
- */
-export const roundNumber = (x: number, precision: number): number => {
-	const factor = 10 ** precision;
-
-	return Math.round(x * factor) / factor;
-};
-
-/**
  * Computes the half-value versed sine.
  *
  * @param {number} x - input value (in radians)
@@ -84,21 +72,7 @@ export const rad2deg = (x: number): number => x * CONST_180_DIV_PI;
  */
 export const abs = (x: number): number => (x < 0.0 ? -x : x);
 
-/**
- * Clamps a number within the inclusive range specified by the given minimum and maximum bounds.
- *
- * @param {number} x - The input value to be clamped.
- * @param {number} minIncl - The inclusive minimum boundary.
- * @param {number} maxIncl - The inclusive maximum boundary.
- * @returns {number} - The clamped value, confined within the range [minIncl, maxIncl].
- *
- * @example
- * var v = clamp( -5, -3, 3 );
- * // returns -3
- *
- * @example
- * var v = clamp( 4, -3, 3 );
- * // returns 3
- */
-export const clamp = (x: number, minIncl: number, maxIncl: number): number =>
-	x <= minIncl ? minIncl : x >= maxIncl ? maxIncl : x;
+export { clamp } from './clamp';
+export { round } from './round';
+export { sum } from './sum';
+export { mean } from './mean';
