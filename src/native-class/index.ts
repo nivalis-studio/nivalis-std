@@ -20,6 +20,6 @@
  * // returns '[object Object]'
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const nativeClass = (value: any) =>
+// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+export const nativeClass = (value: any): string =>
 	Object.prototype.toString.call(value);

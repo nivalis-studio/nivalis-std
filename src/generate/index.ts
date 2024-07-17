@@ -1,5 +1,5 @@
-const urlAlphabet =
-	'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
+const URL_ALPHABET =
+	'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict' as const;
 
 /**
  * Get a random id ex: 3n4j8a9j3n4j8a9j3n4j8a9j
@@ -7,7 +7,10 @@ const urlAlphabet =
  * @param alphabet The alphabet to use (default urlAlphabet)
  * @returns string value
  */
-export const generateId = (size = 21, alphabet = urlAlphabet) => {
+export const generateId = (
+	size = 21,
+	alphabet: string = URL_ALPHABET,
+): string => {
 	let code = '';
 	let idx = size;
 
@@ -23,7 +26,7 @@ export const generateId = (size = 21, alphabet = urlAlphabet) => {
  * @param len Number of char (default 6)
  * @returns string value
  */
-export const generateRandomChar = (len = 6) =>
+export const generateRandomChar = (len = 6): string =>
 	generateId(len, '123456789ACEFHJKLMNPRTUVWXY');
 
 /**
@@ -31,5 +34,5 @@ export const generateRandomChar = (len = 6) =>
  * @param len Number of digits (default 6)
  * @returns string value
  */
-export const generateRandomNumber = (len = 6) =>
+export const generateRandomNumber = (len = 6): string =>
 	(Math.floor(Math.random() * (9 * (10 ^ len))) + 1 * (10 ^ len)).toString();

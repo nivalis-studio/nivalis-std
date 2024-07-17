@@ -3,7 +3,7 @@
  * @param array
  * @returns
  */
-export const pick = <T>(array: readonly T[]) =>
+export const pick = <T>(array: readonly T[]): T =>
 	array[Math.floor(Math.random() * array.length)];
 
 /**

@@ -1,4 +1,4 @@
-export const getRegExpFlags = (regExp: RegExp) => {
+export const getRegExpFlags = (regExp: RegExp): string => {
 	const flags = [];
 
 	if (regExp.global) {

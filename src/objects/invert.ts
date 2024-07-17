@@ -18,9 +18,9 @@
  */
 export function invert<K extends PropertyKey, Val extends PropertyKey>(
 	obj: Record<K, Val>,
-	// biome-ignore lint/style/useNamingConvention: biome-ignore-reason
+	// biome-ignore lint/style/useNamingConvention: prefered naming convention
 ): { [key in Val]: K } {
-	// biome-ignore lint/style/useNamingConvention: biome-ignore-reason
+	// biome-ignore lint/style/useNamingConvention: prefered naming convention
 	const result = {} as { [key in Val]: K };
 
 	for (const key in obj) {

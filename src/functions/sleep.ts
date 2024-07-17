@@ -8,14 +8,16 @@ type SleepOptions = {
 export const sleep = async (
 	ms: number,
 	{ signal }: SleepOptions | undefined = {},
-) =>
-	new Promise((resolve, reject) => {
+): Promise<void> =>
+	new Promise((resolve, reject): void => {
 		if (signal?.aborted) {
 			reject(new Error('Aborted'));
 			return;
 		}
 
-		const timeout = setTimeout(resolve, ms);
+		const timeout = setTimeout(() => {
+			resolve();
+		}, ms);
 
 		const onAbort = () => {
 			clearTimeout(timeout);
