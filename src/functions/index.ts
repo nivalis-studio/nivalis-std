@@ -1,3 +1,4 @@
-export { debounce } from './debounce.ts';
-export { once } from './once.ts';
-export { throttle } from './throttle.ts';
+export { debounce } from './debounce';
+export { once } from './once';
+export { throttle } from './throttle';
+export { sleep } from './sleep';

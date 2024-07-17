@@ -3,7 +3,7 @@ type SleepOptions = {
 };
 
 /**
- * @deprecated use `import { sleep } from '@nivalis/std/functions';`
+ * Sleep for a given amount of time
  */
 export const sleep = async (
 	ms: number,

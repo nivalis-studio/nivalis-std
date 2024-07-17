@@ -1,6 +1,9 @@
+export { sleep } from './sleep';
+export { clone } from './clone';
+export { nonNullable } from './non-nullable';
+
 export * from './arrays';
 export * from './objects';
-export { clone } from './clone';
 export * from './constants';
 export * from './constructor-name';
 export * from './currency';
@@ -15,9 +18,7 @@ export * from './math';
 export * from './mutex';
 export * from './native-class';
 export * from './predicates';
-export { nonNullable } from './non-nullable';
 export * from './regexp';
 export * from './result';
 export * from './safe-json';
-export * from './sleep';
 export * from './strings';
