@@ -11,27 +11,19 @@ import type { Result } from './result';
  * @param ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
  */
 export const wrap =
-	<Fn extends (...args: readonly any[]) => Promise<any>>(
-		fn: Fn,
-		ErrorConstructor?: ErrorConstructor | ExceptionConstructor,
-	): ((
-		...args: Parameters<Fn>
-	) => Promise<Result<Awaited<ReturnType<Fn>>, Exception>>) =>
-	async (...args: Parameters<Fn>) => {
+	<Args extends any[], Ret>(
+		fn: (...args: Args) => Promise<Ret>,
+		ErrorConstructor?: ExceptionConstructor,
+	): ((...args: Args) => Promise<Result<Ret, Exception>>) =>
+	async (...args: Args) => {
 		try {
-			// eslint-disable-next-line ts/no-unsafe-assignment
 			const result = await fn(...args);
-
 			return ok(result);
 		} catch (error_: unknown) {
 			const error = error_ as Error | Exception;
 
 			if ('__exception' in error && error.__exception) {
-				error.meta = {
-					...error.meta,
-					args,
-				};
-
+				error.addMeta({ args });
 				return err(error);
 			}
 
@@ -57,25 +49,19 @@ export const wrap =
  * @param ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
  */
 export const wrapSync =
-	<Fn extends (...args: readonly any[]) => any>(
-		fn: Fn,
-		ErrorConstructor?: ErrorConstructor | ExceptionConstructor,
-	): ((...args: Parameters<Fn>) => Result<ReturnType<Fn>, Exception>) =>
-	(...args: Parameters<Fn>) => {
+	<Args extends any[], Ret>(
+		fn: (...args: Args) => Ret,
+		ErrorConstructor?: ExceptionConstructor,
+	): ((...args: Args) => Result<Ret, Exception>) =>
+	(...args: Args): Result<Ret, Exception> => {
 		try {
-			// eslint-disable-next-line ts/no-unsafe-assignment
 			const result = fn(...args);
-
 			return ok(result);
 		} catch (error_: unknown) {
 			const error = error_ as Error | Exception;
 
 			if ('__exception' in error && error.__exception) {
-				error.meta = {
-					...error.meta,
-					args,
-				};
-
+				error.addMeta({ args });
 				return err(error);
 			}
 
