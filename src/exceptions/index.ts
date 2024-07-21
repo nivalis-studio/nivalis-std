@@ -9,6 +9,7 @@ export {
 	BadRequestException,
 	UnauthorizedException,
 	ForbiddenException,
+	MethodNotAlloweddException,
 	NotFoundException,
 	ConflictException,
 	GoneException,

@@ -1,43 +1,137 @@
-import { createCustomException } from './create-custom';
+import { Exception, type ExceptionOptions } from './create-custom';
 
-export const BadRequestException = createCustomException({
-	defaultName: 'BadRequest',
-	defaultMessage: 'Bad request',
-	defaultStatus: 400,
-});
+export class BadRequestException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Bad request', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'BadRequest',
+			status: options?.status ?? 400,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const UnauthorizedException = createCustomException({
-	defaultName: 'Unauthorized',
-	defaultMessage: 'Unauthorized',
-	defaultStatus: 401,
-});
+export class UnauthorizedException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Unauthorized', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'Unauthorized',
+			status: options?.status ?? 401,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const ForbiddenException = createCustomException({
-	defaultName: 'Forbidden',
-	defaultMessage: 'Forbidden',
-	defaultStatus: 403,
-});
+export class ForbiddenException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Forbidden', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'Forbidden',
+			status: options?.status ?? 403,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const NotFoundException = createCustomException({
-	defaultName: 'NotFound',
-	defaultMessage: 'Not found',
-	defaultStatus: 404,
-});
+export class NotFoundException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Not Found', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'NotFound',
+			status: options?.status ?? 404,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const ConflictException = createCustomException({
-	defaultName: 'Conflict',
-	defaultMessage: 'Conflict',
-	defaultStatus: 409,
-});
+export class MethodNotAlloweddException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Method Not Allowed', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'MethodNotAllowed',
+			status: options?.status ?? 405,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const GoneException = createCustomException({
-	defaultName: 'Gone',
-	defaultMessage: 'Gone',
-	defaultStatus: 410,
-});
+export class ConflictException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Conflict', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'Conflict',
+			status: options?.status ?? 409,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
 
-export const UnknownException = createCustomException({
-	defaultName: 'Unknown',
-	defaultMessage: 'Internal server error',
-	defaultStatus: 500,
-});
+export class GoneException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Gone', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'Gone',
+			status: options?.status ?? 410,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
+
+export class UnknownException extends Exception {
+	/**
+	 * Constructor for the custom exception.
+	 *
+	 * @param message - The error message.
+	 * @param options - Optional object containing additional error details.
+	 */
+	constructor(message = 'Internal server error', options?: ExceptionOptions) {
+		super(message, {
+			...options,
+			name: options?.name || 'Unknown',
+			status: options?.status ?? 500,
+			logLevel: options?.logLevel ?? 'error',
+		});
+	}
+}
