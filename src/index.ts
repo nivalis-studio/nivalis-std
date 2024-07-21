@@ -1,11 +1,6 @@
-export { sleep } from './sleep';
-export { clone } from './clone';
-export { nonNullable } from './non-nullable';
-
 export * from './arrays';
 export * from './objects';
 export * from './constants';
-export * from './constructor-name';
 export * from './currency';
 export * from './dates';
 export * from './exceptions';
