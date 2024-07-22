@@ -1,5 +1,4 @@
 export * from './arrays';
-export * from './objects';
 export * from './constants';
 export * from './currency';
 export * from './dates';
@@ -11,7 +10,11 @@ export * from './http-status';
 export * from './is';
 export * from './math';
 export * from './mutex';
+export * from './objects';
+export * from './predicates';
 export * from './regexp';
 export * from './result';
 export * from './safe-json';
 export * from './strings';
+export * from './time';
+export * from './units';
