@@ -1,4 +1,4 @@
-import { nativeClass } from '../native-class';
+import { nativeClass } from '../objects/native-class';
 
 /**
  * Tests if a value is an `Error` object.

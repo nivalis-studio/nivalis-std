@@ -69,16 +69,6 @@
 				"default": "./dist/arrays/index.cjs"
 			}
 		},
-		"./clone": {
-			"import": {
-				"types": "./dist/clone/index.d.ts",
-				"default": "./dist/clone/index.mjs"
-			},
-			"require": {
-				"types": "./dist/clone/index.d.cts",
-				"default": "./dist/clone/index.cjs"
-			}
-		},
 		"./constants": {
 			"import": {
 				"types": "./dist/constants/index.d.ts",
@@ -87,16 +77,6 @@
 			"require": {
 				"types": "./dist/constants/index.d.cts",
 				"default": "./dist/constants/index.cjs"
-			}
-		},
-		"./constructor-name": {
-			"import": {
-				"types": "./dist/constructor-name/index.d.ts",
-				"default": "./dist/constructor-name/index.mjs"
-			},
-			"require": {
-				"types": "./dist/constructor-name/index.d.cts",
-				"default": "./dist/constructor-name/index.cjs"
 			}
 		},
 		"./currency": {
@@ -199,26 +179,6 @@
 				"default": "./dist/mutex/index.cjs"
 			}
 		},
-		"./native-class": {
-			"import": {
-				"types": "./dist/native-class/index.d.ts",
-				"default": "./dist/native-class/index.mjs"
-			},
-			"require": {
-				"types": "./dist/native-class/index.d.cts",
-				"default": "./dist/native-class/index.cjs"
-			}
-		},
-		"./non-nullable": {
-			"import": {
-				"types": "./dist/non-nullable/index.d.ts",
-				"default": "./dist/non-nullable/index.mjs"
-			},
-			"require": {
-				"types": "./dist/non-nullable/index.d.cts",
-				"default": "./dist/non-nullable/index.cjs"
-			}
-		},
 		"./regexp": {
 			"import": {
 				"types": "./dist/regexp/index.d.ts",
@@ -247,16 +207,6 @@
 			"require": {
 				"types": "./dist/safe-json/index.d.cts",
 				"default": "./dist/safe-json/index.cjs"
-			}
-		},
-		"./sleep": {
-			"import": {
-				"types": "./dist/sleep/index.d.ts",
-				"default": "./dist/sleep/index.mjs"
-			},
-			"require": {
-				"types": "./dist/sleep/index.d.cts",
-				"default": "./dist/sleep/index.cjs"
 			}
 		},
 		"./strings": {

@@ -11,8 +11,6 @@ export * from './http-status';
 export * from './is';
 export * from './math';
 export * from './mutex';
-export * from './native-class';
-export * from './predicates';
 export * from './regexp';
 export * from './result';
 export * from './safe-json';
