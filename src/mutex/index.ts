@@ -1,197 +1,205 @@
 import { createCustomException } from '../exceptions';
-import type { Exception } from '../exceptions';
 import { Future } from '../future';
 import { Err, Ok } from '../result';
+import type { Exception } from '../exceptions';
 import type { Result } from '../result';
 
 type Awaitable<T> = T | Promise<T>;
 
 export const LockedError = createCustomException({
-	defaultMessage: 'Locked',
-	defaultName: 'LockedError',
+  defaultMessage: 'Locked',
+  defaultName: 'LockedError',
 });
 
 /**
  * A releasable object
  */
 export class Lock<T> {
-	readonly inner: T;
-	readonly release: () => void;
+  readonly inner: T;
+  readonly release: () => void;
 
-	constructor(inner: T, release: () => void) {
-		this.inner = inner;
-		this.release = release;
-	}
+  constructor(inner: T, release: () => void) {
+    this.inner = inner;
+    this.release = release;
+  }
 
-	[Symbol.dispose]() {
-		this.release();
-	}
+  [Symbol.dispose]() {
+    this.release();
+  }
 
-	get() {
-		return this.inner;
-	}
+  get() {
+    return this.inner;
+  }
 }
 
 /**
  * A semaphore with some reference and some capacity
  */
 export class Semaphore<T, N extends number = number> {
-	#queue = new Array<Future<void>>();
-	#count = 0;
+  #queue = new Array<Future<void>>();
+  #count = 0;
 
-	readonly inner: T;
-	readonly capacity: N;
+  readonly inner: T;
+  readonly capacity: N;
 
-	constructor(inner: T, capacity: N) {
-		this.inner = inner;
-		this.capacity = capacity;
-	}
+  constructor(inner: T, capacity: N) {
+    this.inner = inner;
+    this.capacity = capacity;
+  }
 
-	static void<N extends number>(capacity: N) {
-		return new Semaphore<void, N>(undefined, capacity);
-	}
+  static void<N extends number>(capacity: N) {
+    return new Semaphore<void, N>(undefined, capacity);
+  }
 
-	get locked() {
-		return this.#count >= this.capacity;
-	}
+  get locked() {
+    return this.#count >= this.capacity;
+  }
 
-	get count() {
-		return this.#count;
-	}
+  get count() {
+    return this.#count;
+  }
 
-	/**
-	 * Lock or throw an error
-	 * @param callback
-	 */
-	lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-		if (this.#count >= this.capacity) {
-			throw new LockedError();
-		}
+  /**
+   * Lock or throw an error
+   * @param callback
+   */
+  lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    if (this.#count >= this.capacity) {
+      throw new LockedError();
+    }
 
-		this.#count += 1;
+    this.#count += 1;
 
-		const promise = Promise.resolve(callback(this.inner))
-			.finally(() => this.#queue.shift()?.resolve())
-			.finally(() => this.#count--);
+    const promise = Promise.resolve(callback(this.inner))
+      .finally(() => this.#queue.shift()?.resolve())
+      .finally(() => this.#count--);
 
-		return promise;
-	}
+    return promise;
+  }
 
-	/**
-	 * Lock or return an error
-	 * @param callback
-	 * @returns
-	 */
-	tryLock<R>(
-		callback: (inner: T) => Awaitable<R>,
-	): Result<Promise<R>, Exception> {
-		if (this.#count >= this.capacity) {
-			return new Err(new LockedError());
-		}
+  /**
+   * Lock or return an error
+   * @param callback
+   * @returns
+   */
+  tryLock<R>(
+    callback: (inner: T) => Awaitable<R>,
+  ): Result<Promise<R>, Exception> {
+    if (this.#count >= this.capacity) {
+      return new Err(new LockedError());
+    }
 
-		this.#count += 1;
+    this.#count += 1;
 
-		const promise = Promise.resolve(callback(this.inner))
-			.finally(() => this.#queue.shift()?.resolve())
-			.finally(() => this.#count--);
+    const promise = Promise.resolve(callback(this.inner))
+      .finally(() => this.#queue.shift()?.resolve())
+      .finally(() => this.#count--);
 
-		return new Ok(promise);
-	}
+    return new Ok(promise);
+  }
 
-	/**
-	 * Lock or wait
-	 * @param callback
-	 */
-	lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-		this.#count++;
+  /**
+   * Lock or wait
+   * @param callback
+   */
+  lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    this.#count++;
 
-		if (this.#count > this.capacity) {
-			const future = new Future<void>();
-			this.#queue.push(future);
+    if (this.#count > this.capacity) {
+      const future = new Future<void>();
 
-			const promise = future.promise
-				.then(() => callback(this.inner))
-				.finally(() => this.#queue.shift()?.resolve())
-				.finally(() => this.#count--);
+      this.#queue.push(future);
 
-			return promise;
-		}
+      const promise = future.promise
+        .then(async () => callback(this.inner))
+        .finally(() => this.#queue.shift()?.resolve())
+        .finally(() => this.#count--);
 
-		const promise = Promise.resolve(callback(this.inner))
-			.finally(() => this.#queue.shift()?.resolve())
-			.finally(() => this.#count--);
+      return promise;
+    }
 
-		return promise;
-	}
+    const promise = Promise.resolve(callback(this.inner))
+      .finally(() => this.#queue.shift()?.resolve())
+      .finally(() => this.#count--);
 
-	/**
-	 * Just wait
-	 * @returns
-	 */
-	wait(): Promise<void> {
-		const outer = new Future<void>();
-		this.lock(() => outer.resolve());
-		return outer.promise;
-	}
+    return promise;
+  }
 
-	/**
-	 * Lock and return a disposable object
-	 * @returns
-	 */
-	async acquire(): Promise<Lock<T>> {
-		const outer = new Future<void>();
-		const inner = new Future<void>();
+  /**
+   * Just wait
+   * @returns
+   */
+  wait(): Promise<void> {
+    const outer = new Future<void>();
 
-		this.lock(() => {
-			outer.resolve();
-			return inner.promise;
-		});
+    this.lock(() => {
+      outer.resolve();
+    });
 
-		await outer.promise;
+    return outer.promise;
+  }
 
-		return new Lock(this.inner, () => inner.resolve());
-	}
+  /**
+   * Lock and return a disposable object
+   * @returns
+   */
+  async acquire(): Promise<Lock<T>> {
+    const outer = new Future<void>();
+    const inner = new Future<void>();
+
+    this.lock(async () => {
+      outer.resolve();
+
+      return inner.promise;
+    });
+
+    await outer.promise;
+
+    return new Lock(this.inner, () => {
+      inner.resolve();
+    });
+  }
 }
 
 /**
  * A semaphore but with a capacity of 1
  */
 export class Mutex<T> {
-	#semaphore: Semaphore<T, 1>;
-	readonly inner: T;
+  #semaphore: Semaphore<T, 1>;
+  readonly inner: T;
 
-	constructor(inner: T) {
-		this.#semaphore = new Semaphore(inner, 1);
-		this.inner = inner;
-	}
+  constructor(inner: T) {
+    this.#semaphore = new Semaphore(inner, 1);
+    this.inner = inner;
+  }
 
-	static void() {
-		return new Mutex<void>(undefined);
-	}
+  static void() {
+    return new Mutex<void>(undefined);
+  }
 
-	get locked() {
-		return this.#semaphore.locked;
-	}
+  get locked() {
+    return this.#semaphore.locked;
+  }
 
-	lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-		return this.#semaphore.lockOrThrow(callback);
-	}
+  lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    return this.#semaphore.lockOrThrow(callback);
+  }
 
-	tryLock<R>(
-		callback: (inner: T) => Awaitable<R>,
-	): Result<Promise<R>, Exception> {
-		return this.#semaphore.tryLock(callback);
-	}
+  tryLock<R>(
+    callback: (inner: T) => Awaitable<R>,
+  ): Result<Promise<R>, Exception> {
+    return this.#semaphore.tryLock(callback);
+  }
 
-	lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-		return this.#semaphore.lock(callback);
-	}
+  lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    return this.#semaphore.lock(callback);
+  }
 
-	wait(): Promise<void> {
-		return this.#semaphore.wait();
-	}
+  wait(): Promise<void> {
+    return this.#semaphore.wait();
+  }
 
-	async acquire(): Promise<Lock<T>> {
-		return await this.#semaphore.acquire();
-	}
+  async acquire(): Promise<Lock<T>> {
+    return await this.#semaphore.acquire();
+  }
 }

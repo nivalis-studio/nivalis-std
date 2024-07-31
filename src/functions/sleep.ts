@@ -1,30 +1,34 @@
 type SleepOptions = {
-	signal?: AbortSignal;
+  signal?: AbortSignal;
 };
 
 /**
  * Sleep for a given amount of time
+ * @param ms
+ * @param root0
+ * @param root0.signal
  */
 export const sleep = async (
-	ms: number,
-	{ signal }: SleepOptions | undefined = {},
+  ms: number,
+  { signal }: SleepOptions | undefined = {},
 ): Promise<void> =>
-	new Promise((resolve, reject): void => {
-		if (signal?.aborted) {
-			reject(new Error('Aborted'));
-			return;
-		}
+  new Promise((resolve, reject): void => {
+    if (signal?.aborted) {
+      reject(new Error('Aborted'));
 
-		const timeout = setTimeout(() => {
-			resolve();
-		}, ms);
+      return;
+    }
 
-		const onAbort = () => {
-			clearTimeout(timeout);
-			reject(new Error('Aborted'));
-		};
+    const timeout = setTimeout(() => {
+      resolve();
+    }, ms);
 
-		if (signal) {
-			signal.addEventListener('abort', onAbort, { once: true });
-		}
-	});
+    const onAbort = () => {
+      clearTimeout(timeout);
+      reject(new Error('Aborted'));
+    };
+
+    if (signal) {
+      signal.addEventListener('abort', onAbort, { once: true });
+    }
+  });

@@ -2,11 +2,9 @@ import { union } from '../arrays/union';
 
 /**
  * Checks if two values are equal, including support for `Date`, `RegExp`, and deep object comparison.
- *
  * @param {unknown} a - The first value to compare.
  * @param {unknown} b - The second value to compare.
  * @returns {boolean} `true` if the values are equal, otherwise `false`.
- *
  * @example
  * isEqual(1, 1); // true
  * isEqual({ a: 1 }, { a: 1 }); // true
@@ -15,49 +13,49 @@ import { union } from '../arrays/union';
  * isEqual([1, 2, 3], [1, 2, 3]); // true
  */
 export function isEqual(a: unknown, b: unknown): boolean {
-	if (Object.is(a, b)) {
-		return true;
-	}
+  if (Object.is(a, b)) {
+    return true;
+  }
 
-	if (a instanceof Date && b instanceof Date) {
-		return a.getTime() === b.getTime();
-	}
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
 
-	if (a instanceof RegExp && b instanceof RegExp) {
-		return a.source === b.source && a.flags === b.flags;
-	}
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return a.source === b.source && a.flags === b.flags;
+  }
 
-	if (
-		typeof a !== 'object' ||
-		typeof b !== 'object' ||
-		a === null ||
-		b === null
-	) {
-		return false;
-	}
+  if (
+    typeof a !== 'object' ||
+    typeof b !== 'object' ||
+    a === null ||
+    b === null
+  ) {
+    return false;
+  }
 
-	const aKeys = Object.keys(a as object);
-	const bKeys = Object.keys(b as object);
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
 
-	if (aKeys.length !== bKeys.length) {
-		return false;
-	}
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
 
-	// check if all keys in both arrays match
-	if (union(aKeys, bKeys).length !== aKeys.length) {
-		return false;
-	}
+  // check if all keys in both arrays match
+  if (union(aKeys, bKeys).length !== aKeys.length) {
+    return false;
+  }
 
-	for (const propKey of aKeys) {
-		// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-		const aProp = (a as any)[propKey];
-		// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-		const bProp = (b as any)[propKey];
+  for (const propKey of aKeys) {
+    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+    const aProp = (a as any)[propKey];
+    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+    const bProp = (b as any)[propKey];
 
-		if (!isEqual(aProp, bProp)) {
-			return false;
-		}
-	}
+    if (!isEqual(aProp, bProp)) {
+      return false;
+    }
+  }
 
-	return true;
+  return true;
 }

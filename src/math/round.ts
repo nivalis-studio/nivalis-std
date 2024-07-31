@@ -5,7 +5,7 @@
  * @returns rounded number
  */
 export const round = (x: number, precision: number): number => {
-	const factor = 10 ** precision;
+  const factor = 10 ** precision;
 
-	return Math.round(x * factor) / factor;
+  return Math.round(x * factor) / factor;
 };

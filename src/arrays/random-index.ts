@@ -4,4 +4,4 @@
  * @returns
  */
 export const randomIndex = <T>(array: readonly T[]): number =>
-	Math.floor(Math.random() * array.length);
+  Math.floor(Math.random() * array.length);

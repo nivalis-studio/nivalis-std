@@ -1,5 +1,6 @@
 /**
  * Gets the index of the last element.
+ * @param array
  */
 export const lastIndex = <T>(array: T[]): number => array.length - 1;
 
@@ -11,10 +12,8 @@ export const lastIndex = <T>(array: T[]): number => array.length - 1;
  *
  * Unlike some implementations, this function is optimized for performance
  * by directly accessing the last index of the array.
- *
  * @param {T[]} arr - The array from which to get the last element.
  * @returns {T | undefined} The last element of the array, or `undefined` if the array is empty.
- *
  * @example
  * const arr = [1, 2, 3];
  * const lastElement = last(arr);
@@ -27,6 +26,7 @@ export const lastIndex = <T>(array: T[]): number => array.length - 1;
 
 export function last<T>(arr: readonly [...T[], T]): T;
 export function last<T>(arr: readonly T[]): T | undefined;
+
 export function last<T>(arr: readonly T[]): T | undefined {
-	return arr[arr.length - 1];
+  return arr.at(-1);
 }

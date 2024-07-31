@@ -1,5 +1,5 @@
 const URL_ALPHABET =
-	'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict' as const;
+  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
 /**
  * Get a random id ex: 3n4j8a9j3n4j8a9j3n4j8a9j
@@ -8,17 +8,17 @@ const URL_ALPHABET =
  * @returns string value
  */
 export const generateId = (
-	size = 21,
-	alphabet: string = URL_ALPHABET,
+  size = 21,
+  alphabet: string = URL_ALPHABET,
 ): string => {
-	let code = '';
-	let idx = size;
+  let code = '';
+  let idx = size;
 
-	while (idx--) {
-		code += alphabet[(Math.random() * alphabet.length) | 0];
-	}
+  while (idx--) {
+    code += alphabet[(Math.random() * alphabet.length) | 0];
+  }
 
-	return code;
+  return code;
 };
 
 /**
@@ -27,7 +27,7 @@ export const generateId = (
  * @returns string value
  */
 export const generateRandomChar = (len = 6): string =>
-	generateId(len, '123456789ACEFHJKLMNPRTUVWXY');
+  generateId(len, '123456789ACEFHJKLMNPRTUVWXY');
 
 /**
  * Get a random ex: 637283
@@ -35,4 +35,4 @@ export const generateRandomChar = (len = 6): string =>
  * @returns string value
  */
 export const generateRandomNumber = (len = 6): string =>
-	(Math.floor(Math.random() * (9 * (10 ^ len))) + 1 * (10 ^ len)).toString();
+  (Math.floor(Math.random() * (9 * (10 ^ len))) + 1 * (10 ^ len)).toString();
