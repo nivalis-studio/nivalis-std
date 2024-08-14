@@ -235,6 +235,9 @@
     "README.md",
     "dist"
   ],
+  "engines": {
+    "node": ">=16.6.0"
+  },
   "scripts": {
     "test": "exit 0",
     "build": "unbuild",
@@ -248,10 +251,10 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@nivalis/eslint-config": "3.0.0",
+    "@nivalis/eslint-config": "3.4.0",
     "@nivalis/prettier-config": "3.3.3",
     "@types/bun": "latest",
-    "eslint": "9.7.0",
+    "eslint": "^9.9.0",
     "lint-staged": "15.2.7",
     "prettier": "3.3.3",
     "simple-git-hooks": "2.11.1",

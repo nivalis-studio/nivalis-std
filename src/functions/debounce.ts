@@ -35,13 +35,13 @@ type DebounceOptions = {
  * // Will cancel the debounced function call
  * controller.abort();
  */
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-export function debounce<F extends (...args: any[]) => void>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const debounce = <F extends (...args: any[]) => void>(
   func: F,
   debounceMs: number,
   { signal }: DebounceOptions = {},
-): F & { cancel: () => void } {
-  let timeoutId: number | null = null;
+): F & { cancel: () => void } => {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const debounced = ((...args: Parameters<F>) => {
     if (timeoutId !== null) {
@@ -55,7 +55,7 @@ export function debounce<F extends (...args: any[]) => void>(
     timeoutId = setTimeout(() => {
       func(...args);
       timeoutId = null;
-    }, debounceMs) as unknown as number;
+    }, debounceMs);
   }) as F & { cancel: () => void };
 
   const onAbort = () => {
@@ -72,4 +72,4 @@ export function debounce<F extends (...args: any[]) => void>(
   signal?.addEventListener('abort', onAbort, { once: true });
 
   return debounced;
-}
+};

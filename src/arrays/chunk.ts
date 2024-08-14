@@ -16,7 +16,7 @@
  * chunk(['a', 'b', 'c', 'd', 'e', 'f', 'g'], 3);
  * // Returns: [['a', 'b', 'c'], ['d', 'e', 'f'], ['g']]
  */
-export function chunk<T>(arr: readonly T[], size: number): T[][] {
+export const chunk = <T>(arr: readonly T[], size: number): T[][] => {
   const chunkSize = Math.max(Math.floor(size), 0);
 
   if (chunkSize === 0) {
@@ -24,7 +24,7 @@ export function chunk<T>(arr: readonly T[], size: number): T[][] {
   }
 
   const chunkLength = Math.ceil(arr.length / chunkSize);
-  const result: T[][] = new Array(chunkLength);
+  const result: T[][] = Array.from({ length: chunkLength });
 
   for (let index = 0; index < chunkLength; index++) {
     const start = index * chunkSize;
@@ -34,4 +34,4 @@ export function chunk<T>(arr: readonly T[], size: number): T[][] {
   }
 
   return result;
-}
+};

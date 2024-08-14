@@ -11,8 +11,8 @@ type SleepOptions = {
 export const sleep = async (
   ms: number,
   { signal }: SleepOptions | undefined = {},
-): Promise<void> =>
-  new Promise((resolve, reject): void => {
+): Promise<void> => {
+  await new Promise((resolve, reject): void => {
     if (signal?.aborted) {
       reject(new Error('Aborted'));
 
@@ -32,3 +32,4 @@ export const sleep = async (
       signal.addEventListener('abort', onAbort, { once: true });
     }
   });
+};

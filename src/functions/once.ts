@@ -13,7 +13,7 @@
  * initialize(); // Logs: 'Initialized!' and returns true
  * initialize(); // Returns true without logging
  */
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function once<F extends () => any>(func: F): F {
   let called = false;
   let cache: ReturnType<F> | undefined;

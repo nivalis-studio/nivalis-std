@@ -154,12 +154,12 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     );
   }
 
-  match<A>(ok: (t: T) => A, _err: (e: E) => A): Promise<A> {
-    return this._promise.then(res => res.match(ok, _err));
+  async match<A>(ok: (t: T) => A, _err: (e: E) => A): Promise<A> {
+    return await this._promise.then(res => res.match(ok, _err));
   }
 
-  unwrapOr<A>(t: A): Promise<T | A> {
-    return this._promise.then(res => res.unwrapOr(t));
+  async unwrapOr<A>(t: A): Promise<T | A> {
+    return await this._promise.then(res => res.unwrapOr(t));
   }
 
   /**

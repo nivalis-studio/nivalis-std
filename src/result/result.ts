@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { ResultAsync, errAsync } from './result-async';
 import {
   combineResultList,
@@ -15,8 +16,11 @@ export namespace Result {
   /**
    * Wraps a function with a try catch, creating a new function with the same
    * arguments but returning `Ok` if successful, `Err` if the function throws
-   * @param fn function to wrap with ok on success or err on failure
-   * @param errorFn when an error is thrown, this will wrap the error result if provided
+   * @template Fn - The type of function.
+   * @template E - The type of error.
+   * @param {Fn} fn function to wrap with ok on success or err on failure
+   * @param {(e: unknown) => E} errorFn when an error is thrown, this will wrap the error result if provided
+   * @returns {(...args: Parameters<Fn>) => Result<ReturnType<Fn>, E>} A new function that wraps the original function with try catch.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export function fromThrowable<Fn extends (...args: readonly any[]) => any, E>(

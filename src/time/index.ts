@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+
 /**
- * Returns, e.g:
- * 125 ms
- * 1.125 sec
- * 11 sec
- * 1m12s
- * 59m2s
- * 1h3m12s
- * @param ms
+ * @param {number} ms - The number of milliseconds to convert to a string.
+ * @returns {string} A string representation of the input number of milliseconds.
+ * @example
+ * parseMs(125); // "125 ms"
+ * parseMs(1100); // "1.1 sec"
+ * parseMs(60000); // "1 min"
+ * parseMs(3600000); // "1 hour"
+ * parseMs(86400000); // "1 day"
+ * parseMs(604800000); // "1 week"
  */
 export const parseMs = (ms: number): string => {
   // <1 sec
@@ -50,8 +53,9 @@ export const parseMs = (ms: number): string => {
 
 /**
  * Returns time passed since `from` until `until` (default to Date.now())
- * @param from
- * @param until
+ * @param {number} from - The starting time.
+ * @param {number} until - The ending time. Defaults to the current time.
+ * @returns {string} A string representation of the time passed since `from` until `until`.
  */
 export const since = (from: number, until = Date.now()): string =>
   parseMs(until - from);
@@ -62,13 +66,15 @@ export const since = (from: number, until = Date.now()): string =>
  *
  * using _ = blockTimer('named')
  * // will log "named took 1.234 sec" on dispose
- * @param name
+ * @param {string} name - The name of the block to log.
+ * @returns {Disposable} A disposable object that logs the time taken when disposed.
  */
 export const blockTimer = (name?: string): Disposable => {
   const started = Date.now();
 
   return {
     [Symbol.dispose](): void {
+      // eslint-disable-next-line no-console
       console.debug(`${name ? `${name} ` : ''}took ${since(started)}`);
     },
   };

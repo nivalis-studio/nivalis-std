@@ -1,24 +1,29 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 /**
  * convert bytes to kilobytes
- * @param bytes
+ * @param {number} bytes - input value
+ * @returns {number} converted value
  */
 export const toKb = (bytes: number): number => Math.round(bytes / 1024);
 
 /**
  * convert bytes to megabytes
- * @param bytes
+ * @param {number} bytes - input value
+ * @returns {number} converted value
  */
 export const toMb = (bytes: number): number => Math.round(bytes / 1024 ** 2);
 
 /**
  * convert bytes to gigabytes
- * @param bytes
+ * @param {number} bytes - input value
+ * @returns {number} converted value
  */
 export const toGb = (bytes: number): number => Math.round(bytes / 1024 ** 3);
 
 /**
  * convert bytes to Human bytes string
- * @param bytes
+ * @param {number} bytes - input value
+ * @returns {number} converted value
  */
 export const toHumanBytes = (bytes = 0): string => {
   if (bytes < 1024) {
@@ -47,28 +52,29 @@ export const toHumanBytes = (bytes = 0): string => {
 /**
  * Helpful to print big numbers, as it adds `K` (kilo), `M` (mega), etc to make
  * them more readable.
- * @param c
+ * @param {number} val - input value
+ * @returns {string} converted value
  */
-export const toHumanCount = (c = 0): string => {
-  if (c < 10 ** 4) {
-    return String(c);
+export const toHumanCount = (val = 0): string => {
+  if (val < 10 ** 4) {
+    return String(val);
   }
 
-  if (c < 10 ** 6) {
-    return `${(c / 10 ** 3).toPrecision(3)} K`;
+  if (val < 10 ** 6) {
+    return `${(val / 10 ** 3).toPrecision(3)} K`;
   }
 
-  if (c < 10 ** 9) {
-    return `${(c / 10 ** 6).toPrecision(3)} M`; // million
+  if (val < 10 ** 9) {
+    return `${(val / 10 ** 6).toPrecision(3)} M`; // million
   }
 
-  if (c < 10 ** 12) {
-    return `${(c / 10 ** 9).toPrecision(3)} B`; // billion
+  if (val < 10 ** 12) {
+    return `${(val / 10 ** 9).toPrecision(3)} B`; // billion
   }
 
-  if (c < 10 ** 15) {
-    return `${(c / 10 ** 12).toPrecision(3)} T`; // trillion
+  if (val < 10 ** 15) {
+    return `${(val / 10 ** 12).toPrecision(3)} T`; // trillion
   }
 
-  return `${Math.round(c / 10 ** 12)} T`;
+  return `${Math.round(val / 10 ** 12)} T`;
 };

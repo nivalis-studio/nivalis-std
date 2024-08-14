@@ -1,7 +1,8 @@
 /**
  * Get a random value with `Math.random()`
- * @param array
- * @returns
+ * @template T
+ * @param {T[]} array - The array from which to pick a random element.
+ * @returns {T} A random element from the array.
  */
 export const pick = <T>(array: readonly T[]): T =>
   array[Math.floor(Math.random() * array.length)];
@@ -12,15 +13,17 @@ export const pick = <T>(array: readonly T[]): T =>
  * This function takes an array and a number, and returns an array containing the sampled elements using Floyd's algorithm.
  *
  * {@link https://www.nowherenearithaca.com/2013/05/robert-floyds-tiny-and-beautiful.html Floyd's algoritm}
- * @param array
- * @param size
+ * @template T
+ * @param {T[]} array - The array from which to sample elements.
+ * @param {number} size - The number of elements to sample.
+ * @returns {T[]} An array containing the sampled elements.
  */
-export function sample<T>(array: readonly T[], size: number): T[] {
+export const sample = <T>(array: readonly T[], size: number): T[] => {
   if (size > array.length) {
     return [...array];
   }
 
-  const result = new Array(size);
+  const result: T[] = Array.from({ length: size });
   const selected = new Set();
 
   for (
@@ -40,4 +43,4 @@ export function sample<T>(array: readonly T[], size: number): T[] {
   }
 
   return result;
-}
+};

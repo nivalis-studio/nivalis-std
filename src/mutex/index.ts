@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import { createCustomException } from '../exceptions';
 import { Future } from '../future';
 import { Err, Ok } from '../result';
@@ -15,10 +16,10 @@ export const LockedError = createCustomException({
  * A releasable object
  */
 export class Lock<T> {
-  readonly inner: T;
-  readonly release: () => void;
-
-  constructor(inner: T, release: () => void) {
+  constructor(
+    readonly inner: T,
+    readonly release: () => void,
+  ) {
     this.inner = inner;
     this.release = release;
   }
@@ -39,16 +40,12 @@ export class Semaphore<T, N extends number = number> {
   #queue = new Array<Future<void>>();
   #count = 0;
 
-  readonly inner: T;
-  readonly capacity: N;
-
-  constructor(inner: T, capacity: N) {
+  constructor(
+    readonly inner: T,
+    readonly capacity: N,
+  ) {
     this.inner = inner;
     this.capacity = capacity;
-  }
-
-  static void<N extends number>(capacity: N) {
-    return new Semaphore<void, N>(undefined, capacity);
   }
 
   get locked() {
@@ -59,11 +56,18 @@ export class Semaphore<T, N extends number = number> {
     return this.#count;
   }
 
+  static void<N extends number>(capacity: N) {
+    return new Semaphore<void, N>(undefined, capacity);
+  }
+
   /**
    * Lock or throw an error
-   * @param callback
+   * @template R - The type of the return value
+   * @template T - The type of the inner value
+   * @param {(inner: T) => Awaitable<R>} callback - The callback to execute
+   * @returns {Promise<R>} A promise that resolves with the result of the callback
    */
-  lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+  async lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
     if (this.#count >= this.capacity) {
       throw new LockedError();
     }
@@ -74,13 +78,15 @@ export class Semaphore<T, N extends number = number> {
       .finally(() => this.#queue.shift()?.resolve())
       .finally(() => this.#count--);
 
-    return promise;
+    return await promise;
   }
 
   /**
    * Lock or return an error
-   * @param callback
-   * @returns
+   * @template R - The type of the return value
+   * @template T - The type of the inner value
+   * @param {(inner: T) => Awaitable<R>} callback - The callback to execute
+   * @returns {Result<Promise<R>, Exception>} A result containing a promise or an error
    */
   tryLock<R>(
     callback: (inner: T) => Awaitable<R>,
@@ -100,9 +106,12 @@ export class Semaphore<T, N extends number = number> {
 
   /**
    * Lock or wait
-   * @param callback
+   * @template R - The type of the return value
+   * @template T - The type of the inner value
+   * @param {(inner: T) => Awaitable<R>} callback - The callback to execute
+   * @returns {Promise<R>} A promise that resolves with the result of the callback
    */
-  lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+  async lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
     this.#count++;
 
     if (this.#count > this.capacity) {
@@ -111,46 +120,48 @@ export class Semaphore<T, N extends number = number> {
       this.#queue.push(future);
 
       const promise = future.promise
-        .then(async () => callback(this.inner))
+        // eslint-disable-next-line promise/no-callback-in-promise
+        .then(async () => await callback(this.inner))
         .finally(() => this.#queue.shift()?.resolve())
         .finally(() => this.#count--);
 
-      return promise;
+      return await promise;
     }
 
     const promise = Promise.resolve(callback(this.inner))
       .finally(() => this.#queue.shift()?.resolve())
       .finally(() => this.#count--);
 
-    return promise;
+    return await promise;
   }
 
   /**
    * Just wait
-   * @returns
+   * @returns {Promise<void>} A promise that resolves when the lock is released
    */
-  wait(): Promise<void> {
+  async wait(): Promise<void> {
     const outer = new Future<void>();
 
-    this.lock(() => {
+    await this.lock(() => {
       outer.resolve();
     });
 
-    return outer.promise;
+    await outer.promise;
   }
 
   /**
    * Lock and return a disposable object
-   * @returns
+   * @template T - The type of the return value
+   * @returns {Promise<Lock<T>>} A disposable object
    */
   async acquire(): Promise<Lock<T>> {
     const outer = new Future<void>();
     const inner = new Future<void>();
 
-    this.lock(async () => {
+    await this.lock(async () => {
       outer.resolve();
 
-      return inner.promise;
+      await inner.promise;
     });
 
     await outer.promise;
@@ -166,23 +177,22 @@ export class Semaphore<T, N extends number = number> {
  */
 export class Mutex<T> {
   #semaphore: Semaphore<T, 1>;
-  readonly inner: T;
 
-  constructor(inner: T) {
+  constructor(readonly inner: T) {
     this.#semaphore = new Semaphore(inner, 1);
     this.inner = inner;
-  }
-
-  static void() {
-    return new Mutex<void>(undefined);
   }
 
   get locked() {
     return this.#semaphore.locked;
   }
 
-  lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-    return this.#semaphore.lockOrThrow(callback);
+  static void() {
+    return new Mutex<void>(undefined);
+  }
+
+  async lockOrThrow<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    return await this.#semaphore.lockOrThrow(callback);
   }
 
   tryLock<R>(
@@ -191,12 +201,12 @@ export class Mutex<T> {
     return this.#semaphore.tryLock(callback);
   }
 
-  lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
-    return this.#semaphore.lock(callback);
+  async lock<R>(callback: (inner: T) => Awaitable<R>): Promise<R> {
+    return await this.#semaphore.lock(callback);
   }
 
-  wait(): Promise<void> {
-    return this.#semaphore.wait();
+  async wait(): Promise<void> {
+    await this.#semaphore.wait();
   }
 
   async acquire(): Promise<Lock<T>> {

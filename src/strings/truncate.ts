@@ -14,6 +14,8 @@ export const truncate = (
   return str.slice(0, max - end.length) + end;
 };
 
+const maxChars = 2;
+
 export const truncateMiddle = (
   str: string,
   max?: number,
@@ -28,8 +30,8 @@ export const truncateMiddle = (
   }
 
   return (
-    str.slice(0, Math.round((max - end.length) / 2)) +
+    str.slice(0, Math.round((max - end.length) / maxChars)) +
     end +
-    str.slice(str.length - Math.floor((max - end.length) / 2))
+    str.slice(str.length - Math.floor((max - end.length) / maxChars))
   );
 };

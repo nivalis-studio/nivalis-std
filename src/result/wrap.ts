@@ -4,10 +4,13 @@ import type { Exception, ExceptionConstructor } from '../exceptions';
 import type { Result } from './result';
 
 /**
- * Wraps an `async` function with a try catch, creating a new function with the same
- * arguments but returning `Ok` if successful, `Err` if the function throws
- * @param fn function to wrap with ok on success or err on failure
- * @param ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
+ * Wraps an `async` function with a try catch, creating a new function with the
+ * same arguments but returning `Ok` if successful, `Err` if the function throws
+ * @template Args
+ * @template Ret
+ * @param {((...args: Args) => Promise<Ret>)} fn function to wrap with ok on success or err on failure
+ * @param {ExceptionConstructor} ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
+ * @returns {Promise<Result<Ret, Exception>>} The result
  */
 export const wrap =
   <Args extends any[], Ret>(
@@ -45,8 +48,11 @@ export const wrap =
 /**
  * Wraps a function with a try catch, creating a new function with the same
  * arguments but returning `Ok` if successful, `Err` if the function throws
- * @param fn function to wrap with ok on success or err on failure
- * @param ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
+ * @template Args
+ * @template Ret
+ * @param {((...args: Args) => Ret)} fn function to wrap with ok on success or err on failure
+ * @param {ExceptionConstructor} ErrorConstructor optional `ErrorConstructor`, defaults to `Error`
+ * @returns {Result<Ret, Exception>} The result
  */
 export const wrapSync =
   <Args extends any[], Ret>(

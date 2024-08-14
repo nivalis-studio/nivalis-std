@@ -11,8 +11,8 @@ import {
 export const SafeJson = {
   /**
    * Checks if a value can be safely stringified to JSON.
-   * @param value - The value to check.
-   * @returns True if the value can be stringified, false otherwise.
+   * @param {unknown} value - The value to check.
+   * @returns {boolean} True if the value can be stringified, false otherwise.
    */
   isStringifyable: (value: unknown): boolean => {
     try {
@@ -26,8 +26,8 @@ export const SafeJson = {
 
   /**
    * Checks if a value can be safely parsed from JSON.
-   * @param value - The value to check.
-   * @returns True if the value can be parsed, false otherwise.
+   * @param {unknown} value - The value to check.
+   * @returns {boolean} True if the value can be parsed, false otherwise.
    */
   isParsable: (value: unknown): boolean => {
     if (!value || typeof value !== 'string' || !RE_DETECT_JSON.test(value)) {
@@ -45,11 +45,12 @@ export const SafeJson = {
 
   /**
    * Parses a JSON string with a fallback value.
-   * @param value - The value to parse.
-   * @param fallback - The fallback value if parsing fails.
-   * @returns The parsed value or the fallback.
+   * @template T
+   * @param {any} value - The value to parse.
+   * @param {T} fallback - The fallback value if parsing fails.
+   * @returns {T} The parsed value or the fallback.
    */
-  // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseOr: <T>(value: any, fallback: T): T => {
     if (typeof value !== 'string') {
       return value as T;
@@ -68,6 +69,7 @@ export const SafeJson = {
     if (_value.length <= 9) {
       const _lval = _value.toLowerCase();
 
+      // eslint-disable-next-line default-case
       switch (_lval) {
         case 'true': {
           return true as T;
@@ -112,7 +114,7 @@ export const SafeJson = {
       ) {
         console.error(new Error('[safeJson] Possible prototype pollution'));
 
-        // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
         return JSON.parse(value, (key: string, value: any): any => {
           if (
             key === '__proto__' ||

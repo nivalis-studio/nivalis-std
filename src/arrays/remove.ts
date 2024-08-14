@@ -1,7 +1,9 @@
 /**
  * Remove an item of an array.
- * @param array
- * @param element
+ * @template T
+ * @param {T[]} array - The array from which to remove an element.
+ * @param {T} element - The element to remove from the array.
+ * @returns {T[]} A new array with the element removed.
  */
 export const remove = <T>(array: T[], element: T): T[] => {
   const array_ = [...array];

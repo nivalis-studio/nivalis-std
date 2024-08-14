@@ -8,7 +8,7 @@ export default nivalis(
   },
   {
     rules: {
-      '@typescript-eslint/no-magic-numbers': 'off',
+      'func-style': 'off',
     },
   },
 );

@@ -1,5 +1,6 @@
 import { generateId } from '../generate';
 import { SafeJson } from '../safe-json';
+import { httpStatus } from '../http-status';
 import type { HttpStatusError } from '../http-status';
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
@@ -40,6 +41,7 @@ type Mutable<TargetType> = {
 };
 
 export class Exception extends Error {
+  // eslint-disable-next-line @typescript-eslint/class-literal-property-style
   readonly __exception = true;
   /* Unique identifier for the error. */
   readonly traceId: string;
@@ -56,14 +58,16 @@ export class Exception extends Error {
 
   /**
    * Constructor for the custom exception.
-   * @param message - The error message.
-   * @param options - Optional object containing additional error details.
+   * @param {string} message - The error message.
+   * @param {ExceptionOptions} options - Optional object containing additional details.
    */
+  // eslint-disable-next-line complexity
   constructor(message: string, options?: ExceptionOptions) {
     super(message);
-    this.status = options?.status ?? 500;
+    this.status = options?.status ?? httpStatus.internalServerError;
     this.cause = options?.cause ?? undefined;
     this.name = options?.name || new.target.name;
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.traceId = options?.traceId || generateId(8);
     this.readableMessage = options?.readableMessage ?? undefined;
     this.timestamp = options?.timestamp ?? Date.now();
@@ -81,40 +85,15 @@ export class Exception extends Error {
     } else if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);
     } else {
-      this.stack = new Error().stack;
+      this.stack = new Error(message).stack;
     }
 
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
-  toJson() {
-    return {
-      __exception: this.__exception,
-      message: this.message,
-      name: this.name,
-      status: this.status,
-      timestamp: this.timestamp,
-      traceId: this.traceId,
-      meta: SafeJson.isStringifyable(this.meta) ? this.meta : undefined,
-      cause: SafeJson.isStringifyable(this.cause) ? this.cause : undefined,
-      readableMessage: this.readableMessage,
-      stack: this.stack,
-      logLevel: this.logLevel,
-    };
-  }
-
-  toString(): string {
-    return JSON.stringify(this.toJson());
-  }
-
+  // eslint-disable-next-line class-methods-use-this
   get [Symbol.toStringTag](): string {
     return 'Exception';
-  }
-
-  addMeta(meta: { [key: string]: unknown }): this {
-    (this as Mutable<Exception>).meta = Object.assign({}, this.meta, meta);
-
-    return this;
   }
 
   static from(
@@ -152,6 +131,32 @@ export class Exception extends Error {
       ...options,
     });
   }
+
+  toJson() {
+    return {
+      __exception: this.__exception,
+      message: this.message,
+      name: this.name,
+      status: this.status,
+      timestamp: this.timestamp,
+      traceId: this.traceId,
+      meta: SafeJson.isStringifyable(this.meta) ? this.meta : undefined,
+      cause: SafeJson.isStringifyable(this.cause) ? this.cause : undefined,
+      readableMessage: this.readableMessage,
+      stack: this.stack,
+      logLevel: this.logLevel,
+    };
+  }
+
+  toString(): string {
+    return JSON.stringify(this.toJson());
+  }
+
+  addMeta(meta: { [key: string]: unknown }): this {
+    (this as Mutable<Exception>).meta = Object.assign({}, this.meta, meta);
+
+    return this;
+  }
 }
 
 export type ExceptionConstructor = {
@@ -159,14 +164,21 @@ export type ExceptionConstructor = {
   new (message?: string, options?: ExceptionOptions): Exception;
 };
 
+export type CustomeExceptionProperties = {
+  defaultMessage: string;
+  defaultName?: string;
+  defaultStatus?: HttpStatusError;
+  defaultLogLevel?: LogLevel;
+};
+
 /**
  * Creates a custom exception class.
- * @param properties - Default properties including message and HTTP status.
- * @param properties.defaultMessage
- * @param properties.defaultName
- * @param properties.defaultStatus
- * @param properties.defaultLogLevel
- * @returns The Exception class with provided default properties.
+ * @param {CustomeExceptionProperties} properties - Default properties including message and HTTP status.
+ * @param {string} properties.defaultMessage - The default error message.
+ * @param {string} properties.defaultName - The default error name.
+ * @param {HttpStatusError} properties.defaultStatus - The default HTTP status code.
+ * @param {LogLevel} properties.defaultLogLevel - The default log level.
+ * @returns {ExceptionConstructor} The Exception class with provided default properties.
  */
 export const createCustomException = (properties: {
   defaultMessage: string;
@@ -177,8 +189,8 @@ export const createCustomException = (properties: {
   return class extends Exception {
     /**
      * Constructor for the custom exception.
-     * @param message - The error message.
-     * @param options - Optional object containing additional error details.
+     * @param {string} message - The error message.
+     * @param {ExceptionOptions} options - Optional object containing additional details.
      */
     constructor(
       message: string = properties.defaultMessage,

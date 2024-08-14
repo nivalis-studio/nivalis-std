@@ -23,22 +23,22 @@ export class Future<T> implements Promise<T> {
   }
 
   // biome-ignore lint/suspicious/noThenProperty: on purpose to allow chaining
-  then<Result1 = T, Result2 = never>(
+  async then<Result1 = T, Result2 = never>(
     onfulfilled?: ((value: T) => Result1 | PromiseLike<Result1>) | null,
     // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
     onrejected?: ((reason: any) => Result2 | PromiseLike<Result2>) | null,
   ): Promise<Result1 | Result2> {
-    return this.promise.then(onfulfilled, onrejected);
+    return await this.promise.then(onfulfilled, onrejected);
   }
 
-  catch<Result = never>(
+  async catch<Result = never>(
     // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
     onrejected?: ((reason: any) => Result | PromiseLike<Result>) | null,
   ): Promise<T | Result> {
-    return this.promise.catch(onrejected);
+    return await this.promise.catch(onrejected);
   }
 
-  finally(onfinally?: (() => void) | null): Promise<T> {
-    return this.promise.finally(onfinally);
+  async finally(onfinally?: (() => void) | null): Promise<T> {
+    return await this.promise.finally(onfinally);
   }
 }
