@@ -1,5 +1,6 @@
 export { debounce } from './debounce';
-export { once } from './once';
-export { throttle } from './throttle';
-export { sleep } from './sleep';
+export { memo } from './memo';
 export { noop } from './noop';
+export { once } from './once';
+export { sleep } from './sleep';
+export { throttle } from './throttle';
