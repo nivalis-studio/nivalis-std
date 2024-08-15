@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { ResultAsync, errAsync } from './result-async';
 import {
   combineResultList,
@@ -10,6 +11,10 @@ import type {
   InferErrTypes,
   InferOkTypes,
 } from './result-utils';
+
+export const ok = <T, E = never>(value: T): Ok<T, E> => new Ok(value);
+
+export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Result {
@@ -29,6 +34,7 @@ export namespace Result {
   ): (...args: Parameters<Fn>) => Result<ReturnType<Fn>, E> {
     return (...args) => {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const result = fn(...args);
 
         return ok(result);
@@ -76,11 +82,8 @@ export namespace Result {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type Result<T, E> = Ok<T, E> | Err<T, E>;
-
-export const ok = <T, E = never>(value: T): Ok<T, E> => new Ok(value);
-
-export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
 
 /**
  * Evaluates the given generator to a Result returned or an Err yielded from it,
@@ -89,9 +92,11 @@ export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
  * This function, in combination with `Result.safeUnwrap()`, is intended to emulate
  * Rust's ? operator.
  * See `/tests/safeTry.test.ts` for examples.
- * @param body - What is evaluated. In body, `yield* result.safeUnwrap()` works as
+ * @template T - The type of the result
+ * @template E - The type of the error
+ * @param {() => Generator<Err<never, E>, Result<T, E>>} body - What is evaluated. In body, `yield* result.safeUnwrap()` works as
  * Rust's `result?` expression.
- * @returns The first occurence of either an yielded Err or a returned Result.
+ * @returns {Result<T, E>} The first occurence of either an yielded Err or a returned Result.
  */
 export function safeTry<T, E>(
   body: () => Generator<Err<never, E>, Result<T, E>>,
@@ -103,9 +108,10 @@ export function safeTry<T, E>(
  * This function, in combination with `Result.safeUnwrap()`, is intended to emulate
  * Rust's ? operator.
  * See `/tests/safeTry.test.ts` for examples.
- * @param body - What is evaluated. In body, `yield* result.safeUnwrap()` and
- * `yield* resultAsync.safeUnwrap()` work as Rust's `result?` expression.
- * @returns The first occurence of either an yielded Err or a returned Result.
+ * @template T - The type of the result
+ * @template E - The type of the error
+ * @param {() => AsyncGenerator<Err<never, E>, Result<T, E>>} body - What is evaluated. In body, `yield* result.safeUnwrap()` and `yield* resultAsync.safeUnwrap()` work as Rust's `result?` expression.
+ * @returns {Promise<Result<T, E>>} The first occurence of either an yielded Err or a returned Result.
  */
 // NOTE:
 // Since body is potentially throwable because `await` can be used in it,
@@ -119,16 +125,16 @@ export function safeTry<T, E>(
     | (() => Generator<Err<never, E>, Result<T, E>>)
     | (() => AsyncGenerator<Err<never, E>, Result<T, E>>),
 ): Result<T, E> | Promise<Result<T, E>> {
-  const n = body().next();
+  const next = body().next();
 
-  if (n instanceof Promise) {
-    return n.then(r => r.value);
+  if (next instanceof Promise) {
+    return next.then(result => result.value);
   }
 
-  return n.value;
+  return next.value;
 }
 
-type IResult<T, E> = {
+interface IResult<T, E> {
   /**
    * Used to check if a `Result` is an `OK`
    * @returns `true` if the result is an `OK` variant of Result
@@ -242,7 +248,7 @@ type IResult<T, E> = {
    * Used to check if a `Result` has been handled properly.
    */
   [Symbol.dispose]: () => void;
-};
+}
 
 export class Ok<T, E> implements IResult<T, E> {
   private handled = false;
@@ -260,10 +266,10 @@ export class Ok<T, E> implements IResult<T, E> {
     return !this.isOk();
   }
 
-  map<A>(f: (t: T) => A): Result<A, E> {
+  map<A>(callback: (t: T) => A): Result<A, E> {
     this.handled = true;
 
-    return ok(f(this.value));
+    return ok(callback(this.value));
   }
 
   [Symbol.dispose](): void {
@@ -279,56 +285,59 @@ export class Ok<T, E> implements IResult<T, E> {
   }
 
   andThen<R extends Result<unknown, unknown>>(
-    f: (t: T) => R,
+    callback: (t: T) => R,
   ): Result<InferOkTypes<R>, InferErrTypes<R> | E>;
-  andThen<U, F>(f: (t: T) => Result<U, F>): Result<U, E | F>;
+  andThen<U, F>(callback: (t: T) => Result<U, F>): Result<U, E | F>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  andThen(f: any): any {
+  andThen(callback: any): any {
     this.handled = true;
 
-    return f(this.value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    return callback(this.value);
   }
 
   orElse<R extends Result<unknown, unknown>>(
-    _f: (e: E) => R,
+    _callback: (e: E) => R,
   ): Result<T, InferErrTypes<R>>;
-  orElse<A>(_f: (e: E) => Result<T, A>): Result<T, A>;
+  orElse<A>(_callback: (e: E) => Result<T, A>): Result<T, A>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  orElse(_f: any): any {
+  orElse(_callback: any): any {
     this.handled = true;
 
     return ok(this.value);
   }
 
-  asyncAndThen<U, F>(f: (t: T) => ResultAsync<U, F>): ResultAsync<U, E | F> {
+  asyncAndThen<U, F>(
+    callback: (t: T) => ResultAsync<U, F>,
+  ): ResultAsync<U, E | F> {
     this.handled = true;
 
-    return f(this.value);
+    return callback(this.value);
   }
 
-  asyncMap<U>(f: (t: T) => Promise<U>): ResultAsync<U, E> {
+  asyncMap<U>(callback: (t: T) => Promise<U>): ResultAsync<U, E> {
     this.handled = true;
 
-    return ResultAsync.fromSafePromise(f(this.value));
+    return ResultAsync.fromSafePromise(callback(this.value));
   }
 
-  unwrapOr<A>(_v: A): T | A {
+  unwrapOr<A>(_fallbackValue: A): T | A {
     this.handled = true;
 
     return this.value;
   }
 
-  match<A>(ok: (t: T) => A, _err: (e: E) => A): A {
+  match<A>(callback: (t: T) => A, _err: (e: E) => A): A {
     this.handled = true;
 
-    return ok(this.value);
+    return callback(this.value);
   }
 
   safeUnwrap(): Generator<Err<never, E>, T> {
     this.handled = true;
     const value = this.value;
 
-    /* eslint-disable-next-line require-yield */
+    /* eslint-disable-next-line require-yield, func-names */
     return (function* () {
       return value;
     })();
@@ -363,56 +372,59 @@ export class Err<T, E> implements IResult<T, E> {
     }
   }
 
-  map<A>(_f: (t: T) => A): Result<A, E> {
+  map<A>(_callback: (t: T) => A): Result<A, E> {
     this.handled = true;
 
     return err(this.error);
   }
 
-  mapErr<U>(f: (e: E) => U): Result<T, U> {
+  mapErr<U>(callback: (e: E) => U): Result<T, U> {
     this.handled = true;
 
-    return err(f(this.error));
+    return err(callback(this.error));
   }
 
   andThen<R extends Result<unknown, unknown>>(
-    _f: (t: T) => R,
+    _callback: (t: T) => R,
   ): Result<InferOkTypes<R>, InferErrTypes<R> | E>;
-  andThen<U, F>(_f: (t: T) => Result<U, F>): Result<U, E | F>;
+  andThen<U, F>(_callback: (t: T) => Result<U, F>): Result<U, E | F>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  andThen(_f: any): any {
+  andThen(_callback: any): any {
     this.handled = true;
 
     return err(this.error);
   }
 
   orElse<R extends Result<unknown, unknown>>(
-    f: (e: E) => R,
+    callback: (e: E) => R,
   ): Result<T, InferErrTypes<R>>;
-  orElse<A>(f: (e: E) => Result<T, A>): Result<T, A>;
+  orElse<A>(callback: (e: E) => Result<T, A>): Result<T, A>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  orElse(f: any): any {
+  orElse(callback: any): any {
     this.handled = true;
 
-    return f(this.error);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    return callback(this.error);
   }
 
-  asyncAndThen<U, F>(_f: (t: T) => ResultAsync<U, F>): ResultAsync<U, E | F> {
+  asyncAndThen<U, F>(
+    _callback: (t: T) => ResultAsync<U, F>,
+  ): ResultAsync<U, E | F> {
     this.handled = true;
 
     return errAsync<U, E>(this.error);
   }
 
-  asyncMap<U>(_f: (t: T) => Promise<U>): ResultAsync<U, E> {
+  asyncMap<U>(_callback: (t: T) => Promise<U>): ResultAsync<U, E> {
     this.handled = true;
 
     return errAsync<U, E>(this.error);
   }
 
-  unwrapOr<A>(v: A): T | A {
+  unwrapOr<A>(fallbackValue: A): T | A {
     this.handled = true;
 
-    return v;
+    return fallbackValue;
   }
 
   match<A>(_ok: (t: T) => A, err: (e: E) => A): A {
@@ -425,6 +437,7 @@ export class Err<T, E> implements IResult<T, E> {
     this.handled = true;
     const error = this.error;
 
+    // eslint-disable-next-line func-names
     return (function* () {
       yield err(error);
 
@@ -434,7 +447,7 @@ export class Err<T, E> implements IResult<T, E> {
 
   _unsafeUnwrap(): T {
     this.handled = true;
-    throw this.error;
+    throw this.error as Error;
   }
 }
 

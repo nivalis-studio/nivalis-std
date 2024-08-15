@@ -21,8 +21,6 @@ export const MINUTES_IN_WEEK = 10_080;
 export const HOURS_IN_DAY = 24;
 export const HOURS_IN_WEEK = 168;
 
-export const MAX_ARR_OPTIMIZE_SIZE = 100;
-
 /**
  * ```tex
  * π / 180.0
@@ -54,3 +52,5 @@ export const MAX_ARRAY_LENGTH = 4_294_967_295 >>> 0;
  * ```
  */
 export const MAX_TYPED_ARRAY_LENGTH = 9_007_199_254_740_991;
+
+export const MAX_ARRAY_OPTIMIZE_SIZE = 100;

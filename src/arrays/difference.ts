@@ -1,4 +1,4 @@
-import { MAX_ARR_OPTIMIZE_SIZE } from '../constants';
+import { MAX_ARRAY_OPTIMIZE_SIZE } from '../constants';
 
 /**
  * Computes the difference between two arrays.
@@ -21,7 +21,7 @@ import { MAX_ARR_OPTIMIZE_SIZE } from '../constants';
  * // result will be [1, 3, 5] since 2 and 4 are in both arrays and are excluded from the result.
  */
 export const difference = <T>(source: T[], ...diffs: readonly T[][]): T[] => {
-  if (source.length <= MAX_ARR_OPTIMIZE_SIZE) {
+  if (source.length <= MAX_ARRAY_OPTIMIZE_SIZE) {
     return diffs.reduce(
       (prev, curr) => prev.filter(value => !curr.includes(value)),
       source,
