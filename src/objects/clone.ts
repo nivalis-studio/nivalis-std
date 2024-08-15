@@ -1,3 +1,5 @@
+import { isPrimitive } from '../is';
+
 /**
  * Creates a shallow clone of the given object.
  * @template T - The type of the object.
@@ -64,12 +66,4 @@ export function clone<T>(obj: T): T {
   }
 
   return obj;
-}
-
-type Primitive = null | undefined | string | number | boolean | symbol | bigint;
-
-function isPrimitive(value: unknown): value is Primitive {
-  return (
-    value == null || (typeof value !== 'object' && typeof value !== 'function')
-  );
 }
