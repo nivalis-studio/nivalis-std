@@ -1,3 +1,4 @@
+import type { Exception } from '../exceptions';
 import type { Result } from './result';
 
 export { ok, Ok, err, Err, fromThrowable, safeTry } from './result';
@@ -28,5 +29,5 @@ export const unwrap = <T, E>(result: Result<T, E>): T => {
     return result.value;
   }
 
-  throw result.error;
+  throw result.error as Exception;
 };

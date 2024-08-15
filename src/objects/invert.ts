@@ -14,15 +14,14 @@
  * invert({ a: 1, 2: 'b', c: 3, 4: 'd' }); // { 1: 'a', b: '2', 3: 'c', d: '4' }
  * invert({ a: Symbol('sym1'), b: Symbol('sym2') }); // { [Symbol('sym1')]: 'a', [Symbol('sym2')]: 'b' }
  */
-export function invert<K extends PropertyKey, Val extends PropertyKey>(
-  obj: { [key: K]: Val },
-  // biome-ignore lint/style/useNamingConvention: prefered naming convention
-): { [key in Val]: K } {
-  // biome-ignore lint/style/useNamingConvention: prefered naming convention
-  const result = {} as { [key in Val]: K };
+export function invert<K extends PropertyKey, Val extends PropertyKey>(obj: {
+  [key in K]: Val;
+}): { [key in Val]: K } {
+  const result = {} as unknown as { [key in Val]: K };
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const key in obj) {
-    const value = obj[key as K] as Val;
+    const value = obj[key as keyof typeof obj] as Val;
 
     result[value] = key;
   }

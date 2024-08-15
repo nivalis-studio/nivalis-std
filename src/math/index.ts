@@ -8,6 +8,7 @@ import { CONST_180_DIV_PI, PI_DIV_180 } from '../constants';
  * var v = haversin( 3.141592653589793/2.0 );
  * // returns ~0.5
  */
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export const haversin = (x: number): number => (1 - Math.cos(x)) / 2;
 
 /**
@@ -18,6 +19,7 @@ export const haversin = (x: number): number => (1 - Math.cos(x)) / 2;
  * var v = havercos( 3.141592653589793/2.0 );
  * // returns 0.5
  */
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export const havercos = (x: number): number => (1 + Math.cos(x)) / 2;
 
 /**

@@ -13,6 +13,6 @@
  * // returns false
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isObjectLike = (value: any): boolean =>
   value !== null && typeof value === 'object';

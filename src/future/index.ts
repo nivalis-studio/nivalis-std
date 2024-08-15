@@ -2,15 +2,15 @@
  * Just like a Promise but you can manually resolve or reject it
  */
 export class Future<T> implements Promise<T> {
+  [Symbol.toStringTag] = 'Promise';
+  promise: Promise<T>;
   #resolve!: (value: T | PromiseLike<T>) => void;
   #reject!: (value: unknown) => void;
-  promise: Promise<T>;
-  [Symbol.toStringTag] = 'Promise';
 
   constructor() {
-    this.promise = new Promise((subresolve, subreject) => {
-      this.#resolve = subresolve;
-      this.#reject = subreject;
+    this.promise = new Promise((resolve, reject) => {
+      this.#resolve = resolve;
+      this.#reject = reject;
     });
   }
 
@@ -22,19 +22,20 @@ export class Future<T> implements Promise<T> {
     return this.#reject;
   }
 
-  // biome-ignore lint/suspicious/noThenProperty: on purpose to allow chaining
+  // eslint-disable-next-line unicorn/no-thenable
   async then<Result1 = T, Result2 = never>(
     onfulfilled?: ((value: T) => Result1 | PromiseLike<Result1>) | null,
-    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onrejected?: ((reason: any) => Result2 | PromiseLike<Result2>) | null,
   ): Promise<Result1 | Result2> {
     return await this.promise.then(onfulfilled, onrejected);
   }
 
   async catch<Result = never>(
-    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onrejected?: ((reason: any) => Result | PromiseLike<Result>) | null,
   ): Promise<T | Result> {
+    // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
     return await this.promise.catch(onrejected);
   }
 

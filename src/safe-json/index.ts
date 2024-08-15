@@ -66,6 +66,7 @@ export const SafeJson = {
       return _value.slice(1, -1) as T;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (_value.length <= 9) {
       const _lval = _value.toLowerCase();
 
@@ -115,13 +116,13 @@ export const SafeJson = {
         console.error(new Error('[safeJson] Possible prototype pollution'));
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
-        return JSON.parse(value, (key: string, value: any): any => {
+        return JSON.parse(value, (key: string, val: any): any => {
           if (
             key === '__proto__' ||
             (key === 'constructor' &&
-              value &&
-              typeof value === 'object' &&
-              'prototype' in value)
+              val &&
+              typeof val === 'object' &&
+              'prototype' in val)
           ) {
             console.warn(
               `[safeJson] Dropping "${key}" key to prevent prototype pollution.`,
@@ -130,11 +131,11 @@ export const SafeJson = {
             return;
           }
 
-          return value;
+          return val;
         });
       }
 
-      return JSON.parse(value);
+      return JSON.parse(value) as T;
     } catch (error) {
       console.error(error);
 

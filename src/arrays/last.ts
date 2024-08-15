@@ -29,6 +29,7 @@ export const lastIndex = <T>(array: T[]): number => array.length - 1;
 
 export function last<T>(arr: readonly [...T[], T]): T;
 export function last<T>(arr: readonly T[]): T | undefined;
+
 export function last<T>(arr: readonly T[]): T | undefined {
   return arr.at(-1);
 }

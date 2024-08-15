@@ -22,7 +22,7 @@
  *   throttledFunction(); // Will log 'Function executed'
  * }, 1000);
  */
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function throttle<F extends (...args: any[]) => void>(
   func: F,
   throttleMs: number,

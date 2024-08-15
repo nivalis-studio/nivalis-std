@@ -7,4 +7,4 @@ export const RE_SUSPECT_CONSTRUCTOR_PROTO =
 export const RE_JSON_SIG =
   /^\s*["[{]|^\s*-?\d{1,16}(\.\d{1,17})?(e[+-]?\d+)?\s*$/i;
 
-export const RE_DETECT_JSON = /^\s*[\d"[{\-]/;
+export const RE_DETECT_JSON = /^\s*[\d"[{-]/;

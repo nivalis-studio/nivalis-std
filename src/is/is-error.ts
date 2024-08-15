@@ -12,7 +12,7 @@ import { nativeClass } from '../objects/native-class';
  * // returns false
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any value
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isError = (value: any): value is Error => {
   if (typeof value !== 'object' || value === null) {
     return false;
@@ -23,6 +23,7 @@ export const isError = (value: any): value is Error => {
     return true;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   let val = value;
 
   // Walk the prototype tree until we find an object having the desired native class...
@@ -31,6 +32,7 @@ export const isError = (value: any): value is Error => {
       return true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     val = Object.getPrototypeOf(val);
   }
 

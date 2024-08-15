@@ -18,16 +18,18 @@ export function once<F extends () => any>(func: F): F {
   let called = false;
   let cache: ReturnType<F> | undefined;
 
-  return (() => {
+  return ((): ReturnType<F> => {
     if (called) {
-      return cache;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-non-null-assertion
+      return cache!;
     }
 
-    const result = func();
+    const result = func() as ReturnType<F>;
 
     called = true;
     cache = result;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result;
   }) as F;
 }

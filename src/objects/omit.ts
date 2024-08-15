@@ -13,14 +13,15 @@
  * const result = omit(obj, ['b', 'c']);
  * // result will be { a: 1 }
  */
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function omit<T extends { [key: string]: any }, K extends keyof T>(
   obj: T,
   keys: K[],
 ): Omit<T, K> {
-  const result = { ...obj };
+  const result = structuredClone(obj);
 
   for (const key of keys) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete result[key];
   }
 

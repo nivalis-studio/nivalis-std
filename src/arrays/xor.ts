@@ -5,8 +5,9 @@ import { union } from './union.ts';
 /**
  * Computes the symmetric difference between two arrays. The symmetric difference is the set of elements
  * which are in either of the arrays, but not in their intersection.
- * @param arr1
- * @param arr2
+ * @template T
+ * @param {T[]} arr1 - The first array.
+ * @param {T[]} arr2 - The second array.
  * @returns {T[]} An array containing the elements that are present in either `arr1` or `arr2` but not in both.
  * @example
  * // Returns [1, 2, 5, 6]

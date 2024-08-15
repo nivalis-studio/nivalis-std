@@ -236,7 +236,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=16.6.0"
+    "node": ">=17.0.0"
   },
   "scripts": {
     "test": "exit 0",

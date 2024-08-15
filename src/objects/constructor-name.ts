@@ -2,6 +2,8 @@ import { isBuffer } from '../is';
 import { RE_FUNCTION_NAME } from '../regexp';
 import { nativeClass } from './native-class';
 
+const CONSTRUCTOR_NAME_MIN_LENGTH = 8;
+
 /**
  * Determines the name of a value's constructor.
  * @param {*} value - input value
@@ -23,10 +25,11 @@ import { nativeClass } from './native-class';
  * // returns 'Function'
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const constructorName = (value: any): string => {
-  const name = nativeClass(value).slice(8, -1);
+  const name = nativeClass(value).slice(CONSTRUCTOR_NAME_MIN_LENGTH, -1);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if ((name === 'Object' || name === 'Error') && value.constructor) {
     const ctor = (value as Error).constructor;
 

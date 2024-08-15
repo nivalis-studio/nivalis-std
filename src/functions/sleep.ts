@@ -2,17 +2,16 @@ type SleepOptions = {
   signal?: AbortSignal;
 };
 
+// eslint-disable-next-line jsdoc/require-param
 /**
  * Sleep for a given amount of time
- * @param ms
- * @param root0
- * @param root0.signal
+ * @param {number} ms Amount
  */
 export const sleep = async (
   ms: number,
   { signal }: SleepOptions | undefined = {},
 ): Promise<void> => {
-  await new Promise((resolve, reject): void => {
+  await new Promise<void>((resolve, reject): void => {
     if (signal?.aborted) {
       reject(new Error('Aborted'));
 

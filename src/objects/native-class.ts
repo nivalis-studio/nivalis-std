@@ -15,7 +15,6 @@
  * var str = nativeClass( new Beep() );
  * // returns '[object Object]'
  */
-
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nativeClass = (value: any): string =>
   Object.prototype.toString.call(value);

@@ -12,6 +12,7 @@ import { union } from '../arrays/union';
  * isEqual(new Date('2020-01-01'), new Date('2020-01-01')); // true
  * isEqual([1, 2, 3], [1, 2, 3]); // true
  */
+// eslint-disable-next-line id-length
 export function isEqual(a: unknown, b: unknown): boolean {
   if (Object.is(a, b)) {
     return true;
@@ -47,10 +48,8 @@ export function isEqual(a: unknown, b: unknown): boolean {
   }
 
   for (const propKey of aKeys) {
-    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-    const aProp = (a as any)[propKey];
-    // biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
-    const bProp = (b as any)[propKey];
+    const aProp = (a as { [key: string]: unknown })[propKey];
+    const bProp = (b as { [key: string]: unknown })[propKey];
 
     if (!isEqual(aProp, bProp)) {
       return false;

@@ -30,6 +30,7 @@ export const toDiscord = (err: {
         {
           inline: false,
           name: 'Stack Trace',
+          // eslint-disable-next-line @typescript-eslint/no-magic-numbers
           value: `\`\`\`${err.stack ? ensureIsArray(err.stack).join('').slice(0, 1014) : 'N/A'}\`\`\``,
         },
       ],

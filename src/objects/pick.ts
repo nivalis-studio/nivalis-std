@@ -13,12 +13,12 @@
  * const result = pick(obj, ['a', 'c']);
  * // result will be { a: 1, c: 3 }
  */
-// biome-ignore lint/suspicious/noExplicitAny: we want to allow any here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function pick<T extends { [key: string]: any }, K extends keyof T>(
   obj: T,
   keys: K[],
 ): Pick<T, K> {
-  const result = {} as Pick<T, K>;
+  const result = {} as unknown as Pick<T, K>;
 
   for (const key of keys) {
     result[key] = obj[key];

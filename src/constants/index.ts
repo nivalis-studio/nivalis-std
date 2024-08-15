@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 export const EARTH_RADIUS_IN_METERS = 6_378_137;
 
 export const NS_IN_SECOND = 1e9;

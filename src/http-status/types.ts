@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 const _httpStatusOk = [
   200, // Ok
   201, // Created

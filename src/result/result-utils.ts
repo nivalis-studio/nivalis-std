@@ -42,7 +42,10 @@ const appendValueToEndOfList =
 
 /**
  * Short circuits on the FIRST Err value that we find
- * @param resultList
+ * @template T - The result type
+ * @template E - The error type
+ * @param {ReadonlyArray<Result<T, E>>} resultList The list of results
+ * @returns {Result<T[], E>} A new result with the list of errors
  */
 export const combineResultList = <T, E>(
   resultList: ReadonlyArray<Result<T, E>>,
@@ -71,7 +74,10 @@ export const combineResultAsyncList = <T, E>(
 
 /**
  * Give a list of all the errors we find
- * @param resultList
+ * @template T - The result type
+ * @template E - The error type
+ * @param {ReadonlyArray<Result<T, E>>} resultList The list of results
+ * @returns {Result<T[], E[]>} A new result with the list of errors
  */
 export const combineResultListWithAllErrors = <T, E>(
   resultList: ReadonlyArray<Result<T, E>>,
@@ -88,6 +94,7 @@ export const combineResultListWithAllErrors = <T, E>(
     ok([]),
   );
 
+// eslint-disable-next-line id-length
 export const combineResultAsyncListWithAllErrors = <T, E>(
   asyncResultList: ReadonlyArray<ResultAsync<T, E>>,
 ): ResultAsync<readonly T[], E[]> =>
