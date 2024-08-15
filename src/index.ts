@@ -167,4 +167,10 @@ export {
 
 export { parseMs, since, blockTimer } from './time';
 
+export type {
+  StringWithAutocomplete,
+  TypesFromSet,
+  UnifyIntersection,
+} from './types';
+
 export { toHumanBytes, toHumanCount, toKb, toMb, toGb } from './units';

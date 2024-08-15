@@ -215,6 +215,16 @@
         "types": "./dist/units/index.d.cts",
         "default": "./dist/units/index.cjs"
       }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/types/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/index.d.cts",
+        "default": "./dist/types/index.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
