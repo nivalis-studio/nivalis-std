@@ -36,7 +36,10 @@ export class Lock<T> {
 /**
  * A semaphore with some reference and some capacity
  */
-export class Semaphore<T, N extends number = number> {
+export class Semaphore<
+  T extends Awaitable<unknown>,
+  N extends number = number,
+> {
   #queue = new Array<Future<void>>();
   #count = 0;
 
@@ -57,7 +60,7 @@ export class Semaphore<T, N extends number = number> {
   }
 
   static void<N extends number>(capacity: N) {
-    return new Semaphore<void, N>(undefined, capacity);
+    return new Semaphore<Awaitable<void>, N>(undefined, capacity);
   }
 
   /**
@@ -155,19 +158,19 @@ export class Semaphore<T, N extends number = number> {
    * @returns {Promise<Lock<T>>} A disposable object
    */
   async acquire(): Promise<Lock<T>> {
-    const outer = new Future<void>();
-    const inner = new Future<void>();
+    const outer = new Future<null>();
+    const inner = new Future<null>();
 
-    await this.lock(async () => {
-      outer.resolve();
+    await this.lock(async (): Promise<null> => {
+      outer.resolve(null);
 
-      await inner.promise;
+      return await inner.promise;
     });
 
     await outer.promise;
 
     return new Lock(this.inner, () => {
-      inner.resolve();
+      inner.resolve(null);
     });
   }
 }
@@ -175,7 +178,7 @@ export class Semaphore<T, N extends number = number> {
 /**
  * A semaphore but with a capacity of 1
  */
-export class Mutex<T> {
+export class Mutex<T extends Awaitable<unknown>> {
   #semaphore: Semaphore<T, 1>;
 
   constructor(readonly inner: T) {
