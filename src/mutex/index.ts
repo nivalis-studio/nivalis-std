@@ -1,8 +1,7 @@
 /* eslint-disable no-plusplus */
-import { createCustomException } from '../exceptions';
+import { Exception, createCustomException } from '../exceptions';
 import { Future } from '../future';
 import { Err, Ok } from '../result';
-import type { Exception } from '../exceptions';
 import type { Result } from '../result';
 
 type Awaitable<T> = T | Promise<T>;
@@ -158,19 +157,21 @@ export class Semaphore<
    * @returns {Promise<Lock<T>>} A disposable object
    */
   async acquire(): Promise<Lock<T>> {
-    const outer = new Future<null>();
-    const inner = new Future<null>();
+    const outer = new Future<void>();
+    const inner = new Future<void>();
 
-    await this.lock(async (): Promise<null> => {
-      outer.resolve(null);
+    this.lock(async (): Promise<void> => {
+      outer.resolve();
 
-      return await inner.promise;
+      await inner.promise;
+    }).catch((error: unknown) => {
+      throw Exception.from(error as Error);
     });
 
     await outer.promise;
 
     return new Lock(this.inner, () => {
-      inner.resolve(null);
+      inner.resolve();
     });
   }
 }
