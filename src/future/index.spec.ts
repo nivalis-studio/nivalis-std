@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { Future } from './index.js';
+import { Future } from './index';
 
-const ms = 25;
+const ms = 1;
 
 describe('Future', () => {
   test('should resolve with the correct value', async () => {

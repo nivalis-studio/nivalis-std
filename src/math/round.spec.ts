@@ -52,7 +52,6 @@ describe('round function', () => {
     const value = 1.2345;
     const precision = 3.1;
 
-    console.log(value, precision, round(value, precision));
     expect(round(value, precision)).toBe(1.234_386_076_761_533_1);
   });
 });

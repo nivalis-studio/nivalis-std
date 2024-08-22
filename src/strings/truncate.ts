@@ -3,6 +3,10 @@ export const truncate = (
   max?: number,
   end = '...' as string,
 ): string => {
+  if (max === 0) {
+    return end;
+  }
+
   if (!max || str.length <= max) {
     return str;
   }
@@ -21,6 +25,10 @@ export const truncateMiddle = (
   max?: number,
   end = '...' as string,
 ): string => {
+  if (max === 0) {
+    return end;
+  }
+
   if (!max || str.length <= max) {
     return str;
   }

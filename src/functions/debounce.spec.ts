@@ -12,7 +12,7 @@ describe('debounce', () => {
     debouncedFunc();
     expect(func).not.toHaveBeenCalled();
 
-    await sleep(ms + 10);
+    await sleep(ms + 5);
     expect(func).toHaveBeenCalledTimes(1);
   });
 
@@ -23,11 +23,11 @@ describe('debounce', () => {
     debouncedFunc();
     expect(func).not.toHaveBeenCalled();
 
-    await sleep(ms - 10);
+    await sleep(ms - 5);
     debouncedFunc();
     expect(func).not.toHaveBeenCalled();
 
-    await sleep(ms + 10);
+    await sleep(ms + 5);
     expect(func).toHaveBeenCalledTimes(1);
   });
 
@@ -37,7 +37,7 @@ describe('debounce', () => {
 
     debouncedFunc();
     debouncedFunc.cancel();
-    await sleep(ms + 10);
+    await sleep(ms + 5);
     expect(func).not.toHaveBeenCalled();
   });
 
@@ -48,7 +48,7 @@ describe('debounce', () => {
 
     debouncedFunc();
     controller.abort();
-    await sleep(ms + 10);
+    await sleep(ms + 5);
     expect(func).not.toHaveBeenCalled();
   });
 
@@ -60,7 +60,7 @@ describe('debounce', () => {
     const debouncedFunc = debounce(func, ms, { signal: controller.signal });
 
     debouncedFunc();
-    await sleep(ms + 10);
+    await sleep(ms + 5);
     expect(func).not.toHaveBeenCalled();
   });
 });

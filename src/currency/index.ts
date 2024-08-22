@@ -1,12 +1,12 @@
 import type { CurrencyCode } from './types';
 
-type Money = {
+export type Currency = {
   amount: string;
   currencyCode: CurrencyCode;
 };
 
 export const formatPrice = (
-  { amount, currencyCode }: Money,
+  { amount, currencyCode }: Currency,
   locale = 'fr',
   quantity = 1,
   disableCents = false,

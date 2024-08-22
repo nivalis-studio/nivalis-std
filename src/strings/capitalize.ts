@@ -16,4 +16,4 @@ export const capitalize = (string: string): string =>
  * capitalizeWords('hello world'); // "Hello World"
  */
 export const capitalizeWords = (string: string): string =>
-  string.replaceAll(/(?:^|\s)\S/g, capitalize);
+  string.toLowerCase().replaceAll(/(?:^|\s)\S/g, match => match.toUpperCase());

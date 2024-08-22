@@ -19,14 +19,14 @@ describe('memo', () => {
 
   test('should compute and cache new result if cache is expired', async () => {
     const func = mock((x: number) => x * 3);
-    const ttl = 25; // 100ms TTL
+    const ttl = 5;
     const memoizedFunc = memo(func, { ttl });
 
     const firstCall = memoizedFunc(3);
 
     expect(firstCall).toBe(9);
 
-    await sleep(ttl + 10); // Wait for the cache to expire
+    await sleep(ttl + 5); // Wait for the cache to expire
 
     const secondCall = memoizedFunc(3);
 

@@ -113,8 +113,6 @@ export const SafeJson = {
         RE_SUSPECT_JSON_PROTO.test(value) ||
         RE_SUSPECT_CONSTRUCTOR_PROTO.test(value)
       ) {
-        console.error(new Error('[safeJson] Possible prototype pollution'));
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
         return JSON.parse(value, (key: string, val: any): any => {
           if (
@@ -136,8 +134,8 @@ export const SafeJson = {
       }
 
       return JSON.parse(value) as T;
-    } catch (error) {
-      console.error(error);
+    } catch {
+      console.error(new SyntaxError('[safeJson] Invalid JSON'));
 
       return fallback;
     }
