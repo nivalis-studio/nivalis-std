@@ -1,15 +1,12 @@
 import { describe, expect, test } from 'bun:test';
-import { Mutex, Semaphore } from './index.js';
+import { sleep } from '../functions/sleep';
+import { Mutex, Semaphore } from './index';
 
-// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const wait = async (ms = 100) =>
-  await new Promise(resolve => {
-    setTimeout(() => {
-      resolve('done');
-    }, ms);
-  });
+const wait = async (ms = 10) => {
+  await sleep(ms);
+};
 
-describe('mutex', () => {
+describe('Mutex', () => {
   const mutex = new Mutex(new Array<string>());
 
   test('lock', async () => {
@@ -89,7 +86,7 @@ describe('mutex', () => {
   });
 });
 
-describe('semaphore', () => {
+describe('Semaphore', () => {
   const semaphore = new Semaphore(new Array<string>(), 1);
 
   test('lock', async () => {
