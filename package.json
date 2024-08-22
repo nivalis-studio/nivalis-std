@@ -239,7 +239,7 @@
     "node": ">=17.0.0"
   },
   "scripts": {
-    "test": "exit 0",
+    "test": "bun test",
     "build": "unbuild",
     "prepublishOnly": "unbuild",
     "lint": "eslint .",
