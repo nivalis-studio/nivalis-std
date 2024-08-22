@@ -1,4 +1,4 @@
-import { MS_IN_DAY, MS_IN_MINUTE } from '../constants';
+import { MS_IN_DAY } from '../constants';
 
 export const getDaysSince = (date: Date): number =>
   Math.floor((Date.now() - date.getTime()) / MS_IN_DAY);
@@ -14,6 +14,3 @@ export const isInThisMonth = (
 
 export const getDateFromDeltaDays = (date: Date, numberDays: number): Date =>
   new Date(date.valueOf() + MS_IN_DAY * numberDays);
-
-export const convertToParisTime = (dateAsUtc: Date): Date =>
-  new Date(dateAsUtc.getTime() + dateAsUtc.getTimezoneOffset() * MS_IN_MINUTE);

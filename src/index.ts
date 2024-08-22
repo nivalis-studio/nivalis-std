@@ -54,7 +54,6 @@ export type { CurrencyCode } from './currency';
 export {
   getDaysSince,
   isToday,
-  convertToParisTime,
   getDateFromDeltaDays,
   isInThisMonth,
 } from './dates';
