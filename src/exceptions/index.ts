@@ -3,6 +3,7 @@ export {
   createCustomException,
   type ExceptionConstructor,
   type FormattedException,
+  type ExceptionOptions,
   Exception,
 } from './create-custom';
 export {

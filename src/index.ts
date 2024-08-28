@@ -71,7 +71,11 @@ export {
   toDiscord,
   createCustomException,
 } from './exceptions';
-export type { ExceptionConstructor, FormattedException } from './exceptions';
+export type {
+  ExceptionConstructor,
+  FormattedException,
+  ExceptionOptions,
+} from './exceptions';
 
 export { debounce, memo, noop, once, sleep, throttle } from './functions';
 
