@@ -107,6 +107,7 @@ export {
   isBuffer,
   isObjectLike,
   nonNullable,
+  fieldNonNullable,
   isError,
 } from './is';
 
