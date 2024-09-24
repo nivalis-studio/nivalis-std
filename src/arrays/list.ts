@@ -21,13 +21,13 @@ export class List<T> extends Array<T> {
     return new List(...arr);
   }
 
-  append(item: T) {
+  append(item: T): this {
     this.push(item);
 
     return this;
   }
 
-  compact() {
+  compact(): List<NonNullable<T>> {
     return List.fromArray(
       this.filter(
         (item): item is NonNullable<T> => item != null && item !== undefined,
@@ -55,55 +55,70 @@ export class List<T> extends Array<T> {
     return List.fromArray(this.filter((...args) => !predicate(...args)));
   }
 
-  shuffle() {
+  /**
+   * Randomizes the order of elements in an list using the Fisher-Yates algorithm.
+   * @template T - The type of elements in the list.
+   * @returns {T[]} A new list with its elements shuffled in random order.
+   * @example
+   * const list = new List(...[1, 2, 3, 4, 5]);
+   * const shuffledList = list.shuffle();
+   * // shuffledList will be a new list with elements of list in random order, e.g., [3, 1, 4, 5, 2]
+   */
+  shuffle(): List<T> {
     return List.fromArray(shuffle(this));
   }
 
-  remove(value: T) {
-    return List.fromArray(remove(this, value));
+  /**
+   * Remove an item of a list.
+   * @template T
+   * @param {T} element - The element to remove from the list.
+   * @returns {T[]} A new list with the element removed.
+   */
+  remove(element: T): List<T> {
+    return List.fromArray(remove(this, element));
   }
 
-  last() {
+  last(): T | undefined {
     return last(this);
   }
 
-  lastIndex() {
+  lastIndex(): number {
     return lastIndex(this);
   }
 
-  pick() {
+  pick(): T {
     return pick(this);
   }
 
-  sample(size: number) {
-    return sample(this, size);
+  sample(size: number): List<T> {
+    return List.fromArray(sample(this, size));
   }
 
-  uniq() {
-    return uniq(this);
+  uniq(): List<T> {
+    return List.fromArray(uniq(this));
   }
 
-  union(other: List<T>) {
-    return union(this, other);
+  union(other: List<T>): List<T> {
+    return List.fromArray(union(this, other));
   }
 
-  intersection(...others: Array<List<T>>) {
-    return intersection(this, ...others);
+  intersection(...others: Array<List<T>>): List<T> {
+    return List.fromArray(intersection(this, ...others));
   }
 
-  xor(other: List<T>) {
-    return xor(this, other);
+  xor(other: T[]): List<T> {
+    return List.fromArray(xor(this, other));
   }
 
-  difference(...others: Array<List<T>>) {
-    return difference(this, ...others);
+  difference(...others: T[][]): List<T> {
+    return List.fromArray(difference(this, ...others));
   }
 
   select<K>(
     mapper: (item: T, index: number) => K,
     condition: (item: T, index: number) => boolean,
-  ) {
-    return select(this, mapper, condition);
+  ): List<K> {
+    return List.fromArray(select(this, mapper, condition));
   }
 
   group<Key extends string | number | symbol>(
@@ -112,23 +127,52 @@ export class List<T> extends Array<T> {
     return group(this, getGroupId);
   }
 
-  randomIndex() {
+  /**
+   * Get a random index with `Math.random()`
+   * @returns {number} A random index in the list.
+   */
+  randomIndex(): number {
     return randomIndex(this);
   }
 
-  countOccurrences(value: T) {
+  /**
+   * Counts the occurrences of a value in an list.
+   * @template T - The type of values in the list.
+   * @param {T} value - The value to count occurrences of.
+   * @returns {number} The number of occurrences of the value in the list.
+   * @example
+   * const list = new List(...[1, 2, 3, 1]);
+   * const value = 1;
+   * const result = list.countOccurrences(value);
+   * // result will be 2
+   */
+  countOccurrences(value: T): number {
     return countOccurrences(this, value);
   }
 
-  chunk(size: number) {
-    return chunk(this, size);
+  chunk(size: number): List<T[]> {
+    return List.fromArray(chunk(this, size));
   }
 
-  average(this: List<number>) {
+  /**
+   * Returns the average of the current list.
+   * If the list is empty, this function returns `NaN`.
+   * @returns {number} The average of all the numbers in the array.
+   * @example
+   * const list = new List(...[1, 2, 3, 4, 5]);
+   * const result = list.average();
+   * // result will be 3
+   */
+  average(this: List<number>): number {
     return average(this);
   }
 
-  sortNumbers(this: List<number>, dir: 'asc' | 'desc') {
-    return sortNumbers(this, dir);
+  /**
+   * Sorts the current list in ascending or descending order.
+   * @param {"asc"|"desc"} dir - The direction to sort the array. Can be 'asc' or 'desc'.
+   * @returns {List<number>} The sorted list of numbers.
+   */
+  sortNumbers(this: List<number>, dir: 'asc' | 'desc'): List<number> {
+    return List.fromArray(sortNumbers(this, dir));
   }
 }
