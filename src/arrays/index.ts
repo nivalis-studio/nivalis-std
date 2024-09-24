@@ -14,7 +14,6 @@ export { shuffle } from './shuffle';
 export { sortNumbers } from './sort-numbers';
 export { tail } from './tail';
 export { toFilled } from './to-filled';
-export { unDuplicate } from './un-duplicate';
 export { union } from './union';
 export { uniq } from './uniq';
 export { xor } from './xor';

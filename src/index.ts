@@ -17,7 +17,6 @@ export {
   sortNumbers,
   tail,
   toFilled,
-  unDuplicate,
   union,
   uniq,
   xor,
