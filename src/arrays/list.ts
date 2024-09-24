@@ -21,6 +21,18 @@ export class List<T> extends Array<T> {
     return new List(...arr);
   }
 
+  static fromIterable<S>(iterable: Iterable<S>): List<S> {
+    return new List(...iterable);
+  }
+
+  static toArray<S>(list: List<S>): S[] {
+    return list;
+  }
+
+  toArray(): T[] {
+    return this;
+  }
+
   append(item: T): this {
     this.push(item);
 
