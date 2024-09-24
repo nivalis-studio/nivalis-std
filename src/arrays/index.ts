@@ -17,3 +17,4 @@ export { toFilled } from './to-filled';
 export { union } from './union';
 export { uniq } from './uniq';
 export { xor } from './xor';
+export { List } from './list';

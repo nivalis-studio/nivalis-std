@@ -20,6 +20,7 @@ export {
   union,
   uniq,
   xor,
+  List,
 } from './arrays';
 
 export {
