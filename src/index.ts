@@ -167,6 +167,7 @@ export {
   truncate,
   htmlEscape,
   htmlUnescape,
+  slugify,
 } from './strings';
 
 export { parseMs, since, blockTimer } from './time';
