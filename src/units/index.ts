@@ -23,58 +23,70 @@ export const toGb = (bytes: number): number => Math.round(bytes / 1024 ** 3);
 /**
  * convert bytes to Human bytes string
  * @param {number} bytes - input value
+ * @param {number} precision - number of significant digits (must be between 1 and 21)
+ * @param {string} separator - separator between value and readable unit
  * @returns {number} converted value
  */
-export const toHumanBytes = (bytes = 0): string => {
+export const toHumanBytes = (
+  bytes = 0,
+  precision = 3,
+  separator = '',
+): string => {
   if (bytes < 1024) {
-    return `${Math.round(bytes)} byte(s)`;
+    return `${Math.round(bytes)}${separator}byte(s)`;
   }
 
   if (bytes < 1024 ** 2) {
-    return `${(bytes / 1024).toPrecision(3)} Kb`;
+    return `${(bytes / 1024).toPrecision(precision)}${separator}Kb`;
   }
 
   if (bytes < 1024 ** 3) {
-    return `${(bytes / 1024 ** 2).toPrecision(3)} Mb`;
+    return `${(bytes / 1024 ** 2).toPrecision(precision)}${separator}Mb`;
   }
 
   if (bytes < 1024 ** 4) {
-    return `${(bytes / 1024 ** 3).toPrecision(3)} Gb`;
+    return `${(bytes / 1024 ** 3).toPrecision(precision)}${separator}Gb`;
   }
 
   if (bytes < 1024 ** 5) {
-    return `${(bytes / 1024 ** 4).toPrecision(3)} Tb`;
+    return `${(bytes / 1024 ** 4).toPrecision(precision)}${separator}Tb`;
   }
 
-  return `${Math.round(bytes / 1024 ** 4)} Tb`;
+  return `${Math.round(bytes / 1024 ** 4)}${separator}Tb`;
 };
 
 /**
  * Helpful to print big numbers, as it adds `K` (kilo), `M` (mega), etc to make
  * them more readable.
  * @param {number} val - input value
+ * @param {number} precision - number of significant digits (must be between 1 and 21)
+ * @param {string} separator - separator between value and readable unit
  * @returns {string} converted value
  */
-export const toHumanCount = (val = 0): string => {
+export const toHumanCount = (
+  val = 0,
+  precision = 3,
+  separator = '',
+): string => {
   if (val < 10 ** 4) {
-    return String(val);
+    return String(val.toPrecision(precision));
   }
 
   if (val < 10 ** 6) {
-    return `${(val / 10 ** 3).toPrecision(3)} K`;
+    return `${(val / 10 ** 3).toPrecision(precision)}${separator}K`;
   }
 
   if (val < 10 ** 9) {
-    return `${(val / 10 ** 6).toPrecision(3)} M`; // million
+    return `${(val / 10 ** 6).toPrecision(precision)}${separator}M`; // million
   }
 
   if (val < 10 ** 12) {
-    return `${(val / 10 ** 9).toPrecision(3)} B`; // billion
+    return `${(val / 10 ** 9).toPrecision(precision)}${separator}B`; // billion
   }
 
   if (val < 10 ** 15) {
-    return `${(val / 10 ** 12).toPrecision(3)} T`; // trillion
+    return `${(val / 10 ** 12).toPrecision(precision)}${separator}T`; // trillion
   }
 
-  return `${Math.round(val / 10 ** 12)} T`;
+  return `${Math.round(val / 10 ** 12)}${separator}T`;
 };
