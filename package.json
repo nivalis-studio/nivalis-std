@@ -251,11 +251,11 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@nivalis/eslint-config": "3.4.0",
+    "@nivalis/eslint-config": "4.1.1",
     "@nivalis/prettier-config": "3.3.3",
     "@types/bun": "latest",
-    "eslint": "^9.9.0",
-    "lint-staged": "15.2.7",
+    "eslint": "9.15.0",
+    "lint-staged": "15.2.10",
     "prettier": "3.3.3",
     "simple-git-hooks": "2.11.1",
     "unbuild": "2.0.0"
