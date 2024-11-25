@@ -62,7 +62,8 @@ export function clone<T>(obj: T): T {
   }
 
   if (typeof obj === 'object') {
-    return Object.assign({}, obj) as T;
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return { ...obj } as T;
   }
 
   return obj;

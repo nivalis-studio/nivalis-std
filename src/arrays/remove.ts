@@ -9,7 +9,7 @@ export const remove = <T>(array: T[], element: T): T[] => {
   const array_ = [...array];
   const idx = array_.indexOf(element);
 
-  if (idx < 0) {
+  if (idx === -1) {
     return [];
   }
 

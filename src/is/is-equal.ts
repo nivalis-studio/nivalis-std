@@ -12,7 +12,7 @@ import { union } from '../arrays/union';
  * isEqual(new Date('2020-01-01'), new Date('2020-01-01')); // true
  * isEqual([1, 2, 3], [1, 2, 3]); // true
  */
-// eslint-disable-next-line id-length
+
 export function isEqual(a: unknown, b: unknown): boolean {
   if (Object.is(a, b)) {
     return true;

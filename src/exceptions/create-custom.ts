@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { generateId } from '../generate';
 import { SafeJson } from '../safe-json';
 import { httpStatus } from '../http-status';
@@ -71,11 +72,10 @@ export class Exception extends Error {
     this.traceId = options?.traceId || generateId(8);
     this.readableMessage = options?.readableMessage ?? undefined;
     this.timestamp = options?.timestamp ?? Date.now();
-    this.meta = Object.assign(
-      {},
-      options?.meta,
-      (options?.cause as Exception | undefined)?.meta,
-    );
+    this.meta = {
+      ...options?.meta,
+      ...(options?.cause as Exception | undefined)?.meta,
+    };
     this.logLevel = options?.logLevel ?? 'error';
 
     if (options?.stack) {
@@ -153,7 +153,7 @@ export class Exception extends Error {
   }
 
   addMeta(meta: { [key: string]: unknown }): this {
-    (this as Mutable<Exception>).meta = Object.assign({}, this.meta, meta);
+    (this as Mutable<Exception>).meta = { ...this.meta, ...meta };
 
     return this;
   }
