@@ -251,14 +251,14 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@nivalis/eslint-config": "4.1.1",
-    "@nivalis/prettier-config": "3.3.3",
+    "@nivalis/eslint-config": "4.2.2",
+    "@nivalis/prettier-config": "3.4.2",
     "@types/bun": "latest",
-    "eslint": "9.15.0",
-    "lint-staged": "15.2.10",
-    "prettier": "3.3.3",
+    "eslint": "9.18.0",
+    "lint-staged": "15.4.1",
+    "prettier": "3.4.2",
     "simple-git-hooks": "2.11.1",
-    "unbuild": "2.0.0"
+    "unbuild": "3.3.1"
   },
   "prettier": "@nivalis/prettier-config",
   "simple-git-hooks": {
