@@ -125,7 +125,14 @@ export {
 
 export { Lock, LockedError, Mutex, Semaphore } from './mutex';
 
-export { clone, omit, invert, constructorName, nativeClass } from './objects';
+export {
+  clone,
+  omit,
+  invert,
+  constructorName,
+  nativeClass,
+  deepMerge,
+} from './objects';
 
 export {
   RE_DETECT_JSON,
