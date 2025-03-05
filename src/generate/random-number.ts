@@ -8,5 +8,6 @@ export const generateRandomNumber = (len = 6): string => {
   const min = 10 ** (len - 1);
   const max = 10 ** len - 1;
 
+  // eslint-disable-next-line sonarjs/pseudo-random
   return Math.floor(Math.random() * (max - min + 1) + min).toString();
 };

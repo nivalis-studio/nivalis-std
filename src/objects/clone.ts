@@ -34,7 +34,7 @@ export function clone<T>(obj: T): T {
   }
 
   if (obj instanceof Date) {
-    return new Date(obj.getTime()) as T;
+    return new Date(obj) as T;
   }
 
   if (obj instanceof RegExp) {

@@ -42,7 +42,7 @@ export class List<T> extends Array<T> {
   compact(): List<NonNullable<T>> {
     return List.fromArray(
       this.filter(
-        (item): item is NonNullable<T> => item != null && item !== undefined,
+        (item): item is NonNullable<T> => item !== null && item !== undefined,
       ),
     );
   }

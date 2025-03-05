@@ -21,9 +21,11 @@ export function invert<K extends PropertyKey, Val extends PropertyKey>(obj: {
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in obj) {
-    const value = obj[key as keyof typeof obj] as Val;
+    if (key) {
+      const value = obj[key as keyof typeof obj] as Val;
 
-    result[value] = key;
+      result[value] = key;
+    }
   }
 
   return result;

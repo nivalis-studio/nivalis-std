@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { httpStatus } from '../http-status';
 import { Exception } from './create-custom';
 import type { ExceptionOptions } from './create-custom';

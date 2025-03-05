@@ -74,8 +74,10 @@ export const blockTimer = (name?: string): Disposable => {
 
   return {
     [Symbol.dispose](): void {
+      const timeTaken = since(started);
+
       // eslint-disable-next-line no-console
-      console.debug(`${name ? `${name} ` : ''}took ${since(started)}`);
+      console.debug(name, `took ${timeTaken}`);
     },
   };
 };

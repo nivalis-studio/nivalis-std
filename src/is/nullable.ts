@@ -16,5 +16,5 @@
  * const result3 = isNil(value3); // false
  */
 export function isNullable(x: unknown): x is null | undefined {
-  return x == null;
+  return x === null || x === undefined;
 }

@@ -17,7 +17,7 @@ export const generateId = (
 
   // eslint-disable-next-line no-plusplus
   while (idx--) {
-    // eslint-disable-next-line unicorn/prefer-math-trunc
+    // eslint-disable-next-line unicorn/prefer-math-trunc, no-bitwise, sonarjs/pseudo-random
     code += alphabet[(Math.random() * alphabet.length) | 0];
   }
 

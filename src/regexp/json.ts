@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/regex-complexity */
+
 // https://github.com/fastify/secure-json-parse
 // https://github.com/hapijs/bourne
 export const RE_SUSPECT_JSON_PROTO =

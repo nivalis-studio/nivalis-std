@@ -60,4 +60,4 @@ const _httpStatusError = [
 export type HttpStatusError = (typeof _httpStatusError)[number];
 export const httpStatusError = new Set(_httpStatusError);
 
-export type HttpStatus = HttpStatusOk;
+export type HttpStatus = HttpStatusOk | HttpStatusError;

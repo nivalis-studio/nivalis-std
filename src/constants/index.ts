@@ -42,6 +42,7 @@ export const CONST_180_DIV_PI = 57.295_779_513_082_32;
  * 2^{32} - 1
  * ```
  */
+// eslint-disable-next-line no-bitwise
 export const MAX_ARRAY_LENGTH = 4_294_967_295 >>> 0;
 
 /**

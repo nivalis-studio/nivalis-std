@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/slow-regex */
 /**
  * Formats the given string in slug url compatible fashion
  *
@@ -5,8 +6,7 @@
  * slugify('va va_VOOM') -> 'va-va-voom'
  * slugify('bonjour l\'Amérique !') -> 'bonjour-lamerique'
  * slugify('helloWord 11') -> 'hello-word-11'
- * @param {string} str The String to format
- * @param text
+ * @param {string} text The string to format
  * @returns {string} The formatted String
  */
 export const slugify = (text: string) => {

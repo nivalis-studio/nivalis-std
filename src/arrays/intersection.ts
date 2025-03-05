@@ -18,8 +18,9 @@ export const intersection = <T>(...arrays: T[][]): T[] => {
   const [firstArr, ...restArrays] = arrays;
 
   if (firstArr.length <= MAX_ARRAY_OPTIMIZE_SIZE) {
-    return arrays.reduce((prev, curr) =>
-      prev.filter(value => curr.includes(value)),
+    return arrays.reduce(
+      (prev, curr) => prev.filter(value => curr.includes(value)),
+      [...firstArr],
     );
   }
 

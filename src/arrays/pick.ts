@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/pseudo-random */
 /**
  * Get a random value with `Math.random()`
  * @template T
@@ -27,7 +28,7 @@ export const sample = <T>(array: readonly T[], size: number): T[] => {
   const selected = new Set();
 
   for (
-    let step = array.length - size, resultIndex = 0;
+    let resultIndex = 0, step = array.length - size;
     step < array.length;
     step++, resultIndex++
   ) {

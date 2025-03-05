@@ -5,7 +5,9 @@ describe('shuffle', () => {
   it('randomizes the order of an array', () => {
     const arr = [1, 2, 3, 4, 5];
 
-    expect([...shuffle(arr)].sort()).toEqual([...arr].sort());
+    expect([...shuffle(arr)].sort((a, b) => a - b)).toEqual(
+      [...arr].sort((a, b) => a - b),
+    );
   });
 
   it('does not modify the original array', () => {

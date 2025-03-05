@@ -21,7 +21,7 @@ export function clamp(
   minimum: number,
   maximum?: number,
 ): number {
-  if (maximum == null) {
+  if (maximum === null || maximum === undefined) {
     return Math.min(value, minimum);
   }
 

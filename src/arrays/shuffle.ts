@@ -17,6 +17,7 @@ export const shuffle = <T>(array: readonly T[]): T[] => {
    * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
    */
   for (let i = arrayCopy.length - 1; i > 0; i--) {
+    // eslint-disable-next-line sonarjs/pseudo-random
     const j = Math.floor(Math.random() * (i + 1));
 
     [arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];

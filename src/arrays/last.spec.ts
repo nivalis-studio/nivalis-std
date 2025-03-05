@@ -6,6 +6,7 @@ describe('last', () => {
     expect(last([1, 2, 3])).toBe(3);
     expect(last(['a', 'b', 'c'])).toBe('c');
     expect(last([1, 'string', true])).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     expect(last([])).toBeUndefined();
   });
   // Edge cases

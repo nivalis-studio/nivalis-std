@@ -33,6 +33,7 @@ export const isFunction = (value: any): value is Function =>
   !!(value?.constructor && value.call && value.apply);
 
 export const isString = (value: any): value is string =>
+  // eslint-disable-next-line unicorn/no-instanceof-builtins
   typeof value === 'string' || value instanceof String;
 
 export const isNumber = (value: any): value is number => {
@@ -64,9 +65,7 @@ export const isPromise = (value: any): value is Promise<any> => {
 
   if (!value.then) return false;
 
-  if (!isFunction(value.then)) return false;
-
-  return true;
+  return isFunction(value.then);
 };
 
 export const isEmpty = (value: any) => {

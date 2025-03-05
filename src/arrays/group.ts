@@ -22,7 +22,6 @@ export const group = <T, Key extends string | number | symbol>(
 
       return acc;
     },
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
     {} as { [key in Key]: T[] },
   );
 };
