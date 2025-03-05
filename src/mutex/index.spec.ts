@@ -1,78 +1,90 @@
 import { describe, expect, test } from 'bun:test';
 import { sleep } from '../functions/sleep';
-import { Mutex, Semaphore } from './index';
+import { LockedError, Mutex, Semaphore } from './index';
 
-const wait = async (ms = 10) => {
+const wait = async (ms = 1) => {
   await sleep(ms);
 };
 
 describe('Mutex', () => {
-  const mutex = new Mutex(new Array<string>());
+  test('sequential operations with runOrWait', async () => {
+    const mutex = new Mutex(new Array<string>());
 
-  test('lock', async () => {
-    await mutex.lock(() => {
-      expect(mutex.locked).toBe(true);
+    await mutex.runOrWait(async (order: string[]) => {
+      order.push('first start');
+      await wait(10);
+      order.push('first end');
     });
-  });
 
-  test('try lock', () => {
-    expect(mutex.locked).toBe(false);
-    const result = mutex.tryLock(async () => {});
+    await mutex.runOrWait(async (order: string[]) => {
+      order.push('second start');
+      await wait(10);
+      order.push('second end');
+    });
 
-    expect(result.isErr()).toBe(false);
-  });
+    await mutex.runOrWait(async (order: string[]) => {
+      order.push('third start');
+      await wait(10);
+      order.push('third end');
+    });
 
-  test('fail try lock', async () => {
-    const [result] = await Promise.all([
-      wait().then(() =>
-        mutex.tryLock(async () => {
-          await wait();
-        }),
-      ),
-      mutex.lock(async () => {
-        await wait();
-        expect(mutex.locked).toBe(true);
-      }),
+    expect(mutex.inner).toEqual([
+      'first start',
+      'first end',
+      'second start',
+      'second end',
+      'third start',
+      'third end',
     ]);
-
-    expect(result.isErr()).toBe(true);
-
-    await wait();
-
-    expect(mutex.locked).toBe(false);
   });
 
-  test('acquire', async () => {
-    expect(mutex.locked).toBe(false);
-    const lock1 = await mutex.acquire();
+  test('runOrThrow should fail when locked', async () => {
+    const mutex = new Mutex(new Array<string>());
+    const lock = await mutex.getOrWait();
 
     expect(mutex.locked).toBe(true);
 
+    try {
+      await mutex.runOrThrow(async () => {
+        await wait(1);
+      });
+      throw new Error('Should have thrown');
+    } catch (error) {
+      expect(error instanceof LockedError).toBe(true);
+    }
+
+    lock.release();
+    expect(mutex.locked).toBe(false);
+  });
+
+  test('getOrWait and release pattern', async () => {
+    const mutex = new Mutex(new Array<string>());
+    const lock1 = await mutex.getOrWait();
+
+    expect(mutex.locked).toBe(true);
     lock1.inner.push('first start');
-    await wait();
+    await wait(10);
     lock1.inner.push('first end');
     lock1.release();
-
     await wait(0);
+
     expect(mutex.locked).toBe(false);
 
-    await mutex.lock(async inner => {
-      inner.push('second start');
-      await wait();
-      inner.push('second end');
+    await mutex.runOrWait(async (order: string[]) => {
+      order.push('second start');
+      await wait(10);
+      order.push('second end');
     });
 
-    expect(mutex.locked).toBe(false);
-    const lock2 = await mutex.acquire();
+    const lock2 = await mutex.getOrWait();
 
     expect(mutex.locked).toBe(true);
-
     lock2.inner.push('third start');
-    await wait();
+    await wait(10);
     lock2.inner.push('third end');
     lock2.release();
-
     await wait(0);
+
     expect(mutex.locked).toBe(false);
 
     expect(mutex.inner).toEqual([
@@ -87,81 +99,45 @@ describe('Mutex', () => {
 });
 
 describe('Semaphore', () => {
-  const semaphore = new Semaphore(new Array<string>(), 1);
+  test('concurrent operations with capacity', async () => {
+    const semaphore = new Semaphore<void, 3>(undefined, 3);
+    const results: string[] = [];
 
-  test('lock', async () => {
-    await semaphore.lock(() => {
-      expect(semaphore.locked).toBe(true);
+    const operation = async (id: number): Promise<void> => {
+      await semaphore.runOrWait(async () => {
+        results.push(`start ${id}`);
+        await wait(10);
+        results.push(`end ${id}`);
+      });
+    };
+
+    const promises = [1, 2, 3, 4, 5].map(async num => {
+      await operation(num);
     });
-  });
 
-  test('try lock', () => {
-    expect(semaphore.locked).toBe(false);
-    const result = semaphore.tryLock(async () => {});
+    await Promise.all(promises);
 
-    expect(result.isErr()).toBe(false);
-  });
-
-  test('fail try lock', async () => {
-    const [result] = await Promise.all([
-      wait().then(() =>
-        semaphore.tryLock(async () => {
-          await wait();
-        }),
-      ),
-      semaphore.lock(async () => {
-        await wait();
-        expect(semaphore.locked).toBe(true);
-      }),
-    ]);
-
-    expect(result.isErr()).toBe(true);
-
-    await wait();
-
+    expect(results.length).toBe(10);
     expect(semaphore.locked).toBe(false);
   });
 
-  test('acquire', async () => {
-    expect(semaphore.locked).toBe(false);
-    const lock1 = await semaphore.acquire();
+  test('mixed getOrWait and runOrWait operations', async () => {
+    const semaphore = new Semaphore<string[], 1>([], 1);
+    const lock = await semaphore.getOrWait();
 
     expect(semaphore.locked).toBe(true);
-
-    lock1.inner.push('first start');
-    await wait();
-    lock1.inner.push('first end');
-    lock1.release();
-
+    lock.inner.push('acquired');
+    lock.release();
     await wait(0);
+
     expect(semaphore.locked).toBe(false);
 
-    await semaphore.lock(async inner => {
-      inner.push('second start');
-      await wait();
-      inner.push('second end');
+    await semaphore.runOrWait(async (inner: string[]) => {
+      inner.push('waited');
+      await wait(1);
     });
 
     expect(semaphore.locked).toBe(false);
-    const lock2 = await semaphore.acquire();
-
-    expect(semaphore.locked).toBe(true);
-
-    lock2.inner.push('third start');
-    await wait();
-    lock2.inner.push('third end');
-    lock2.release();
-
-    await wait(0);
-    expect(semaphore.locked).toBe(false);
-
-    expect(semaphore.inner).toEqual([
-      'first start',
-      'first end',
-      'second start',
-      'second end',
-      'third start',
-      'third end',
-    ]);
+    expect(semaphore.inner).toEqual(['acquired', 'waited']);
   });
 });

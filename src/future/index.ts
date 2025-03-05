@@ -35,7 +35,6 @@ export class Future<T> implements Promise<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onrejected?: ((reason: any) => Result | PromiseLike<Result>) | null,
   ): Promise<T | Result> {
-    // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
     return await this.promise.catch(onrejected);
   }
 

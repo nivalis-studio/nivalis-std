@@ -12,6 +12,8 @@ describe('Future', () => {
       future.resolve(resolvedValue);
     }, ms);
 
+    expect(future).not.toBe(resolvedValue);
+
     const result = await future;
 
     expect(result).toBe(resolvedValue);
