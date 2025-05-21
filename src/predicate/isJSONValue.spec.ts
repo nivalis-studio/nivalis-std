@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { isJSONArray, isJSONObject, isJSONValue } from './isJSONValue.ts';
 
 describe('isJSONValue', () => {

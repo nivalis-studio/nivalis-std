@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { curry } from '../compat/function/curry';
 import { identity } from './identity';
 import { partialRight } from './partialRight';

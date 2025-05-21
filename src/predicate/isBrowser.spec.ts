@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { isBrowser } from './isBrowser';
 
 describe('isBrowser', () => {

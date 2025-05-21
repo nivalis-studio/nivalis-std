@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { burredLetters } from '../_internal/burredLetters';
 import { comboMarks } from '../_internal/comboMarks';
 import { deburredLetters } from '../_internal/deburredLetters';

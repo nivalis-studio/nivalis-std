@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { head, uniq } from '../array';
 import { map } from '../compat';
 import { curry } from '../compat/function/curry';

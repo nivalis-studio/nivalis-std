@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { args } from '../compat/_internal/args';
 import { falsey } from '../compat/_internal/falsey';
 import { isSymbol } from './isSymbol';

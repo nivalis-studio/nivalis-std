@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { takeWhile } from './takeWhile';
 
 // adjust the import path as necessary

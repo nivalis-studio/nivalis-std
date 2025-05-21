@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { args } from '../compat/_internal/args';
 import { arrayViews } from '../compat/_internal/arrayViews';
 import { stubFalse } from '../compat/util/stubFalse';

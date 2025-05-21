@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { medianBy } from './medianBy';
 
 describe('medianBy', () => {

@@ -1,5 +1,5 @@
 import { runInNewContext } from 'node:vm';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { isPlainObject } from './isPlainObject';
 
 describe('isPlainObject', () => {

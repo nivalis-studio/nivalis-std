@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import { spread } from './spread';
 
 function add(a: number, b: number): number {
@@ -31,7 +31,7 @@ describe('spread', () => {
 
     const spreadConcat = spread(concat);
 
-    expect(spreadConcat(['Hello', 'World', 'Vitest'])).toBe(
+    expect(spreadConcat(['Hello', 'World', 'bun:test'])).toBe(
       'Hello World Vitest',
     );
   });
