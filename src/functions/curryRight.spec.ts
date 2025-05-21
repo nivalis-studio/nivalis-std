@@ -23,9 +23,21 @@ describe('curryRight', () => {
 
     expectTypeOf(curried).parameters.toEqualTypeOf<[boolean]>();
     expectTypeOf(curried(true)).parameters.toEqualTypeOf<[string]>();
-    expectTypeOf(curried(true)).not.toEqualTypeOf<{ a: number; b: string; c: boolean }>();
+    expectTypeOf(curried(true)).not.toEqualTypeOf<{
+      a: number;
+      b: string;
+      c: boolean;
+    }>();
     expectTypeOf(curried(true)('a')).parameters.toEqualTypeOf<[number]>();
-    expectTypeOf(curried(true)('a')).not.toEqualTypeOf<{ a: number; b: string; c: boolean }>();
-    expectTypeOf(curried(true)('a')(1)).toEqualTypeOf<{ a: number; b: string; c: boolean }>();
+    expectTypeOf(curried(true)('a')).not.toEqualTypeOf<{
+      a: number;
+      b: string;
+      c: boolean;
+    }>();
+    expectTypeOf(curried(true)('a')(1)).toEqualTypeOf<{
+      a: number;
+      b: string;
+      c: boolean;
+    }>();
   });
 });

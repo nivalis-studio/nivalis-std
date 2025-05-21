@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { differenceWith } from './differenceWith';
 import { range } from '../../math';
 import { isEqual } from '../../predicate';
 import { args } from '../_internal/args';
@@ -10,6 +9,7 @@ import { constant } from '../util/constant';
 import { eq } from '../util/eq';
 import { times } from '../util/times';
 import { toString } from '../util/toString';
+import { differenceWith } from './differenceWith';
 
 describe('differenceWith', () => {
   /**
@@ -17,11 +17,13 @@ describe('differenceWith', () => {
    */
   it(`should return the difference of two arrays`, () => {
     const actual = differenceWith([2, 1], [2, 3]);
+
     expect(actual).toEqual([1]);
   });
 
   it(`should return the difference of multiple arrays`, () => {
     const actual = differenceWith([2, 1, 2, 3], [3, 4], [3, 2]);
+
     expect(actual).toEqual([1]);
   });
 
@@ -36,7 +38,9 @@ describe('differenceWith', () => {
   });
 
   it(`should match \`NaN\``, () => {
-    expect(differenceWith([1, NaN, 3], [NaN, 5, NaN])).toEqual([1, 3]);
+    expect(
+      differenceWith([1, Number.NaN, 3], [Number.NaN, 5, Number.NaN]),
+    ).toEqual([1, 3]);
   });
 
   it(`should work with large arrays`, () => {
@@ -64,12 +68,14 @@ describe('differenceWith', () => {
     expect(actual).toEqual([[], []]);
 
     const largeArray = times(LARGE_ARRAY_SIZE, stubOne);
+
     expect(differenceWith([-0, 1], largeArray)).toEqual([-0]);
   });
 
   it(`should work with large arrays of \`NaN\``, () => {
     const largeArray = times(LARGE_ARRAY_SIZE, stubNaN);
-    expect(differenceWith([1, NaN, 3], largeArray)).toEqual([1, 3]);
+
+    expect(differenceWith([1, Number.NaN, 3], largeArray)).toEqual([1, 3]);
   });
 
   it(`should work with large arrays of objects`, () => {
@@ -114,7 +120,9 @@ describe('differenceWith', () => {
     const others = [[1], largeArray];
     const expected = others.map(constant(['-0']));
 
-    const actual = others.map(other => differenceWith(array, other, eq).map(toString));
+    const actual = others.map(other =>
+      differenceWith(array, other, eq).map(toString),
+    );
 
     expect(actual).toEqual(expected);
   });

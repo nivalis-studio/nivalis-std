@@ -7,10 +7,8 @@
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the
  * argument to a valid length (`number`).
- *
  * @param {unknown} value The value to check.
  * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- *
  * @example
  * isLength(0); // true
  * isLength(42); // true

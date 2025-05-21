@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { memoize } from './memoize';
 import { identity, isFunction, noop, stubTrue } from '../index';
+import { memoize } from './memoize';
 
 describe('memoize', () => {
   class CustomCache {
@@ -13,11 +13,14 @@ describe('memoize', () => {
 
     clear() {
       this.__data__ = [];
+
       return this;
     }
+
     get(key: any) {
       const entry = lodashStable.find(this.__data__, ['key', key]);
-      return entry && entry.value;
+
+      return entry?.value;
     }
 
     has(key: any) {
@@ -26,15 +29,19 @@ describe('memoize', () => {
 
     set(key: any, value: any) {
       this.__data__.push({ key, value });
+
       return this;
     }
 
     delete(key: any): boolean {
       const index = this.__data__.findIndex(entry => entry.key === key);
-      if (index >= 0) {
+
+      if (index !== -1) {
         this.__data__.splice(index, 1);
+
         return true;
       }
+
       return false;
     }
   }
@@ -51,7 +58,9 @@ describe('memoize', () => {
 
     override set(key: any, value: any) {
       const result = new ImmutableCache();
+
       result.__data__ = [...this.__data__, { key, value }];
+
       return result as this;
     }
   }
@@ -79,7 +88,8 @@ describe('memoize', () => {
     };
     const memoized = memoize(fn, fn);
 
-    const object = { memoized: memoized, b: 2, c: 3 };
+    const object = { memoized, b: 2, c: 3 };
+
     expect(object.memoized(1)).toBe(6);
 
     object.b = 3;
@@ -103,7 +113,7 @@ describe('memoize', () => {
       try {
         // @ts-expect-error - Intentionally bypassing type check for testing purposes
         return isFunction(index ? memoize(noop, resolver) : memoize(noop));
-      } catch (e) {
+      } catch {
         /* empty */
       }
     });
@@ -137,9 +147,9 @@ describe('memoize', () => {
       let count = 0;
       const resolver = index ? identity : undefined;
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const memoized = memoize(function (_): unknown[] {
         count++;
+
         return array;
       }, resolver);
 
@@ -150,13 +160,14 @@ describe('memoize', () => {
 
       expect(count).toBe(1);
       expect(cache.get(key)).toBe(array);
-      expect(cache.__data__ instanceof Array).toBe(false);
+      expect(Array.isArray(cache.__data__)).toBe(false);
       expect(cache.delete(key)).toBe(true);
     });
   });
 
   it('should allow `_.memoize.Cache` to be customized', () => {
     const oldCache = memoize.Cache;
+
     memoize.Cache = CustomCache;
 
     const memoized = memoize(object => object.id);
@@ -176,6 +187,7 @@ describe('memoize', () => {
 
   it('should works with an immutable `_.memoize.Cache` ', () => {
     const oldCache = memoize.Cache;
+
     memoize.Cache = ImmutableCache;
 
     const memoized = memoize(object => object.id);
@@ -187,6 +199,7 @@ describe('memoize', () => {
     memoized(key2);
 
     const cache = memoized.cache;
+
     expect(cache.has(key1)).toBe(true);
     expect(cache.has(key2)).toBe(true);
 
@@ -195,6 +208,7 @@ describe('memoize', () => {
 
   it('should use Map as the default cache when memoize.Cache is not specified', () => {
     const oldCache = memoize.Cache;
+
     // @ts-expect-error - Intentionally setting to null to test default behavior
     memoize.Cache = null;
 
@@ -203,6 +217,7 @@ describe('memoize', () => {
     expect(memoized.cache instanceof Map).toBe(true);
 
     const key = 'test-key';
+
     memoized(key);
     expect(memoized.cache.has(key)).toBe(true);
     expect(memoized.cache.get(key)).toBe(key);
@@ -212,7 +227,7 @@ describe('memoize', () => {
 
   it('should handle cache.set() not returning a value', () => {
     class NonReturningCache {
-      data: Record<string, any> = {};
+      data: { [key: string]: any } = {};
 
       get(key: any) {
         return this.data[key];
@@ -229,6 +244,7 @@ describe('memoize', () => {
     }
 
     const oldCache = memoize.Cache;
+
     memoize.Cache = NonReturningCache as any;
 
     const memoized = memoize(identity);

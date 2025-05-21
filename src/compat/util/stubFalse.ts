@@ -1,6 +1,5 @@
 /**
  * Returns false.
- *
  * @returns {boolean} false.
  * @example
  * stubFalse() // Returns false

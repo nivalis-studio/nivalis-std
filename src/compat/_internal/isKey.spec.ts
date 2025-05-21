@@ -7,7 +7,7 @@ describe('isKey', () => {
     expect(isKey(false)).toBe(true);
     expect(isKey(1)).toBe(true);
     expect(isKey(null)).toBe(true);
-    expect(isKey(undefined)).toBe(true);
+    expect(isKey()).toBe(true);
     expect(isKey(-1.1)).toBe(true);
     expect(isKey(Symbol.iterator)).toBe(true);
   });

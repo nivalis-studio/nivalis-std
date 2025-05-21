@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { add } from './add';
 import { symbol } from '../_internal/symbol';
 import { map } from '../array/map';
 import { times } from '../util/times';
+import { add } from './add';
 
 describe('add', () => {
   it('should add two numbers', () => {
@@ -33,15 +33,15 @@ describe('add', () => {
   });
 
   it('should return NaN if the first value is NaN', () => {
-    expect(add(NaN, 10)).toBe(NaN);
+    expect(add(Number.NaN, 10)).toBe(Number.NaN);
   });
 
   it('should return NaN if the second value is NaN', () => {
-    expect(add(5, NaN)).toBe(NaN);
+    expect(add(5, Number.NaN)).toBe(Number.NaN);
   });
 
   it('should return NaN if both values are NaN', () => {
-    expect(add(NaN, NaN)).toBe(NaN);
+    expect(add(Number.NaN, Number.NaN)).toBe(Number.NaN);
   });
 
   it(`\`add\` should return \`0\` when no arguments are given`, () => {
@@ -71,6 +71,7 @@ describe('add', () => {
       const actual = map(values, value => {
         // @ts-expect-error - invalid arguments
         const result = index ? add(undefined, value) : add(value);
+
         return [result, 1 / result];
       });
 
@@ -80,15 +81,15 @@ describe('add', () => {
 
   it(`\`add\` should convert objects to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(add(0, {})).toEqual(NaN);
+    expect(add(0, {})).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(add({}, 0)).toEqual(NaN);
+    expect(add({}, 0)).toEqual(Number.NaN);
   });
 
   it(`\`add\` should convert symbols to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(add(0, symbol)).toEqual(NaN);
+    expect(add(0, symbol)).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(add(symbol, 0)).toEqual(NaN);
+    expect(add(symbol, 0)).toEqual(Number.NaN);
   });
 });

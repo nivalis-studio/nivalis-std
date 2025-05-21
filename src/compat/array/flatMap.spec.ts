@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { flatMap } from './flatMap';
-import { map } from './map';
 import { identity } from '../../function/identity';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
 import { each, stubArray } from '../compat';
 import { range } from '../math/range';
 import { constant } from '../util/constant';
+import { map } from './map';
+import { flatMap } from './flatMap';
 
 describe('flatMap', () => {
   it('should map and flatten values', () => {
@@ -14,6 +14,7 @@ describe('flatMap', () => {
     const expected = [1, 1, 2, 2];
 
     const duplicate = (n: number) => [n, n];
+
     expect(flatMap(array, duplicate)).toEqual(expected);
   });
 
@@ -23,6 +24,7 @@ describe('flatMap', () => {
 
   it('should work with `_.identity`', () => {
     const array = [[1], [2, [3]], 4];
+
     expect(flatMap(array, identity)).toEqual([1, 2, [3], 4]);
   });
 
@@ -37,6 +39,7 @@ describe('flatMap', () => {
 
   it('should treat sparse arrays correctly', () => {
     const array = [1];
+
     array[2] = 3;
 
     const expected = [1, undefined, 3];
@@ -44,12 +47,25 @@ describe('flatMap', () => {
 
     expect(flatMap(array, identity)).toEqual(expected);
     expect(flatMap([array], identity)).toEqual(expected);
-    expect(flatMap(array, value => (value === undefined ? [] : [value]))).toEqual([1, 3]);
-    expect(flatMap(array, duplicator)).toEqual([1, undefined, 3, 1, undefined, 3, 1, undefined, 3]);
+    expect(
+      flatMap(array, value => (value === undefined ? [] : [value])),
+    ).toEqual([1, 3]);
+    expect(flatMap(array, duplicator)).toEqual([
+      1,
+      undefined,
+      3,
+      1,
+      undefined,
+      3,
+      1,
+      undefined,
+      3,
+    ]);
   });
 
   it('should work with a "_.property" style iteratee', () => {
     const objects = [{ a: [1, 2] }, { a: [3, 4] }];
+
     expect(flatMap(objects, 'a')).toEqual([1, 2, 3, 4]);
   });
 
@@ -58,6 +74,7 @@ describe('flatMap', () => {
     const expected = [1, 1, 2, 2];
 
     const duplicate = (n: number) => [n, n];
+
     expect(flatMap(object, duplicate)).toEqual(expected);
   });
 
@@ -67,23 +84,27 @@ describe('flatMap', () => {
   });
 
   it('should handle empty values in arrays', () => {
-    const array = empties.slice();
+    const array = [...empties];
     const result = flatMap(array, value => [value, value]);
+
     expect(result.length).toBe(array.length * 2);
 
     for (const value of array) {
       let count = 0;
+
       for (const item of result) {
         if (Object.is(item, value)) {
           count++;
         }
       }
+
       expect(count).toBe(2);
     }
   });
 
   it('should work with undefined iteratee', () => {
     const array = [[1], [2, [3]], 4];
+
     expect(flatMap(array)).toEqual([1, 2, [3], 4]);
   });
 
@@ -91,10 +112,12 @@ describe('flatMap', () => {
     function Foo(this: any) {
       this.a = [1, 2];
     }
+
     Foo.prototype.b = [3, 4];
 
     // @ts-expect-error - Foo is a constructor
     const actual = flatMap(new Foo(), identity);
+
     expect(actual).toEqual([1, 2]);
   });
 
@@ -110,7 +133,9 @@ describe('flatMap', () => {
 
     each([array, object], collection => {
       // @ts-expect-error - testing
-      const actual = map(values, (value, index) => (index ? flatMap(collection, value) : flatMap(collection)));
+      const actual = map(values, (value, index) =>
+        index ? flatMap(collection, value) : flatMap(collection),
+      );
 
       expect(actual).toEqual(expected);
     });
@@ -134,6 +159,7 @@ describe('flatMap', () => {
 
   it(`should work with objects with non-number length properties`, () => {
     const object = { length: [1, 2] };
+
     expect(flatMap(object, identity)).toEqual([1, 2]);
   });
 });

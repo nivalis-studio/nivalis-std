@@ -31,9 +31,9 @@ describe('unescape', () => {
     expect(unescape('&#000039;')).toBe("'");
   });
 
-  ['&#96;', '&#x2F;'].forEach(entity => {
+  for (const entity of ['&#96;', '&#x2F;']) {
     it(`should not unescape the "${entity}" entity`, () => {
       expect(unescape(entity)).toBe(entity);
     });
-  });
+  }
 });

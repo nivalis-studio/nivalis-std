@@ -14,9 +14,10 @@ describe('last', () => {
   });
 
   it('returns the last element of a large array', () => {
-    const largeArray = Array(1000)
+    const largeArray = Array.from({ length: 1000 })
       .fill(0)
       .map((_, i) => i);
+
     expect(last(largeArray)).toBe(999);
   });
 
@@ -26,6 +27,7 @@ describe('last', () => {
       [3, 2],
       [3, 3],
     ];
+
     expect(last(nestedArray)).toEqual([3, 3]);
   });
 });

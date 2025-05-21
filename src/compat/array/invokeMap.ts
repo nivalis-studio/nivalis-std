@@ -7,14 +7,12 @@ import { isArrayLike } from '../predicate/isArrayLike.ts';
  * an array of the results of each invoked method. Any additional arguments
  * are provided to each invoked method. If `path` is a function, it's invoked
  * for, and `this` bound to, each element in `collection`.
- *
  * @template T The type of the elements in the collection.
  * @template R The type of the resolved values from the invoked methods.
  * @param {T[] | Record<string, T> | null | undefined} collection The collection to iterate over.
  * @param {PropertyKey | PropertyKey[] | ((this: T, ...args: unknown[]) => R)} path The path of the method to invoke (string, number, symbol, or an array of these) or the function to invoke.
  * @param {...unknown} [args] The arguments to invoke each method with.
  * @returns {Array<R | undefined>} Returns the array of results. Elements are `undefined` if the path is not found or the method invocation results in `undefined`.
- *
  * @example
  * // Invoke a method on each element
  * invokeMap(['a', 'b', 'c'], 'toUpperCase');
@@ -43,7 +41,7 @@ import { isArrayLike } from '../predicate/isArrayLike.ts';
  * // => [['1', '2', '3'], ['4', '5', '6']]
  */
 export function invokeMap<T, R>(
-  collection: T[] | Record<string, T> | null | undefined,
+  collection: T[] | { [key: string]: T } | null | undefined,
   path: PropertyKey | PropertyKey[] | ((this: T, ...args: any[]) => R),
   ...args: unknown[]
 ): Array<R | undefined> {
@@ -51,14 +49,15 @@ export function invokeMap<T, R>(
     return [];
   }
 
-  const values = isArrayLike(collection) ? (Array.from(collection) as T[]) : (Object.values(collection) as T[]);
+  const values = isArrayLike(collection)
+    ? ([...collection] as T[])
+    : Object.values(collection);
   const result: Array<R | undefined> = [];
 
-  for (let i = 0; i < values.length; i++) {
-    const value = values[i];
-
+  for (const value of values) {
     if (isFunction(path)) {
       result.push(path.apply(value, args));
+
       continue;
     }
 
@@ -68,12 +67,14 @@ export function invokeMap<T, R>(
 
     if (Array.isArray(path)) {
       const pathExceptLast = path.slice(0, -1);
+
       if (pathExceptLast.length > 0) {
         thisContext = get(value, pathExceptLast);
       }
     } else if (typeof path === 'string' && path.includes('.')) {
       const parts = path.split('.');
       const pathExceptLast = parts.slice(0, -1).join('.');
+
       thisContext = get(value, pathExceptLast);
     }
 

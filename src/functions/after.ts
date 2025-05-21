@@ -4,7 +4,6 @@
  *
  * This is particularly useful for scenarios involving events or asynchronous operations
  * where an action should occur only after a certain number of invocations.
- *
  * @template F - The type of the function to be invoked.
  * @param {number} n - The number of calls required for `func` to execute.
  * @param {F} func - The function to be invoked.
@@ -29,17 +28,17 @@
 
 export function after<F extends (...args: any[]) => any>(
   n: number,
-  func: F
+  func: F,
 ): (...args: Parameters<F>) => ReturnType<F> | undefined {
   if (!Number.isInteger(n) || n < 0) {
     throw new Error(`n must be a non-negative integer.`);
   }
 
   let counter = 0;
+
   return (...args: Parameters<F>) => {
     if (++counter >= n) {
       return func(...args);
     }
-    return undefined;
   };
 }

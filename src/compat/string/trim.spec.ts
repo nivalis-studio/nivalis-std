@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { trim } from './trim';
 import { whitespace } from '../_internal/whitespace';
+import { trim } from './trim';
 
 describe('trim', () => {
   const func = trim;
@@ -42,7 +42,7 @@ describe('trim', () => {
   });
 
   it(`\`trim\` should return an empty string for empty values and \`chars\``, () => {
-    [null, '_-'].forEach(chars => {
+    for (const chars of [null, '_-']) {
       // eslint-disable-next-line
       // @ts-ignore
       expect(func(null, chars)).toBe('');
@@ -52,19 +52,19 @@ describe('trim', () => {
       // eslint-disable-next-line
       // @ts-ignore
       expect(func('', chars)).toBe('');
-    });
+    }
   });
 
   it(`\`trim\` should work with \`undefined\` or empty string values for \`chars\``, () => {
     const string = `${whitespace}a b c${whitespace}`;
     const expected = `a b c`;
 
-    expect(func(string, undefined)).toBe(expected);
+    expect(func(string)).toBe(expected);
     expect(func(string, '')).toBe(string);
   });
 
   it(`\`trim\` should work as an iteratee for methods like \`_.map\``, () => {
-    const string = Object(`${whitespace}a b c${whitespace}`);
+    const string = new Object(`${whitespace}a b c${whitespace}`);
     const trimmed = `a b c`;
     // eslint-disable-next-line
     // @ts-ignore

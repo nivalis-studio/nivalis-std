@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { findLastIndex } from './findLastIndex';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { stubZero } from '../_internal/stubZero';
+import { findLastIndex } from './findLastIndex';
 
 describe('findLastIndex', () => {
   const objects = [
@@ -81,7 +81,9 @@ describe('findLastIndex', () => {
     const values = [-6, -8, -Infinity];
     const expected = values.map(stubZero);
 
-    const actual = values.map(fromIndex => findLastIndex(array, x => x === 1, fromIndex));
+    const actual = values.map(fromIndex =>
+      findLastIndex(array, x => x === 1, fromIndex),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -92,7 +94,7 @@ describe('findLastIndex', () => {
     const actual = falsey.map(fromIndex =>
       // eslint-disable-next-line
       // @ts-ignore
-      findLastIndex(array, x => x === 3, fromIndex)
+      findLastIndex(array, x => x === 3, fromIndex),
     );
 
     expect(actual).toEqual(expected);
@@ -108,7 +110,9 @@ describe('findLastIndex', () => {
   });
 
   it('should support array-like objects', () => {
-    expect(findLastIndex({ 0: 'a', 1: 'b', length: 2 }, i => i === 'b')).toBe(1);
+    expect(findLastIndex({ 0: 'a', 1: 'b', length: 2 }, i => i === 'b')).toBe(
+      1,
+    );
     expect(findLastIndex('123', i => i === '2')).toBe(1);
     expect(findLastIndex(args, i => i === 2)).toBe(1);
   });

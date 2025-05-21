@@ -9,13 +9,11 @@ import { compareValues } from '../_internal/compareValues.ts';
  * The function returns the array of objects sorted in corresponding order directions.
  * If two objects have the same value for the current criterion, it uses the next criterion to determine their order.
  * If the number of orders is less than the number of criteria, it uses the last order for the rest of the criteria.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array of objects to be sorted.
  * @param {Array<((item: T) => unknown) | keyof T>} criteria  - The criteria for sorting. This can be an array of object keys or functions that return values used for sorting.
  * @param {Array<'asc' | 'desc'>} orders - An array of order directions ('asc' for ascending or 'desc' for descending).
  * @returns {T[]} - The sorted array.
- *
  * @example
  * // Sort an array of objects by 'user' in ascending order and 'age' in descending order.
  * const users = [
@@ -37,14 +35,13 @@ import { compareValues } from '../_internal/compareValues.ts';
 export function orderBy<T extends object>(
   arr: readonly T[],
   criteria: Array<((item: T) => unknown) | keyof T>,
-  orders: Array<'asc' | 'desc'>
+  orders: Array<'asc' | 'desc'>,
 ): T[] {
-  return arr.slice().sort((a, b) => {
+  return [...arr].sort((a, b) => {
     const ordersLength = orders.length;
 
-    for (let i = 0; i < criteria.length; i++) {
+    for (const [i, criterion] of criteria.entries()) {
       const order = ordersLength > i ? orders[i] : orders[ordersLength - 1];
-      const criterion = criteria[i];
       const criterionIsFunction = typeof criterion === 'function';
 
       const valueA = criterionIsFunction ? criterion(a) : a[criterion];

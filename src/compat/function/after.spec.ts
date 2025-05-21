@@ -1,16 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { after } from './after';
 import { times } from '../util/times';
+import { after } from './after';
 
 describe('after', () => {
   function testAfter(n: number, t: number) {
     let count = 0;
+
     times(
       t,
       after(n, () => {
         count++;
-      })
+      }),
     );
+
     return count;
   }
 
@@ -26,7 +28,7 @@ describe('after', () => {
   });
 
   it('should coerce `n` values of `NaN` to `0`', () => {
-    expect(testAfter(NaN, 1)).toBe(1);
+    expect(testAfter(Number.NaN, 1)).toBe(1);
   });
 
   it('should use `this` binding of function', () => {

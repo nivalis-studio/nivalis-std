@@ -6,11 +6,9 @@
  *
  * Unlike some implementations, this function is optimized for performance
  * by directly accessing the last index of the array.
- *
  * @template T - The type of elements in the array.
  * @param {[...T[], T]} arr - The array from which to get the last element.
  * @returns {T} The last element of the array, or `undefined` if the array is empty.
- *
  * @example
  * const arr = [1, 2, 3];
  * const lastElement = last(arr);
@@ -30,11 +28,9 @@ export function last<T>(arr: readonly [...T[], T]): T;
  *
  * Unlike some implementations, this function is optimized for performance
  * by directly accessing the last index of the array.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array from which to get the last element.
  * @returns {T | undefined} The last element of the array, or `undefined` if the array is empty.
- *
  * @example
  * const arr = [1, 2, 3];
  * const lastElement = last(arr);
@@ -54,11 +50,9 @@ export function last<T>(arr: readonly T[]): T | undefined;
  *
  * Unlike some implementations, this function is optimized for performance
  * by directly accessing the last index of the array.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array from which to get the last element.
  * @returns {T | undefined} The last element of the array, or `undefined` if the array is empty.
- *
  * @example
  * const arr = [1, 2, 3];
  * const lastElement = last(arr);
@@ -69,5 +63,5 @@ export function last<T>(arr: readonly T[]): T | undefined;
  * // noElement will be undefined
  */
 export function last<T>(arr: readonly T[]): T | undefined {
-  return arr[arr.length - 1];
+  return arr.at(-1);
 }

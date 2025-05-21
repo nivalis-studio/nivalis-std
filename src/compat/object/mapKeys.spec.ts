@@ -7,16 +7,19 @@ describe('mapKeys', () => {
 
   it('should map keys in `object` to a new object', () => {
     const actual = mapKeys(object, String);
+
     expect(actual).toEqual({ 1: 1, 2: 2 });
   });
 
   it('should treat arrays like objects', () => {
     const actual = mapKeys(array, String);
+
     expect(actual).toEqual({ 1: 1, 2: 2 });
   });
 
   it('should work with `_.property` shorthands', () => {
     const actual = mapKeys({ a: { b: 'c' } }, 'b');
+
     expect(actual).toEqual({ c: { b: 'c' } });
   });
 
@@ -29,7 +32,7 @@ describe('mapKeys', () => {
     const actual = values.map((value, index) =>
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      index ? mapKeys(object, value) : mapKeys(object)
+      index ? mapKeys(object, value) : mapKeys(object),
     );
 
     expect(actual).toEqual(expected);

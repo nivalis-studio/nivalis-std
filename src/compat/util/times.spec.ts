@@ -1,19 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { stubArray } from './stubArray';
-import { times } from './times';
 import { doubled } from '../_internal/doubled';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
+import { times } from './times';
+import { stubArray } from './stubArray';
 
 describe('times', () => {
   it('should coerce non-finite `n` values to `0`', () => {
-    [-Infinity, NaN, Infinity].forEach(n => {
+    for (const n of [-Infinity, Number.NaN, Infinity]) {
       expect(times(n)).toEqual([]);
-    });
+    }
   });
 
   it('should coerce `n` to an integer', () => {
     const actual = times(2.6, n => n);
+
     expect(actual).toEqual([0, 1]);
   });
 
@@ -21,8 +22,8 @@ describe('times', () => {
     let args: any;
 
     times(1, function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-      args || (args = slice.call(arguments));
+      // eslint-disable-next-line prefer-rest-params
+      args ||= slice.call(arguments);
     });
 
     expect(args).toEqual([0]);
@@ -33,7 +34,9 @@ describe('times', () => {
     const values = [, null, undefined];
     const expected = values.map(() => [0, 1, 2]);
 
-    const actual = values.map((value, index) => (index ? times(3, value as any) : times(3)));
+    const actual = values.map((value, index) =>
+      index ? times(3, value as any) : times(3),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -43,10 +46,12 @@ describe('times', () => {
   });
 
   it('should return an empty array for falsey and negative `n` values', () => {
-    const values = falsey.concat(-1, -Infinity);
+    const values = [...falsey, -1, -Infinity];
     const expected = values.map(stubArray);
 
-    const actual = values.map((value, index) => (index ? times(value as any) : times()));
+    const actual = values.map((value, index) =>
+      index ? times(value as any) : times(),
+    );
 
     expect(actual).toEqual(expected);
   });

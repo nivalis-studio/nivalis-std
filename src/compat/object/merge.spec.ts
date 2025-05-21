@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { merge } from './merge';
 import { range } from '../../math/range';
 import { isEqual } from '../../predicate/isEqual';
 import { args } from '../_internal/args';
 import { typedArrays } from '../_internal/typedArrays';
 import { isArguments } from '../predicate/isArguments';
 import { stubTrue } from '../util/stubTrue';
+import { merge } from './merge';
 
 describe('merge', () => {
   it('should merge `source` into `object`', () => {
@@ -72,10 +72,11 @@ describe('merge', () => {
 
   it('should treat sparse array sources as dense', () => {
     const array = [1];
+
     array[2] = 3;
 
-    const actual = merge([], array),
-      expected: any = array.slice();
+    const actual = merge([], array);
+    const expected: any = [...array];
 
     expected[1] = undefined;
 
@@ -100,7 +101,7 @@ describe('merge', () => {
   });
 
   it('should not merge onto function values of sources', () => {
-    const source1 = { a: function () {} };
+    const source1 = { a() {} };
     const source2 = { a: { b: 2 } };
     const expected = { a: { b: 2 } };
     let actual = merge({}, source1, source2);
@@ -153,11 +154,22 @@ describe('merge', () => {
     const array3 = [0, 0, 0, 0];
     const array4 = [0, 0, 0, 0, 0, 0, 0, 0];
 
-    const arrays = [array2, array1, array4, array3, array2, array4, array4, array3, array2];
+    const arrays = [
+      array2,
+      array1,
+      array4,
+      array3,
+      array2,
+      array4,
+      array4,
+      array3,
+      array2,
+    ];
     const buffer = new ArrayBuffer(8);
 
     let expected = typedArrays.map((type, index) => {
-      const array = arrays[index].slice();
+      const array = [...arrays[index]];
+
       array[0] = 1;
 
       // eslint-disable-next-line
@@ -169,6 +181,7 @@ describe('merge', () => {
       // eslint-disable-next-line
       // @ts-ignore
       const Ctor = globalThis[type];
+
       return Ctor ? merge({ value: new Ctor(buffer) }, { value: [1] }) : false;
     });
 
@@ -176,8 +189,10 @@ describe('merge', () => {
     expect(actual).toEqual(expected);
 
     expected = typedArrays.map((type, index) => {
-      const array = arrays[index].slice();
+      const array = [...arrays[index]];
+
       array.push(1);
+
       // eslint-disable-next-line
       // @ts-ignore
       return globalThis[type] ? { value: array } : false;
@@ -190,7 +205,10 @@ describe('merge', () => {
       const array = range(arrays[index].length);
 
       array.push(1);
-      return Ctor ? merge({ value: array }, { value: new Ctor(buffer) }) : false;
+
+      return Ctor
+        ? merge({ value: array }, { value: new Ctor(buffer) })
+        : false;
     });
 
     expect(Array.isArray(actual)).toBe(true);
@@ -199,6 +217,7 @@ describe('merge', () => {
 
   it('should assign `null` values', () => {
     const actual = merge({ a: 1 }, { a: null });
+
     // eslint-disable-next-line
     // @ts-ignore
     expect(actual.a).toBe(null);
@@ -209,11 +228,20 @@ describe('merge', () => {
 
     // eslint-disable-next-line
     // @ts-ignore
-    const values = [new Foo(), new Boolean(), new Date(), Foo, new Number(), new String(), new RegExp()];
+    const values = [
+      new Foo(),
+      new Boolean(),
+      new Date(),
+      Foo,
+      new Number(),
+      new String(),
+      new RegExp(),
+    ];
     const expected = values.map(stubTrue);
 
     const actual = values.map(value => {
       const object = merge({}, { a: value, b: { c: value } });
+
       return object.a === value && object.b.c === value;
     });
 
@@ -238,12 +266,16 @@ describe('merge', () => {
 
     const actual = values.map((value: any, index: any) => {
       const key = props[index];
-      const object = merge({}, { value: value });
+      const object = merge({}, { value });
       const subValue = value[key];
       const newValue = object.value;
       const newSubValue = newValue[key];
 
-      return newValue !== value && newSubValue !== subValue && isEqual(newValue, value);
+      return (
+        newValue !== value &&
+        newSubValue !== subValue &&
+        isEqual(newValue, value)
+      );
     });
 
     expect(actual).toEqual(expected);
@@ -295,11 +327,13 @@ describe('merge', () => {
 
   it('should not overwrite existing values with `undefined` values of object sources', () => {
     const actual = merge({ a: 1 }, { a: undefined, b: undefined });
+
     expect(actual).toEqual({ a: 1, b: undefined });
   });
 
   it('should not overwrite existing values with `undefined` values of array sources', () => {
     let array: any = [1];
+
     array[2] = 3;
 
     let actual = merge([4, 5, 6], array);
@@ -322,10 +356,10 @@ describe('merge', () => {
     Object.defineProperty(object, 'a', {
       configurable: true,
       enumerable: true,
-      get: function () {
+      get() {
         pass = false;
       },
-      set: function () {
+      set() {
         pass = false;
       },
     });
@@ -336,6 +370,7 @@ describe('merge', () => {
 
   it('should preserve original properties of arrays', () => {
     const arr = [1, 2, 3];
+
     // eslint-disable-next-line
     // @ts-ignore
     arr.foo = 1;

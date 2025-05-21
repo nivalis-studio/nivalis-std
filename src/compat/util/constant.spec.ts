@@ -1,20 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { constant } from './constant';
-import { stubTrue } from './stubTrue';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
 import * as esToolkit from '../index';
+import { stubTrue } from './stubTrue';
+import { constant } from './constant';
 
 describe('constant', () => {
   it('should create a function that returns `value`', () => {
     const object = { a: 1 };
-    const values = Array(2).concat(empties, true, 1, 'a');
+    const values = Array.from({ length: 2 }).concat(empties, true, 1, 'a');
     const _constant = constant(object);
 
     const results = values.map((value, index) => {
       if (index < 2) {
         return index ? _constant.call({}) : _constant();
       }
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       return _constant(value);

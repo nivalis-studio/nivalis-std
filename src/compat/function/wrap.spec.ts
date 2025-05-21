@@ -1,23 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { wrap } from './wrap';
 import { noop } from '../../function';
 import { slice } from '../_internal/slice';
 import { stubA } from '../_internal/stubA';
 import { escape } from '../string/escape';
+import { wrap } from './wrap';
 
 describe('wrap', () => {
   it('should create a wrapped function', () => {
     const p = wrap(escape, (func, text: string) => `<p>${func(text)}</p>`);
 
-    expect(p('fred, barney & pebbles')).toBe('<p>fred, barney &amp; pebbles</p>');
+    expect(p('fred, barney & pebbles')).toBe(
+      '<p>fred, barney &amp; pebbles</p>',
+    );
   });
 
   it('should provide correct `wrapper` arguments', () => {
     let args: unknown;
 
     const wrapped = wrap(noop, function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-      args || (args = slice.call(arguments));
+      // eslint-disable-next-line prefer-rest-params
+      args ||= slice.call(arguments);
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -35,6 +37,7 @@ describe('wrap', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       const wrapped = index ? wrap('a', value) : wrap('a');
+
       return wrapped('b', 'c');
     });
 
@@ -48,7 +51,8 @@ describe('wrap', () => {
       return `<p>${func(this.text)}</p>`;
     });
 
-    const object = { p: p, text: 'fred, barney & pebbles' };
+    const object = { p, text: 'fred, barney & pebbles' };
+
     expect(object.p()).toBe('<p>fred, barney &amp; pebbles</p>');
   });
 
@@ -57,6 +61,7 @@ describe('wrap', () => {
     const expected = '<p>value</p>';
 
     const p = wrap(value, v => `<p>${v}</p>`);
+
     expect(p()).toBe(expected);
   });
 });

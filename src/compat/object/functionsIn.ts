@@ -2,7 +2,6 @@ import { isFunction } from '../../predicate/isFunction.ts';
 
 /**
  * Returns an array of property names whose values are functions, including inherited properties.
- *
  * @param {*} object The object to inspect.
  * @returns {Array} Returns the function names.
  * @example

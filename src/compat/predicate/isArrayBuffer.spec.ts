@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { isArrayBuffer } from './isArrayBuffer';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { stubFalse } from '../util/stubFalse';
+import { isArrayBuffer } from './isArrayBuffer';
 
 describe('isArrayBuffer', () => {
   it('should return `true` for array buffers', () => {
@@ -14,7 +14,9 @@ describe('isArrayBuffer', () => {
   it('should return `false` for non array buffers', () => {
     const expected = falsey.map(() => stubFalse());
 
-    const actual = falsey.map((value, index) => (index ? isArrayBuffer(value) : isArrayBuffer()));
+    const actual = falsey.map((value, index) =>
+      index ? isArrayBuffer(value) : isArrayBuffer(),
+    );
 
     expect(actual).toEqual(expected);
 

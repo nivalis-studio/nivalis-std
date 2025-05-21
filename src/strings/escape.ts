@@ -1,4 +1,4 @@
-const htmlEscapes: Record<string, string> = {
+const htmlEscapes: { [key: string]: string } = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -9,10 +9,8 @@ const htmlEscapes: Record<string, string> = {
 /**
  * Converts the characters "&", "<", ">", '"', and "'" in `str` to their corresponding HTML entities.
  * For example, "<" becomes "&lt;".
- *
  * @param {string} str  The string to escape.
  * @returns {string} Returns the escaped string.
- *
  * @example
  * escape('This is a <div> element.'); // returns 'This is a &lt;div&gt; element.'
  * escape('This is a "quote"'); // returns 'This is a &quot;quote&quot;'
@@ -20,5 +18,5 @@ const htmlEscapes: Record<string, string> = {
  * escape('This is a & symbol'); // returns 'This is a &amp; symbol'
  */
 export function escape(str: string): string {
-  return str.replace(/[&<>"']/g, match => htmlEscapes[match]);
+  return str.replaceAll(/[&<>"']/g, match => htmlEscapes[match]);
 }

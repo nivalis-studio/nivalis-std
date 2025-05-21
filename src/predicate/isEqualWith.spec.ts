@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isEqualWith } from './isEqualWith';
 import { args } from '../compat/_internal/args';
 import { arrayViews } from '../compat/_internal/arrayViews';
 import { stubFalse } from '../compat/util/stubFalse';
 import { noop } from '../function';
+import { isEqualWith } from './isEqualWith';
 
 describe('isEqualWith', () => {
   const symbol1 = Symbol ? Symbol('a') : true;
@@ -47,8 +47,20 @@ describe('isEqualWith', () => {
   });
 
   it('should use the customizer function with parent objects', () => {
-    const customizer = (a: any, b: any, key?: PropertyKey, aParent?: any, bParent?: any) => {
-      if (key === 'value' && aParent && bParent && aParent.type === 'special' && bParent.type === 'special') {
+    const customizer = (
+      a: any,
+      b: any,
+      key?: PropertyKey,
+      aParent?: any,
+      bParent?: any,
+    ) => {
+      if (
+        key === 'value' &&
+        aParent &&
+        bParent &&
+        aParent.type === 'special' &&
+        bParent.type === 'special'
+      ) {
         return String(a) === String(b);
       }
     };
@@ -66,39 +78,39 @@ describe('isEqualWith', () => {
   it('should compare primitives when customizer returns undefined', () => {
     const pairs = [
       [1, 1, true],
-      [1, Object(1), true],
+      [1, new Object(1), true],
       [1, '1', false],
       [1, 2, false],
       [-0, -0, true],
       [0, 0, true],
-      [0, Object(0), true],
-      [Object(0), Object(0), true],
+      [0, new Object(0), true],
+      [new Object(0), new Object(0), true],
       [-0, 0, true],
       [0, '0', false],
       [0, null, false],
-      [NaN, NaN, true],
-      [NaN, Object(NaN), true],
-      [Object(NaN), Object(NaN), true],
-      [NaN, 'a', false],
-      [NaN, Infinity, false],
+      [Number.NaN, Number.NaN, true],
+      [Number.NaN, new Object(Number.NaN), true],
+      [new Object(Number.NaN), new Object(Number.NaN), true],
+      [Number.NaN, 'a', false],
+      [Number.NaN, Infinity, false],
       ['a', 'a', true],
-      ['a', Object('a'), true],
-      [Object('a'), Object('a'), true],
+      ['a', new Object('a'), true],
+      [new Object('a'), new Object('a'), true],
       ['a', 'b', false],
       ['a', ['a'], false],
       [true, true, true],
-      [true, Object(true), true],
-      [Object(true), Object(true), true],
+      [true, new Object(true), true],
+      [new Object(true), new Object(true), true],
       [true, 1, false],
       [true, 'a', false],
       [false, false, true],
-      [false, Object(false), true],
-      [Object(false), Object(false), true],
+      [false, new Object(false), true],
+      [new Object(false), new Object(false), true],
       [false, 0, false],
       [false, '', false],
       [symbol1, symbol1, true],
-      [symbol1, Object(symbol1), true],
-      [Object(symbol1), Object(symbol1), true],
+      [symbol1, new Object(symbol1), true],
+      [new Object(symbol1), new Object(symbol1), true],
       [symbol1, symbol2, false],
       [null, null, true],
       [null, undefined, false],
@@ -136,8 +148,24 @@ describe('isEqualWith', () => {
 
     expect(isEqualWith(array1, array2, noop)).toBe(true);
 
-    array1 = [Object(1), false, Object('a'), /x/, new Date(2012, 4, 23), ['a', 'b', [Object('c')]], { a: 1 }];
-    array2 = [1, Object(false), 'a', /x/, new Date(2012, 4, 23), ['a', Object('b'), ['c']], { a: 1 }];
+    array1 = [
+      new Object(1),
+      false,
+      new Object('a'),
+      /x/,
+      new Date(2012, 4, 23),
+      ['a', 'b', [new Object('c')]],
+      { a: 1 },
+    ];
+    array2 = [
+      1,
+      new Object(false),
+      'a',
+      /x/,
+      new Date(2012, 4, 23),
+      ['a', new Object('b'), ['c']],
+      { a: 1 },
+    ];
 
     expect(isEqualWith(array1, array2, noop)).toBe(true);
 
@@ -195,11 +223,11 @@ describe('isEqualWith', () => {
   });
 
   it('should compare sparse arrays when customizer returns undefined', () => {
-    const array = Array(1);
+    const array = Array.from({ length: 1 });
 
-    expect(isEqualWith(array, Array(1), noop)).toBe(true);
+    expect(isEqualWith(array, Array.from({ length: 1 }), noop)).toBe(true);
     expect(isEqualWith(array, [undefined], noop)).toBe(true);
-    expect(isEqualWith(array, Array(2), noop)).toBe(false);
+    expect(isEqualWith(array, Array.from({ length: 2 }), noop)).toBe(false);
   });
 
   it('should compare plain objects when customizer returns undefined', () => {
@@ -240,11 +268,11 @@ describe('isEqualWith', () => {
     const object1 = {
       a: [1, 2, 3],
       b: true,
-      c: Object(1),
+      c: new Object(1),
       d: 'a',
       e: {
-        f: ['a', Object('b'), 'c'],
-        g: Object(false),
+        f: ['a', new Object('b'), 'c'],
+        g: new Object(false),
         h: new Date(2012, 4, 23),
         i: noop,
         j: 'a',
@@ -252,10 +280,10 @@ describe('isEqualWith', () => {
     };
 
     const object2 = {
-      a: [1, Object(2), 3],
-      b: Object(true),
+      a: [1, new Object(2), 3],
+      b: new Object(true),
       c: 1,
-      d: Object('a'),
+      d: new Object('a'),
       e: {
         f: ['a', 'b', 'c'],
         g: false,
@@ -274,6 +302,7 @@ describe('isEqualWith', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.a = 1;
 
     function Bar() {
@@ -281,6 +310,7 @@ describe('isEqualWith', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Bar.prototype.a = 2;
 
     // eslint-disable-next-line
@@ -298,10 +328,18 @@ describe('isEqualWith', () => {
   });
 
   it('should compare objects with constructor properties when customizer returns undefined', () => {
-    expect(isEqualWith({ constructor: 1 }, { constructor: 1 }, noop)).toBe(true);
-    expect(isEqualWith({ constructor: 1 }, { constructor: '1' }, noop)).toBe(false);
-    expect(isEqualWith({ constructor: [1] }, { constructor: [1] }, noop)).toBe(true);
-    expect(isEqualWith({ constructor: [1] }, { constructor: ['1'] }, noop)).toBe(false);
+    expect(isEqualWith({ constructor: 1 }, { constructor: 1 }, noop)).toBe(
+      true,
+    );
+    expect(isEqualWith({ constructor: 1 }, { constructor: '1' }, noop)).toBe(
+      false,
+    );
+    expect(isEqualWith({ constructor: [1] }, { constructor: [1] }, noop)).toBe(
+      true,
+    );
+    expect(
+      isEqualWith({ constructor: [1] }, { constructor: ['1'] }, noop),
+    ).toBe(false);
     expect(isEqualWith({ constructor: Object }, {}, noop)).toBe(false);
   });
 
@@ -353,12 +391,12 @@ describe('isEqualWith', () => {
     expect(isEqualWith(object1, object2, noop)).toBe(true);
 
     object1.b = 0;
-    object2.b = Object(0);
+    object2.b = new Object(0);
 
     expect(isEqualWith(object1, object2, noop)).toBe(true);
 
-    object1.c = Object(1);
-    object2.c = Object(2);
+    object1.c = new Object(1);
+    object2.c = new Object(2);
 
     expect(isEqualWith(object1, object2, noop)).toBe(false);
 
@@ -391,12 +429,12 @@ describe('isEqualWith', () => {
     expect(isEqualWith(array1, array2, noop)).toBe(true);
 
     array1[0].b = 0;
-    array2[0].b = Object(0);
+    array2[0].b = new Object(0);
 
     expect(isEqualWith(array1, array2, noop)).toBe(true);
 
-    array1[0].c = Object(1);
-    array2[0].c = Object(2);
+    array1[0].c = new Object(1);
+    array2[0].c = new Object(2);
 
     expect(isEqualWith(array1, array2, noop)).toBe(false);
   });
@@ -442,9 +480,11 @@ describe('isEqualWith', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.constructor = null;
 
     const object1 = Object.create(null);
+
     object1.a = 1;
 
     const object2 = { a: 1 };
@@ -456,13 +496,15 @@ describe('isEqualWith', () => {
   });
 
   it('should avoid common type coercions when customizer returns undefined', () => {
-    expect(isEqualWith(true, Object(false), noop)).toBe(false);
-    expect(isEqualWith(Object(false), Object(0), noop)).toBe(false);
-    expect(isEqualWith(false, Object(''), noop)).toBe(false);
-    expect(isEqualWith(Object(36), Object('36'), noop)).toBe(false);
+    expect(isEqualWith(true, new Object(false), noop)).toBe(false);
+    expect(isEqualWith(new Object(false), new Object(0), noop)).toBe(false);
+    expect(isEqualWith(false, new Object(''), noop)).toBe(false);
+    expect(isEqualWith(new Object(36), new Object('36'), noop)).toBe(false);
     expect(isEqualWith(0, '', noop)).toBe(false);
     expect(isEqualWith(1, true, noop)).toBe(false);
-    expect(isEqualWith(1337756400000, new Date(2012, 4, 23), noop)).toBe(false);
+    expect(isEqualWith(1_337_756_400_000, new Date(2012, 4, 23), noop)).toBe(
+      false,
+    );
     expect(isEqualWith('36', 36, noop)).toBe(false);
     expect(isEqualWith(36, '36', noop)).toBe(false);
   });
@@ -490,6 +532,7 @@ describe('isEqualWith', () => {
     const object = { 0: 1, 1: 2, 2: 3 };
 
     function Foo() {}
+
     Foo.prototype = object;
 
     expect(isEqualWith(args, object, noop)).toBe(true);
@@ -544,7 +587,12 @@ describe('isEqualWith', () => {
       // @ts-ignore
       const bufferC = globalThis[otherType] ? new ArrayBuffer(16) : 16;
 
-      return [new CtorA(bufferA), new CtorA(bufferA), new CtorB(bufferB), new CtorB(bufferC)];
+      return [
+        new CtorA(bufferA),
+        new CtorA(bufferA),
+        new CtorB(bufferB),
+        new CtorB(bufferC),
+      ];
     });
 
     const expected = pairs.map(() => [true, false, false]);
@@ -572,23 +620,31 @@ describe('isEqualWith', () => {
     expect(isEqualWith(date, new Date(2012, 4, 23), noop)).toBe(true);
     expect(isEqualWith(new Date('a'), new Date('b'), noop)).toBe(true);
     expect(isEqualWith(date, new Date(2013, 3, 25), noop)).toBe(false);
-    expect(isEqualWith(date, { getTime: () => Number(date) }, noop)).toBe(false);
+    expect(isEqualWith(date, { getTime: () => Number(date) }, noop)).toBe(
+      false,
+    );
   });
 
   it('should compare error objects when customizer returns undefined', () => {
-    const pairs = ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError'].map(
-      (type, index, errorTypes) => {
-        const otherType = errorTypes[++index % errorTypes.length];
-        // eslint-disable-next-line
+    const pairs = [
+      'Error',
+      'EvalError',
+      'RangeError',
+      'ReferenceError',
+      'SyntaxError',
+      'TypeError',
+      'URIError',
+    ].map((type, index, errorTypes) => {
+      const otherType = errorTypes[++index % errorTypes.length];
+      // eslint-disable-next-line
         // @ts-ignore
-        const CtorA = globalThis[type];
-        // eslint-disable-next-line
+      const CtorA = globalThis[type];
+      // eslint-disable-next-line
         // @ts-ignore
-        const CtorB = globalThis[otherType];
+      const CtorB = globalThis[otherType];
 
-        return [new CtorA('a'), new CtorA('a'), new CtorB('a'), new CtorB('b')];
-      }
-    );
+      return [new CtorA('a'), new CtorA('a'), new CtorB('a'), new CtorB('b')];
+    });
 
     const expected = pairs.map(() => [true, false, false]);
 
@@ -605,6 +661,7 @@ describe('isEqualWith', () => {
     function a() {
       return 1 + 2;
     }
+
     function b() {
       return 1 + 2;
     }
@@ -614,7 +671,7 @@ describe('isEqualWith', () => {
   });
 
   it('should compare maps when customizer returns undefined', () => {
-    [[new Map(), new Map()]].forEach(maps => {
+    for (const maps of [[new Map(), new Map()]]) {
       const map1 = maps[0];
       const map2 = maps[1];
 
@@ -635,7 +692,7 @@ describe('isEqualWith', () => {
 
       map1.clear();
       map2.clear();
-    });
+    }
   });
 
   it('should compare maps with circular references when customizer returns undefined', () => {
@@ -652,18 +709,18 @@ describe('isEqualWith', () => {
   });
 
   it('should compare promises by reference when customizer returns undefined', () => {
-    [[Promise.resolve(1), Promise.resolve(1)]].forEach(promises => {
+    for (const promises of [[Promise.resolve(1), Promise.resolve(1)]]) {
       const promise1 = promises[0];
       const promise2 = promises[1];
 
       expect(isEqualWith(promise1, promise2, noop)).toBe(false);
       expect(isEqualWith(promise1, promise1, noop)).toBe(true);
-    });
+    }
   });
 
   it('should compare regexes when customizer returns undefined', () => {
-    expect(isEqualWith(/x/gim, /x/gim, noop)).toBe(true);
-    expect(isEqualWith(/x/gim, /x/gim, noop)).toBe(true);
+    expect(isEqualWith(/x/gi, /x/gi, noop)).toBe(true);
+    expect(isEqualWith(/x/gi, /x/gi, noop)).toBe(true);
     expect(isEqualWith(/x/gi, /x/g, noop)).toBe(false);
     expect(isEqualWith(/x/, /y/, noop)).toBe(false);
 
@@ -676,13 +733,13 @@ describe('isEqualWith', () => {
           multiline: false,
           source: 'x',
         },
-        noop
-      )
+        noop,
+      ),
     ).toBe(false);
   });
 
   it('should compare sets when customizer returns undefined', () => {
-    [[new Set(), new Set()]].forEach(sets => {
+    for (const sets of [[new Set(), new Set()]]) {
       const set1 = sets[0];
       const set2 = sets[1];
 
@@ -703,7 +760,7 @@ describe('isEqualWith', () => {
 
       set1.clear();
       set2.clear();
-    });
+    }
   });
 
   it('should compare sets with circular references when customizer returns undefined', () => {
@@ -750,7 +807,7 @@ describe('isEqualWith', () => {
   it('should return `false` for objects with custom `toString` methods when customizer returns undefined', () => {
     let primitive: any;
     const object = {
-      toString: function () {
+      toString() {
         return primitive;
       },
     };
@@ -759,6 +816,7 @@ describe('isEqualWith', () => {
 
     const actual = values.map(value => {
       primitive = value;
+
       return isEqualWith(object, value, noop);
     });
 

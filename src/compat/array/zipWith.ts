@@ -1,9 +1,8 @@
-import { unzip } from './unzip.ts';
 import { isFunction } from '../../predicate/isFunction.ts';
+import { unzip } from './unzip.ts';
 
 /**
  * Combines one array into a single array using a custom combiner function.
- *
  * @template T - The type of elements in the first array.
  * @template R - The type of elements in the resulting array.
  * @param {ArrayLike<T>} arr1 - The first array to zip.
@@ -15,7 +14,6 @@ export function zipWith<T, R>(arr1: ArrayLike<T>, combine: (item: T) => R): R[];
 
 /**
  * Combines two arrays into a single array using a custom combiner function.
- *
  * @template T - The type of elements in the first array.
  * @template U - The type of elements in the second array.
  * @template R - The type of elements in the resulting array.
@@ -24,11 +22,14 @@ export function zipWith<T, R>(arr1: ArrayLike<T>, combine: (item: T) => R): R[];
  * @param {(item1: T, item2: U) => R} combine - The combiner function that takes corresponding elements from each array and returns a single value.
  * @returns {R[]} A new array where each element is the result of applying the combiner function to the corresponding elements of the input arrays.
  */
-export function zipWith<T, U, R>(arr1: ArrayLike<T>, arr2: ArrayLike<U>, combine: (item1: T, item2: U) => R): R[];
+export function zipWith<T, U, R>(
+  arr1: ArrayLike<T>,
+  arr2: ArrayLike<U>,
+  combine: (item1: T, item2: U) => R,
+): R[];
 
 /**
  * Combines three arrays into a single array using a custom combiner function.
- *
  * @template T - The type of elements in the first array.
  * @template U - The type of elements in the second array.
  * @template V - The type of elements in the third array.
@@ -43,12 +44,11 @@ export function zipWith<T, U, V, R>(
   arr1: ArrayLike<T>,
   arr2: ArrayLike<U>,
   arr3: ArrayLike<V>,
-  combine: (item1: T, item2: U, item3: V) => R
+  combine: (item1: T, item2: U, item3: V) => R,
 ): R[];
 
 /**
  * Combines four arrays into a single array using a custom combiner function.
- *
  * @template T - The type of elements in the first array.
  * @template U - The type of elements in the second array.
  * @template V - The type of elements in the third array.
@@ -66,12 +66,11 @@ export function zipWith<T, U, V, W, R>(
   arr2: ArrayLike<U>,
   arr3: ArrayLike<V>,
   arr4: ArrayLike<W>,
-  combine: (item1: T, item2: U, item3: V, item4: W) => R
+  combine: (item1: T, item2: U, item3: V, item4: W) => R,
 ): R[];
 
 /**
  * Combines five arrays into a single array using a custom combiner function.
- *
  * @template T - The type of elements in the first array.
  * @template U - The type of elements in the second array.
  * @template V - The type of elements in the third array.
@@ -92,7 +91,7 @@ export function zipWith<T, U, V, W, X, R>(
   arr3: ArrayLike<V>,
   arr4: ArrayLike<W>,
   arr5: ArrayLike<X>,
-  combine: (item1: T, item2: U, item3: V, item4: W, item5: X) => R
+  combine: (item1: T, item2: U, item3: V, item4: W, item5: X) => R,
 ): R[];
 
 /**
@@ -102,19 +101,19 @@ export function zipWith<T, U, V, W, X, R>(
  * applying the provided combiner function to the corresponding elements of each array.
  * If the input arrays are of different lengths, the resulting array will have the length
  * of the longest input array, with undefined values for missing elements.
- *
  * @template T - The type of elements in the input arrays.
  * @template R - The type of elements in the resulting array.
  * @param {Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>} combine - The combiner function that takes corresponding elements from each array and returns a single value.
  * @returns {R[]} A new array where each element is the result of applying the combiner function to the corresponding elements of the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
  * const result = zipWith(arr1, arr2, (num, char) => `${num}${char}`);
  * // result will be ['1a', '2b', '3c']
  */
-export function zipWith<T, R>(...combine: Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>): R[];
+export function zipWith<T, R>(
+  ...combine: Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>
+): R[];
 
 /**
  * Combines multiple arrays into a single array using a custom combiner function.
@@ -123,19 +122,19 @@ export function zipWith<T, R>(...combine: Array<((...group: T[]) => R) | ArrayLi
  * applying the provided combiner function to the corresponding elements of each array.
  * If the input arrays are of different lengths, the resulting array will have the length
  * of the longest input array, with undefined values for missing elements.
- *
  * @template T - The type of elements in the input arrays.
  * @template R - The type of elements in the resulting array.
  * @param {Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>} combine - The combiner function that takes corresponding elements from each array and returns a single value.
  * @returns {R[]} A new array where each element is the result of applying the combiner function to the corresponding elements of the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
  * const result = zipWith(arr1, arr2, (num, char) => `${num}${char}`);
  * // result will be ['1a', '2b', '3c']
  */
-export function zipWith<T, R>(...combine: Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>): R[] {
+export function zipWith<T, R>(
+  ...combine: Array<((...group: T[]) => R) | ArrayLike<T> | null | undefined>
+): R[] {
   let iteratee = combine.pop();
 
   if (!isFunction(iteratee)) {

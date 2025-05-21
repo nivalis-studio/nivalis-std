@@ -1,15 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { overEvery } from './overEvery';
-import { stubFalse } from './stubFalse';
-import { stubTrue } from './stubTrue';
 import { slice } from '../_internal/slice';
 import { stubA } from '../_internal/stubA';
 import { stubOne } from '../_internal/stubOne';
+import { overEvery } from './overEvery';
+import { stubFalse } from './stubFalse';
+import { stubTrue } from './stubTrue';
 
 describe('overEvery', () => {
   it('should create a function that returns `true` if all predicates return truthy', () => {
     // @ts-expect-error - invalid argument
     const over = overEvery(stubTrue, stubOne, stubA);
+
     expect(over()).toBe(true);
   });
 
@@ -17,10 +18,12 @@ describe('overEvery', () => {
     let count = 0;
     const countFalse = function () {
       count++;
+
       return false;
     };
     const countTrue = function () {
       count++;
+
       return true;
     };
     const over = overEvery(countTrue, countFalse, countTrue);
@@ -82,6 +85,7 @@ describe('overEvery', () => {
 
   it('should flatten `predicates`', () => {
     const over = overEvery(stubTrue, [stubFalse]);
+
     expect(over()).toBe(false);
   });
 
@@ -109,9 +113,9 @@ describe('overEvery', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       function (this: any) {
         return this.a;
-      }
+      },
     );
-    const object = { over: over, a: 1, b: 2 };
+    const object = { over, a: 1, b: 2 };
 
     expect(object.over()).toBe(true);
 

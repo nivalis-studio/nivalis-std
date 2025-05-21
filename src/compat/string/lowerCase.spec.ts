@@ -2,7 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { lowerCase } from './lowerCase';
 
 describe('lowerCase', () => {
-  const strings = ['foo bar', 'Foo bar', 'foo Bar', 'Foo Bar', 'FOO BAR', 'fooBar', '--foo-bar--', '__foo_bar__'];
+  const strings = [
+    'foo bar',
+    'Foo bar',
+    'foo Bar',
+    'Foo Bar',
+    'FOO BAR',
+    'fooBar',
+    '--foo-bar--',
+    '__foo_bar__',
+  ];
 
   it(`should convert \`string\``, () => {
     const actual = strings.map(string => lowerCase(string));
@@ -23,23 +32,27 @@ describe('lowerCase', () => {
   it(`should remove contraction apostrophes`, () => {
     const postfixes = ['d', 'll', 'm', 're', 's', 't', 've'];
 
-    ["'", '\u2019'].forEach(apos => {
-      const actual = postfixes.map(postfix => lowerCase(`a b${apos}${postfix} c`));
+    for (const apos of ["'", '\u2019']) {
+      const actual = postfixes.map(postfix =>
+        lowerCase(`a b${apos}${postfix} c`),
+      );
 
       const expected = postfixes.map(postfix => `a b${postfix} c`);
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it(`should remove Latin mathematical operators`, () => {
-    const actual = ['\xd7', '\xf7'].map(lowerCase);
+    const actual = ['\u00D7', '\u00F7'].map(lowerCase);
+
     expect(actual).toEqual(['', '']);
   });
 
   it(`should coerce \`string\` to a string`, () => {
     const string = 'foo bar';
-    expect(lowerCase(Object(string))).toBe('foo bar');
+
+    expect(lowerCase(new Object(string))).toBe('foo bar');
     expect(lowerCase({ toString: () => string })).toBe('foo bar');
   });
 });

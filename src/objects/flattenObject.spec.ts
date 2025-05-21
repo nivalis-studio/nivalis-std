@@ -22,8 +22,8 @@ describe('flattenObject', function () {
           number: 1234.5678,
           boolean: true,
           null: null,
-          undefined: undefined,
-          date: date,
+          undefined,
+          date,
         },
       },
     });
@@ -166,7 +166,7 @@ describe('flattenObject', function () {
             d: [2, 3],
           },
         },
-        { delimiter: '/' }
+        { delimiter: '/' },
       );
 
       expect(result).toEqual({
@@ -189,7 +189,7 @@ describe('flattenObject', function () {
             },
           },
         },
-        { delimiter: '-' }
+        { delimiter: '-' },
       );
 
       expect(result).toEqual({
@@ -212,7 +212,7 @@ describe('flattenObject', function () {
             },
           },
         },
-        { delimiter: '_' }
+        { delimiter: '_' },
       );
 
       expect(result).toEqual({
@@ -235,7 +235,7 @@ describe('flattenObject', function () {
             },
           },
         },
-        { delimiter: '->' }
+        { delimiter: '->' },
       );
 
       expect(result).toEqual({
@@ -253,7 +253,7 @@ describe('flattenObject', function () {
             },
           },
         },
-        { delimiter: '' }
+        { delimiter: '' },
       );
 
       expect(result).toEqual({
@@ -271,7 +271,7 @@ describe('flattenObject', function () {
             },
           },
         },
-        { delimiter: '@#$' }
+        { delimiter: '@#$' },
       );
 
       expect(result).toEqual({

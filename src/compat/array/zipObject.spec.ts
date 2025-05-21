@@ -4,8 +4,10 @@ import { zipObject } from './zipObject';
 
 describe('zipObject', () => {
   const object = { barney: 36, fred: 40 };
+
   it(`should zip together key/value arrays into an object`, () => {
     const actual = zipObject(['barney', 'fred'], [36, 40]);
+
     expect(actual).toEqual(object);
   });
 
@@ -20,6 +22,7 @@ describe('zipObject', () => {
   it(`should not support deep paths`, () => {
     each(['a.b.c', ['a', 'b', 'c']], (path, index) => {
       const expected = index ? { 'a,b,c': 1 } : { 'a.b.c': 1 };
+
       // @ts-expect-error - invalid argument
       expect(zipObject([path], [1])).toEqual(expected);
     });

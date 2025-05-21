@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { functions } from './functions';
 import { identity } from '../../function/identity';
 import { noop } from '../../function/noop';
+import { functions } from './functions';
 
 describe('functions', () => {
   it('should return the function names of an object', () => {
@@ -16,6 +16,7 @@ describe('functions', () => {
       this.a = identity;
       this.b = 'b';
     }
+
     Foo.prototype.c = noop;
     // @ts-expect-error - Foo is a constructor
     expect(functions(new Foo())).toEqual(['a']);
@@ -26,6 +27,6 @@ describe('functions', () => {
   });
 
   it('should return an empty array for undefined', () => {
-    expect(functions(undefined)).toEqual([]);
+    expect(functions()).toEqual([]);
   });
 });

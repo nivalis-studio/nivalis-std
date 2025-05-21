@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { unzip } from './unzip';
 import { zip } from '../../array/zip';
+import { unzip } from './unzip';
 
 describe('unzip', () => {
   const object = {
@@ -28,12 +28,13 @@ describe('unzip', () => {
     ],
   };
 
-  Object.entries(object).forEach(([key, pair]) => {
+  for (const [key, pair] of Object.entries(object)) {
     it(`\`_.unzip\` should work with ${key}`, () => {
       const actual = unzip(pair[1]);
+
       expect(actual).toEqual(pair[0]);
     });
-  });
+  }
 
   it(`\`_.unzip\` should work with tuples of different lengths`, () => {
     const pair = [
@@ -48,6 +49,7 @@ describe('unzip', () => {
       ],
     ];
     const actual = unzip(pair[1]) as any;
+
     expect('2' in actual[0]).toBeTruthy();
     expect(actual).toEqual([
       ['barney', 36, undefined],
@@ -60,13 +62,19 @@ describe('unzip', () => {
       ['barney', 'fred'],
       [36, 40],
     ];
+
     // @ts-expect-error - TS doesn't support array types in rest parameters
     expect(unzip(zip(...unzip(zip(...expected))))).toEqual(expected);
   });
 
   it(`\`_.unzip\` should work with array-like object`, () => {
-    const array = { 0: { 0: 'a', 1: 1, length: 2 }, 1: { 0: 'b', 1: 2, length: 2 }, length: 2 };
+    const array = {
+      0: { 0: 'a', 1: 1, length: 2 },
+      1: { 0: 'b', 1: 2, length: 2 },
+      length: 2,
+    };
     const actual = unzip(array);
+
     expect(actual).toEqual([
       ['a', 'b'],
       [1, 2],

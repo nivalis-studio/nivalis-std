@@ -1,55 +1,65 @@
 import { describe, expect, it } from 'vitest';
-import { every } from './every';
 import { identity } from '../../function/identity';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { stubFalse } from '../util/stubFalse';
 import { stubTrue } from '../util/stubTrue';
+import { every } from './every';
 
 describe('every', () => {
   it('should return true for array with all elements passing predicate', () => {
     const arr = [1, 2, 3, 4];
     const result = every(arr, n => n > 0);
+
     expect(result).toBe(true);
   });
 
   it('should return false for array when an element does not pass predicate', () => {
     const arr = [1, 2, 3, -4];
     const result = every(arr, n => n > 0);
+
     expect(result).toBe(false);
   });
 
   it('should return true for empty array', () => {
     const result = every([], () => false);
+
     expect(result).toBe(true);
   });
 
   it('should return true for object with all values passing predicate', () => {
     const obj = { a: 1, b: 2, c: 3 };
     const result = every(obj, value => value > 0);
+
     expect(result).toBe(true);
   });
 
   it('should return false for object when a value does not pass predicate', () => {
     const obj = { a: 1, b: -2, c: 3 };
     const result = every(obj, value => value > 0);
+
     expect(result).toBe(false);
   });
 
   it('should return true for empty object', () => {
     const result = every({}, () => false);
+
     expect(result).toBe(true);
   });
 
   it('should correctly handle indices for arrays', () => {
     const arr = [1, 2, 3];
     const result = every(arr, (n, index) => index < 3);
+
     expect(result).toBe(true);
   });
 
   it('should correctly handle keys for objects', () => {
     const obj = { a: 1, b: 2, c: 3 };
-    const result = every(obj, (value, key) => ['a', 'b', 'c'].includes(key as any));
+    const result = every(obj, (value, key) =>
+      ['a', 'b', 'c'].includes(key as any),
+    );
+
     expect(result).toBe(true);
   });
 
@@ -63,7 +73,7 @@ describe('every', () => {
     const actual = empties.map(value => {
       try {
         return every(value, identity);
-      } catch (e) {
+      } catch {
         /* empty */
       }
     });
@@ -77,8 +87,9 @@ describe('every', () => {
     expect(
       every([true, null, true], value => {
         count++;
+
         return value;
-      })
+      }),
     ).toEqual(false);
 
     expect(count).toBe(2);
@@ -95,6 +106,7 @@ describe('every', () => {
 
     let actual = values.map((value, index) => {
       const array = [0];
+
       // eslint-disable-next-line
       // @ts-ignore
       return index ? every(array, value) : every(array);
@@ -105,6 +117,7 @@ describe('every', () => {
     expected = values.map(stubTrue);
     actual = values.map((value, index) => {
       const array = [1];
+
       // eslint-disable-next-line
       // @ts-ignore
       return index ? every(array, value) : every(array);
@@ -118,6 +131,7 @@ describe('every', () => {
       { a: 0, b: 1, 0: 1, [Symbol.for('c')]: 1 },
       { a: 1, b: 2, 0: 2, [Symbol.for('c')]: 2 },
     ];
+
     expect(every(objects, 'a')).toBe(false);
     expect(every(objects, 'b')).toBe(true);
     expect(every(objects, 0)).toBe(true);
@@ -129,12 +143,14 @@ describe('every', () => {
       { a: 0, b: 0 },
       { a: 0, b: 1 },
     ];
+
     expect(every(objects, { a: 0 })).toBe(true);
     expect(every(objects, { b: 1 })).toBe(false);
   });
 
   it('should work as an iteratee for methods like `_.map`', () => {
     const actual = [[1], [2, 3]].map(every);
+
     expect(actual).toEqual([true, true]);
   });
 
@@ -153,6 +169,7 @@ describe('every', () => {
       { a: 0, b: 0, 0: 1, [Symbol.for('c')]: 1 },
       { a: 0, b: 1, 0: 2, [Symbol.for('c')]: 1 },
     ];
+
     expect(every(objects, ['a', 0])).toBe(true);
     expect(every(objects, ['b', 1])).toBe(false);
     expect(every(objects, [0, 1])).toBe(false);

@@ -1,6 +1,7 @@
-import { Criterion, orderBy } from './orderBy.ts';
 import { flatten } from '../../array/flatten.ts';
 import { isIterateeCall } from '../_internal/isIterateeCall.ts';
+import { orderBy } from './orderBy.ts';
+import type { Criterion } from './orderBy.ts';
 
 /**
  * Sorts an array of objects based on multiple properties and their corresponding order directions.
@@ -8,12 +9,10 @@ import { isIterateeCall } from '../_internal/isIterateeCall.ts';
  * This function takes an array of objects, an array of criteria to sort by.
  * It returns the ascending sorted array, ordering by each key.
  * If values for a key are equal, it moves to the next key to determine the order.
- *
  * @template T - The type of elements in the array.
  * @param {ArrayLike<T> | object | null | undefined} collection - The array of objects to be sorted.
  * @param {Array<Array<Criterion<T> | Criterion<T>>>} criteria - An array of criteria (property names or property paths or custom key functions) to sort by.
  * @returns {T[]} - The ascending sorted array.
- *
  * @example
  * // Sort an array of objects by 'user' in ascending order and 'age' in descending order.
  * const users = [
@@ -36,11 +35,16 @@ export function sortBy<T = any>(
   ...criteria: Array<Criterion<T> | Array<Criterion<T>>>
 ): T[] {
   const length = criteria.length;
+
   // Enables use as an iteratee for methods like `_.reduce` and `_.map`.
   if (length > 1 && isIterateeCall(collection, criteria[0], criteria[1])) {
     criteria = [];
-  } else if (length > 2 && isIterateeCall(criteria[0], criteria[1], criteria[2])) {
+  } else if (
+    length > 2 &&
+    isIterateeCall(criteria[0], criteria[1], criteria[2])
+  ) {
     criteria = [criteria[0]];
   }
+
   return orderBy(collection, flatten(criteria), ['asc']);
 }

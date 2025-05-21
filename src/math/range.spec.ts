@@ -22,7 +22,7 @@ describe('range', () => {
 
   it('throws an error when step is zero', () => {
     expect(() => range(1, 4, 0)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: The step value must be a non-zero integer.]`
+      `[Error: The step value must be a non-zero integer.]`,
     );
   });
 

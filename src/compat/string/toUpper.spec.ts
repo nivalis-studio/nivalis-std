@@ -2,27 +2,53 @@ import { describe, expect, it } from 'vitest';
 import { toUpper } from './toUpper';
 
 describe('toUpper', () => {
-  const strings = ['foo bar', 'Foo bar', 'foo Bar', 'Foo Bar', 'FOO BAR', 'fooBar', '--foo-bar--', '__foo_bar__'];
+  const strings = [
+    'foo bar',
+    'Foo bar',
+    'foo Bar',
+    'Foo Bar',
+    'FOO BAR',
+    'fooBar',
+    '--foo-bar--',
+    '__foo_bar__',
+  ];
 
   it('should convert string to upper case while preserving special characters', () => {
     const actual = strings.map(string => toUpper(string));
-    const expected = ['FOO BAR', 'FOO BAR', 'FOO BAR', 'FOO BAR', 'FOO BAR', 'FOOBAR', '--FOO-BAR--', '__FOO_BAR__'];
+    const expected = [
+      'FOO BAR',
+      'FOO BAR',
+      'FOO BAR',
+      'FOO BAR',
+      'FOO BAR',
+      'FOOBAR',
+      '--FOO-BAR--',
+      '__FOO_BAR__',
+    ];
+
     expect(actual).toEqual(expected);
   });
 
   it('should handle double-converting strings', () => {
     const actual = strings.map(string => toUpper(toUpper(string)));
     const expected = strings.map(string => toUpper(string));
+
     expect(actual).toEqual(expected);
   });
 
   it('should preserve contractions with apostrophes', () => {
     const postfixes = ['d', 'll', 'm', 're', 's', 't', 've'];
-    ["'", '\u2019'].forEach(apos => {
-      const actual = postfixes.map(postfix => toUpper(`a b${apos}${postfix} c`));
-      const expected = postfixes.map(postfix => `A B${apos}${postfix.toUpperCase()} C`);
+
+    for (const apos of ["'", '\u2019']) {
+      const actual = postfixes.map(postfix =>
+        toUpper(`a b${apos}${postfix} c`),
+      );
+      const expected = postfixes.map(
+        postfix => `A B${apos}${postfix.toUpperCase()} C`,
+      );
+
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it('should preserve spaces and special characters', () => {
@@ -38,13 +64,13 @@ describe('toUpper', () => {
   });
 
   it('should preserve Latin mathematical operators', () => {
-    expect(toUpper('\xd7')).toBe('\xd7');
-    expect(toUpper('\xf7')).toBe('\xf7');
+    expect(toUpper('\u00D7')).toBe('\u00D7');
+    expect(toUpper('\u00F7')).toBe('\u00F7');
   });
 
   it('should handle null and undefined', () => {
     expect(toUpper(null)).toBe('');
-    expect(toUpper(undefined)).toBe('');
+    expect(toUpper()).toBe('');
   });
 
   it('should handle numbers including special cases', () => {
@@ -52,7 +78,7 @@ describe('toUpper', () => {
     expect(toUpper(-0)).toBe('-0');
     expect(toUpper(0)).toBe('0');
     expect(toUpper(Infinity)).toBe('INFINITY');
-    expect(toUpper(NaN)).toBe('NAN');
+    expect(toUpper(Number.NaN)).toBe('NAN');
   });
 
   it('should handle arrays', () => {
@@ -70,6 +96,7 @@ describe('toUpper', () => {
   it('should handle symbols', () => {
     const sym1 = Symbol('test');
     const sym2 = Symbol('');
+
     expect(toUpper(sym1)).toBe('SYMBOL(TEST)');
     expect(toUpper(sym2)).toBe('SYMBOL()');
     expect(toUpper([Symbol('a'), Symbol('b')])).toBe('SYMBOL(A),SYMBOL(B)');
@@ -77,12 +104,14 @@ describe('toUpper', () => {
 
   it('should handle objects', () => {
     const obj = { toString: () => 'custom' };
+
     expect(toUpper(obj)).toBe('CUSTOM');
     expect(toUpper({})).toBe('[OBJECT OBJECT]');
   });
 
   it('should handle mixed types in arrays', () => {
     const sym = Symbol('test');
+
     expect(toUpper([1, 'b', sym, null, undefined])).toBe('1,B,SYMBOL(TEST),,');
   });
 
@@ -90,7 +119,7 @@ describe('toUpper', () => {
     const result1: string = toUpper('test');
     const result2: string = toUpper(123);
     const result3: string = toUpper(null);
-    const result4: string = toUpper(undefined);
+    const result4: string = toUpper();
 
     expect(typeof result1).toBe('string');
     expect(typeof result2).toBe('string');

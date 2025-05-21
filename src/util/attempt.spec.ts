@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { attempt } from './attempt';
 import { delay } from '../promise';
+import { attempt } from './attempt';
 
 describe('attempt', () => {
   it('should return the result of the function', () => {
@@ -11,12 +11,13 @@ describe('attempt', () => {
     expect(
       attempt(() => {
         throw new Error('test');
-      })
+      }),
     ).toEqual([new Error('test'), null]);
   });
 
   it('should return the result of the promise', async () => {
     const [error, result] = attempt(async () => 1);
+
     expect(error).toBeNull();
     expect(await result).toBe(1);
   });

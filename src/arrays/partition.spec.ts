@@ -3,7 +3,10 @@ import { partition } from './partition';
 
 describe('partition', () => {
   it('creates two arrays: the first array includes items for which isInTruthy returns true, and the second array includes items for which isInTruthy returns false.', () => {
-    expect(partition([true, true, false], x => x)).toEqual([[true, true], [false]]);
+    expect(partition([true, true, false], x => x)).toEqual([
+      [true, true],
+      [false],
+    ]);
     expect(
       partition(
         [
@@ -12,8 +15,8 @@ describe('partition', () => {
           { id: 3, enabled: false },
           { id: 4, enabled: true },
         ],
-        x => x.enabled
-      )
+        x => x.enabled,
+      ),
     ).toEqual([
       [
         { id: 1, enabled: true },

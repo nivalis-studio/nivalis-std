@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { some } from './some';
 import { identity } from '../../function/identity';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { stubFalse } from '../util/stubFalse';
 import { stubTrue } from '../util/stubTrue';
+import { some } from './some';
 
 describe('some', () => {
   it('should return `true` if `predicate` returns truthy for any element', () => {
@@ -20,8 +20,8 @@ describe('some', () => {
         // eslint-disable-next-line
         // @ts-ignore
         return some(value, identity);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     });
 
@@ -34,8 +34,9 @@ describe('some', () => {
     expect(
       some([null, true, null], value => {
         count++;
+
         return value;
-      })
+      }),
     );
 
     expect(count).toBe(2);
@@ -53,6 +54,7 @@ describe('some', () => {
 
     let actual = values.map((value, index) => {
       const array = [0, 0];
+
       return index
         ? // eslint-disable-next-line
           // @ts-ignore
@@ -65,6 +67,7 @@ describe('some', () => {
     expected = values.map(stubTrue);
     actual = values.map((value, index) => {
       const array = [0, 1];
+
       return index
         ? // eslint-disable-next-line
           // @ts-ignore
@@ -77,6 +80,7 @@ describe('some', () => {
     expected = values.map(stubFalse);
     actual = values.map((value, index) => {
       const array = { 0: 0, a: 0 };
+
       return index
         ? // eslint-disable-next-line
           // @ts-ignore
@@ -89,6 +93,7 @@ describe('some', () => {
     expected = values.map(stubTrue);
     actual = values.map((value, index) => {
       const array = { 0: 0, a: 1 };
+
       return index
         ? // eslint-disable-next-line
           // @ts-ignore
@@ -118,6 +123,7 @@ describe('some', () => {
       { a: 0, b: 0, 0: 0, [Symbol.for('a')]: 0 },
       { a: 0, b: 1, 0: 1, [Symbol.for('a')]: 1 },
     ];
+
     expect(some(objects, 'a')).toBe(false);
     expect(some(objects, 'b')).toBe(true);
 
@@ -130,12 +136,14 @@ describe('some', () => {
       { a: 0, b: 0 },
       { a: 1, b: 1 },
     ];
+
     expect(some(objects, { a: 0 })).toBe(true);
     expect(some(objects, { b: 2 })).toBe(false);
   });
 
   it('should work as an iteratee for methods like `_.map`', () => {
     const actual = [[1]].map(some);
+
     expect(actual).toEqual([true]);
   });
 
@@ -153,21 +161,29 @@ describe('some', () => {
         { a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } },
         {
           name: 'Bob',
-        }
-      )
+        },
+      ),
     ).toBe(true);
   });
 
   it('should return true for object with one value matching the property', () => {
-    expect(some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, 'name')).toBe(true);
+    expect(
+      some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, 'name'),
+    ).toBe(true);
   });
 
   it('should return true for object with one value matching the property and value', () => {
-    expect(some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, ['name', 'Bob'])).toBe(true);
+    expect(
+      some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, [
+        'name',
+        'Bob',
+      ]),
+    ).toBe(true);
   });
 
   it('should return false for empty object', () => {
     const result = some({}, () => false);
+
     expect(result).toBe(false);
   });
 
@@ -177,7 +193,9 @@ describe('some', () => {
   });
 
   it('should support array-like objects', () => {
-    expect(some({ 0: 'a', 1: 'b', length: 2 }, value => value === 'b')).toBe(true);
+    expect(some({ 0: 'a', 1: 'b', length: 2 }, value => value === 'b')).toBe(
+      true,
+    );
     expect(some('123', value => value === '3')).toBe(true);
     expect(some(args, value => value === 1)).toBe(true);
   });

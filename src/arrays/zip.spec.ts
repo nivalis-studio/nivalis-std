@@ -25,6 +25,6 @@ describe('zip', () => {
   });
 
   it('supports spread operators', () => {
-    expect(zip(...[[1], ['s'], [{ a: 2 }]])).toEqual([[1, 's', { a: 2 }]]);
+    expect(zip([1], ['s'], [{ a: 2 }])).toEqual([[1, 's', { a: 2 }]]);
   });
 });

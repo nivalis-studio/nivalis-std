@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { compact } from './compact';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
+import { compact } from './compact';
 
 /**
  * @see https://github.com/lodash/lodash/blob/6a2cc1dfcf7634fea70d1bc5bd22db453df67b42/test/compact.spec.js#L1
@@ -9,7 +9,8 @@ import { falsey } from '../_internal/falsey';
 describe('compact', () => {
   it('should filter falsey values', () => {
     const array = ['0', '1', '2'];
-    expect(compact(falsey.concat(array))).toEqual(array);
+
+    expect(compact([...falsey, ...array])).toEqual(array);
   });
 
   it('should return an empty array when the collection is null or undefined', () => {

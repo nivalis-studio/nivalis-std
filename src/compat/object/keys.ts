@@ -8,7 +8,6 @@ import { times } from '../util/times.ts';
  * Creates an array of the own enumerable property names of `object`.
  *
  * Non-object values are coerced to objects.
- *
  * @param {object} object The object to query.
  * @returns {string[]} Returns the array of property names.
  * @example
@@ -28,7 +27,7 @@ export function keys(object?: any): string[] {
     return arrayLikeKeys(object);
   }
 
-  const result = Object.keys(Object(object));
+  const result = Object.keys(new Object(object));
 
   if (!isPrototype(object)) {
     return result;
@@ -55,5 +54,8 @@ function arrayLikeKeys(object: ArrayLike<any>): string[] {
     filteredKeys.add('byteOffset');
   }
 
-  return [...indices, ...Object.keys(object).filter(key => !filteredKeys.has(key))];
+  return [
+    ...indices,
+    ...Object.keys(object).filter(key => !filteredKeys.has(key)),
+  ];
 }

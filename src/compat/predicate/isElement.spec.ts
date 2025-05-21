@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isElement } from './isElement';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isElement } from './isElement';
 
 /**
  * @see https://github.com/lodash/lodash/blob/afcd5bc1e8801867c31a17566e0e0edebb083d0e/test/isElement.spec.js
@@ -27,9 +27,9 @@ describe('isElement', () => {
   });
 
   it('should return `false` for non DOM elements', () => {
-    falsey.forEach(val => {
+    for (const val of falsey) {
       expect(isElement(val)).toBe(false);
-    });
+    }
 
     expect(isElement(args)).toBe(false);
     expect(isElement([1, 2, 3])).toBe(false);
@@ -46,7 +46,7 @@ describe('isElement', () => {
 
   it('should return `false` for plain objects', () => {
     expect(isElement({ nodeType: 1 })).toBe(false);
-    expect(isElement({ nodeType: Object(1) })).toBe(false);
+    expect(isElement({ nodeType: new Object(1) })).toBe(false);
     expect(isElement({ nodeType: true })).toBe(false);
     expect(isElement({ nodeType: [1] })).toBe(false);
     expect(isElement({ nodeType: '1' })).toBe(false);

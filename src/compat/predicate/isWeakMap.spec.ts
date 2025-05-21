@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isWeakMap } from './isWeakMap';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isWeakMap } from './isWeakMap';
 
 describe('isWeakMap', () => {
   it('should return `true` for weak maps', () => {
@@ -13,7 +13,9 @@ describe('isWeakMap', () => {
   });
 
   it('should return `false` for non weak maps', () => {
-    expect(falsey.map((value, index) => (index ? isWeakMap(value) : isWeakMap()))).toEqual(falsey.map(() => false));
+    expect(
+      falsey.map((value, index) => (index ? isWeakMap(value) : isWeakMap())),
+    ).toEqual(falsey.map(() => false));
     expect(isWeakMap(args)).toBe(false);
     expect(isWeakMap([1, 2, 3])).toBe(false);
     expect(isWeakMap(true)).toBe(false);

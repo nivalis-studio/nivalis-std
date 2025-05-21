@@ -13,7 +13,7 @@ describe('lastIndexOf', () => {
   });
 
   it(`should work with \`NaN\``, () => {
-    expect(lastIndexOf([1, 2, 3, NaN, 1, 2], NaN)).toBe(3);
+    expect(lastIndexOf([1, 2, 3, Number.NaN, 1, 2], Number.NaN)).toBe(3);
   });
 
   it(`should work with a positive \`fromIndex\``, () => {

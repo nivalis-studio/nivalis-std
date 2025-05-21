@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { unionWith } from './unionWith';
 import { isEqual } from '../../predicate';
 import { args } from '../_internal/args';
+import { unionWith } from './unionWith';
 
 /**
  * @see https://github.com/lodash/lodash/blob/v5-wip/test/union-methods.spec.js
@@ -10,21 +10,25 @@ import { args } from '../_internal/args';
 describe('unionWith', () => {
   it('should return the union of two arrays', () => {
     const actual = unionWith([2], [1, 2]);
+
     expect(actual).toEqual([2, 1]);
   });
 
   it('should return the union of multiple arrays', () => {
     const actual = unionWith([2], [1, 2], [2, 3]);
+
     expect(actual).toEqual([2, 1, 3]);
   });
 
   it('should not flatten nested arrays', () => {
     const actual = unionWith([1, 3, 2], [1, [5]], [2, [4]]);
+
     expect(actual).toEqual([1, 3, 2, [5], [4]]);
   });
 
   it('should ignore values that are not arrays or arguments objects', () => {
     const array = [0];
+
     // eslint-disable-next-line
     // @ts-ignore
     expect(unionWith(array, 3, { '0': 1 }, null)).toEqual(array);

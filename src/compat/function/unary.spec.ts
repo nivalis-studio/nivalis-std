@@ -8,21 +8,22 @@ describe('unary', () => {
   }
 
   it('should cap the number of arguments provided to `func`', () => {
-    const actual = map(['6', '8', '10'], unary(parseInt));
+    const actual = map(['6', '8', '10'], unary(Number.parseInt));
+
     expect(actual).toEqual([6, 8, 10]);
   });
 
   it('should not force a minimum argument count', () => {
     const capped = unary(fn);
+
     expect(capped()).toEqual([]);
   });
 
   it('should use `this` binding of function', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const capped = unary(function (this: any, _a: unknown, _b: unknown) {
       return this;
     });
-    const object = { capped: capped };
+    const object = { capped };
 
     expect(object.capped()).toBe(object);
   });

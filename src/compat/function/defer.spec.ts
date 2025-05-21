@@ -9,10 +9,10 @@ describe('defer', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function (a: any, b: any) {
         // eslint-disable-next-line prefer-rest-params
-        args = Array.from(arguments);
+        args = [...arguments];
       },
       1,
-      2
+      2,
     );
 
     setTimeout(() => {

@@ -4,8 +4,8 @@ import { parseInt } from './parseInt';
 describe('parseInt', () => {
   it('should accept a `radix`', () => {
     const expected = [
-      2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-      32, 33, 34, 35, 36,
+      2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
     ];
 
     const actual = expected.map(radix => parseInt('10', radix));
@@ -17,16 +17,16 @@ describe('parseInt', () => {
     expect(parseInt('10')).toBe(10);
     expect(parseInt('10', 0)).toBe(10);
     expect(parseInt('10', 10)).toBe(10);
-    expect(parseInt('10', undefined)).toBe(10);
+    expect(parseInt('10')).toBe(10);
   });
 
   it('should use a radix of `16`, for hexadecimals, if `radix` is `undefined` or `0`', () => {
-    ['0x20', '0X20'].forEach(string => {
+    for (const string of ['0x20', '0X20']) {
       expect(parseInt(string)).toBe(32);
       expect(parseInt(string, 0)).toBe(32);
       expect(parseInt(string, 16)).toBe(32);
-      expect(parseInt(string, undefined)).toBe(32);
-    });
+      expect(parseInt(string)).toBe(32);
+    }
   });
 
   it('should use a radix of `10` for string with leading zeros', () => {
@@ -38,19 +38,21 @@ describe('parseInt', () => {
     const expected = [8, 8, 10, 10, 32, 32, 32, 32];
 
     const actual: number[] = [];
-    ['08', '10'].forEach(string => {
-      actual.push(parseInt(` ${string}`, 10), parseInt(` ${string}`));
-    });
 
-    ['0x20', '0X20'].forEach(string => {
+    for (const string of ['08', '10']) {
+      actual.push(parseInt(` ${string}`, 10), parseInt(` ${string}`));
+    }
+
+    for (const string of ['0x20', '0X20']) {
       actual.push(parseInt(` ${string}`), parseInt(` ${string}`, 16));
-    });
+    }
 
     expect(actual).toEqual(expected);
   });
 
   it('should coerce `radix` to a number', () => {
     const object = { valueOf: () => 0 };
+
     // @ts-expect-error - unusual usage
     expect(parseInt('08', object)).toBe(8);
     // @ts-expect-error - unusual usage

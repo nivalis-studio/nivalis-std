@@ -1,5 +1,5 @@
-import { keys as keysToolkit } from './keys.ts';
 import { identity } from '../../function/identity.ts';
+import { keys as keysToolkit } from './keys.ts';
 
 /**
  * Iterates over an object's properties in reverse order and calls the `iteratee` function for each property.
@@ -7,12 +7,10 @@ import { identity } from '../../function/identity.ts';
  * It only iterates over the object's own properties, not including inherited properties or properties with `Symbol` keys.
  *
  * The `iteratee` function can terminate the iteration early by returning `false`.
- *
  * @template T - The type of the object.
  * @param {T} object The object to iterate over.
- * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee=identity] The function invoked per iteration. If not provided, the identity function will be used.
- * @return {T} Returns object.
- *
+ * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee] The function invoked per iteration. If not provided, the identity function will be used.
+ * @returns {T} Returns object.
  * @example
  * function Foo() {
  *   this.a = 1;
@@ -26,7 +24,10 @@ import { identity } from '../../function/identity.ts';
  * });
  * // => Logs 'b' then 'a' (iteration order is not guaranteed).
  */
-export function forOwnRight<T>(object: T, iteratee?: (value: T[keyof T], key: string, collection: T) => any): T;
+export function forOwnRight<T>(
+  object: T,
+  iteratee?: (value: T[keyof T], key: string, collection: T) => any,
+): T;
 
 /**
  * Iterates over an object's properties in reverse order and calls the `iteratee` function for each property.
@@ -34,12 +35,10 @@ export function forOwnRight<T>(object: T, iteratee?: (value: T[keyof T], key: st
  * It only iterates over the object's own properties, not including inherited properties or properties with `Symbol` keys.
  *
  * The `iteratee` function can terminate the iteration early by returning `false`.
- *
  * @template T - The type of the object.
  * @param {T | null | undefined} object The object to iterate over.
- * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee=identity] The function invoked per iteration. If not provided, the identity function will be used.
- * @return {T | null | undefined} Returns object.
- *
+ * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee] The function invoked per iteration. If not provided, the identity function will be used.
+ * @returns {T | null | undefined} Returns object.
  * @example
  * function Foo() {
  *   this.a = 1;
@@ -55,7 +54,7 @@ export function forOwnRight<T>(object: T, iteratee?: (value: T[keyof T], key: st
  */
 export function forOwnRight<T>(
   object: T | null | undefined,
-  iteratee?: (value: T[keyof T], key: string, collection: T) => any
+  iteratee?: (value: T[keyof T], key: string, collection: T) => any,
 ): T | null | undefined;
 
 /**
@@ -64,12 +63,10 @@ export function forOwnRight<T>(
  * It only iterates over the object's own properties, not including inherited properties or properties with `Symbol` keys.
  *
  * The `iteratee` function can terminate the iteration early by returning `false`.
- *
  * @template T - The type of the object.
  * @param {T | null | undefined} object The object to iterate over.
- * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee=identity] The function invoked per iteration. If not provided, the identity function will be used.
- * @return {T | null | undefined} Returns object.
- *
+ * @param {(value: T[keyof T], key: string, collection: T) => any} [iteratee] The function invoked per iteration. If not provided, the identity function will be used.
+ * @returns {T | null | undefined} Returns object.
  * @example
  * function Foo() {
  *   this.a = 1;
@@ -85,17 +82,18 @@ export function forOwnRight<T>(
  */
 export function forOwnRight<T>(
   object: T | null | undefined,
-  iteratee: (value: T[keyof T], key: string, collection: T) => any = identity
+  iteratee: (value: T[keyof T], key: string, collection: T) => any = identity,
 ): T | null | undefined {
   if (object == null) {
     return object;
   }
 
-  const iterable = Object(object);
+  const iterable = new Object(object);
   const keys = keysToolkit(object);
 
   for (let i = keys.length - 1; i >= 0; --i) {
     const key = keys[i];
+
     if (iteratee(iterable[key], key, iterable) === false) {
       break;
     }

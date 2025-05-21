@@ -9,9 +9,7 @@ declare let window:
  *
  * This function checks for the existence of the `window.document` property,
  * which only exists in browser environments.
- *
  * @returns {boolean} `true` if the current environment is a browser, otherwise `false`.
- *
  * @example
  * if (isBrowser()) {
  *   console.log("This is running in a browser");
@@ -19,5 +17,5 @@ declare let window:
  * }
  */
 export function isBrowser(): boolean {
-  return typeof window !== 'undefined' && window?.document != null;
+  return window?.document != null;
 }

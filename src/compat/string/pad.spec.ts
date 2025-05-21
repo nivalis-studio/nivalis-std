@@ -8,32 +8,34 @@ describe('pad', () => {
   });
 
   it(`\`pad\` should treat negative \`length\` as \`0\``, () => {
-    [0, -2].forEach(length => {
+    for (const length of [0, -2]) {
       expect(pad('abc', length)).toBe('abc');
-    });
+    }
   });
 
   it(`\`pad\` should coerce \`length\` to a number`, () => {
-    ['', '4'].forEach(length => {
+    for (const length of ['', '4']) {
       const actual = length ? 'abc ' : 'abc';
+
       // @ts-expect-error - invalid length
       expect(pad('abc', length)).toBe(actual);
-    });
+    }
   });
 
   it(`\`pad\` should treat nullish values as empty strings`, () => {
-    [undefined, '_-'].forEach(chars => {
+    for (const chars of [undefined, '_-']) {
       const expected = chars ? '__' : '  ';
+
       // @ts-expect-error - invalid string
       expect(pad(null, 2, chars)).toBe(expected);
       // @ts-expect-error - invalid string
       expect(pad(undefined, 2, chars)).toBe(expected);
       expect(pad('', 2, chars)).toBe(expected);
-    });
+    }
   });
 
   it(`\`pad\` should return \`string\` when \`chars\` coerces to an empty string`, () => {
-    const values = ['', Object('')];
+    const values = ['', new Object('')];
     const expected = values.map(() => 'abc');
 
     const actual = values.map(value => pad('abc', 6, value));
@@ -46,7 +48,9 @@ describe('pad', () => {
     const values = [, undefined];
     const expected = values.map(() => ' abc  ');
 
-    const actual = values.map((value, index) => (index ? pad('abc', 6, value) : pad('abc', 6)));
+    const actual = values.map((value, index) =>
+      index ? pad('abc', 6, value) : pad('abc', 6),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -57,7 +61,7 @@ describe('pad', () => {
   });
 
   it('should coerce `string` to a string', () => {
-    const values = [Object('abc'), { toString: () => 'abc' }];
+    const values = [new Object('abc'), { toString: () => 'abc' }];
     const expected = values.map(() => true);
 
     const actual = values.map(value => pad(value, 6) === ' abc  ');

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { clone } from './clone';
 import { args } from '../_internal/args';
 import { typedArrays } from '../_internal/typedArrays';
+import { clone } from './clone';
 
 describe('clone', () => {
   it('should perform a shallow clone', () => {
@@ -69,7 +69,7 @@ describe('clone', () => {
   });
 
   it('should clone boolean objects', () => {
-    const object = Object(false);
+    const object = new Object(false);
 
     const actual = clone(object);
 
@@ -143,7 +143,7 @@ describe('clone', () => {
   });
 
   it('should clone number objects', () => {
-    const object = Object(0);
+    const object = new Object(0);
     const actual = clone(object);
 
     expect(actual).toEqual(object);
@@ -151,7 +151,7 @@ describe('clone', () => {
   });
 
   it('should clone regexes', () => {
-    const object = /a/gim;
+    const object = /a/gi;
 
     const actual = clone(object);
 
@@ -178,7 +178,7 @@ describe('clone', () => {
   });
 
   it('should clone string objects', () => {
-    const object = Object('a');
+    const object = new Object('a');
 
     const actual = clone(object);
 
@@ -231,9 +231,9 @@ describe('clone', () => {
     const dataView = new DataView(buffer);
 
     dataView.setInt8(0, 42);
-    dataView.setInt16(2, 12345, true);
-    dataView.setFloat32(4, 3.14159, true);
-    dataView.setFloat64(8, 123456789.123456, true);
+    dataView.setInt16(2, 12_345, true);
+    dataView.setFloat32(4, 3.141_59, true);
+    dataView.setFloat64(8, 123_456_789.123_456, true);
 
     const cloned = clone(dataView);
 
@@ -243,9 +243,9 @@ describe('clone', () => {
     expect(cloned.byteLength).toBe(dataView.byteLength);
 
     expect(cloned.getInt8(0)).toBe(42);
-    expect(cloned.getInt16(2, true)).toBe(12345);
-    expect(cloned.getFloat32(4, true)).toBeCloseTo(3.14159, 5);
-    expect(cloned.getFloat64(8, true)).toBeCloseTo(123456789.123456, 10);
+    expect(cloned.getInt16(2, true)).toBe(12_345);
+    expect(cloned.getFloat32(4, true)).toBeCloseTo(3.141_59, 5);
+    expect(cloned.getFloat64(8, true)).toBeCloseTo(123_456_789.123_456, 10);
 
     dataView.setInt8(0, 100);
     expect(cloned.getInt8(0)).toBe(42);
@@ -276,9 +276,11 @@ describe('clone', () => {
 
   it('should clone `lastIndex` regexp property', () => {
     const regexp = /c/g;
+
     regexp.exec('abcde');
 
     const actual = clone(regexp);
+
     expect(actual.lastIndex).toBe(3);
   });
 
@@ -287,9 +289,11 @@ describe('clone', () => {
     const expected = values.map(() => true);
 
     const actual = values.map(value => {
-      const object = Object(value);
+      const object = new Object(value);
+
       object.a = 1;
       const cloned = clone(object);
+
       return cloned.a === 1;
     });
 
@@ -332,6 +336,7 @@ describe('clone', () => {
 
   it('should handle objects with null prototype', () => {
     const obj = Object.create(null);
+
     obj.a = 1;
     obj.b = 2;
 
@@ -342,18 +347,20 @@ describe('clone', () => {
 
   it('should handle objects with modified prototype chain', () => {
     function CustomProto() {}
+
     CustomProto.prototype.customMethod = function () {
       return 'custom';
     };
 
     const obj = Object.create(CustomProto.prototype);
+
     obj.a = 1;
 
     const actual = clone(obj);
 
     expect(actual.a).toBe(1);
     expect(Object.getPrototypeOf(actual)).toBe(CustomProto.prototype);
-    expect((actual as any).customMethod()).toBe('custom');
+    expect(actual.customMethod()).toBe('custom');
   });
 
   it('should clone properties that shadow those on `Object.prototype`', () => {
@@ -380,9 +387,11 @@ describe('clone', () => {
 
     if (Symbol) {
       const symbol2 = Symbol('b');
+
       Foo.prototype[symbol2] = 2;
 
       const symbol3 = Symbol('c');
+
       Object.defineProperty(Foo.prototype, symbol3, {
         configurable: true,
         enumerable: false,
@@ -391,15 +400,17 @@ describe('clone', () => {
       });
 
       const object = { a: { b: new (Foo as any)() } } as any;
+
       object[Symbol.for('a')] = { b: 1 };
 
-      const actual = clone(object) as any;
+      const actual = clone(object);
 
       expect(actual[Symbol.for('a')]).toBe(object[Symbol.for('a')]);
       expect(actual.a).toBe(object.a);
       expect(actual[Symbol.for('a')]).toEqual(object[Symbol.for('a')]);
 
       const symbols = Object.getOwnPropertySymbols(actual.a.b);
+
       expect(symbols.length).toBe(1);
       expect(symbols[0]).toBe(Symbol.for('c'));
       expect(actual.a.b[Symbol.for('c')]).toEqual(object.a.b[Symbol.for('c')]);
@@ -413,6 +424,7 @@ describe('clone', () => {
     const nonEnumSymbol = Symbol('non-enumerable');
 
     const object = { a: 1 } as any;
+
     object[enumSymbol] = 'visible';
 
     Object.defineProperty(object, nonEnumSymbol, {
@@ -429,15 +441,17 @@ describe('clone', () => {
     expect(actual[nonEnumSymbol]).toBeUndefined();
 
     const symbols = Object.getOwnPropertySymbols(actual);
+
     expect(symbols).toContain(enumSymbol);
     expect(symbols).not.toContain(nonEnumSymbol);
   });
 
   it('should clone symbol objects', () => {
     const symbol = Symbol('a');
+
     expect(clone(symbol)).toBe(symbol);
 
-    const object = Object(symbol);
+    const object = new Object(symbol);
     const actual = clone(object);
 
     expect(typeof actual).toBe('object');
@@ -447,6 +461,7 @@ describe('clone', () => {
 
   it('should not clone symbol primitives', () => {
     const symbol = Symbol('a');
+
     expect(clone(symbol)).toBe(symbol);
   });
 
@@ -459,7 +474,7 @@ describe('clone', () => {
 
     try {
       expect(clone(element)).toEqual({});
-    } catch (e) {
+    } catch {
       expect(false).toBe(true);
     }
   });
@@ -476,7 +491,7 @@ describe('clone', () => {
 
   lodashStable.each(typedArrays, type => {
     it(`should clone ${type} values`, () => {
-      const Ctor = globalThis[type as keyof typeof globalThis] as any;
+      const Ctor = globalThis[type as keyof typeof globalThis];
 
       if (!Ctor) {
         return;
@@ -510,15 +525,33 @@ describe('clone', () => {
 
       if (type === 'DOM elements' && typeof document !== 'undefined') {
         value = document.body;
-      } else if (type === 'functions') {
-        value = function () {};
-      } else if (type === 'async functions') {
-        value = async function () {};
-      } else if (type === 'generator functions') {
-        value = function* () {};
-      } else if (type === 'the Proxy constructor') {
-        value = Proxy;
-      }
+      } else
+        switch (type) {
+          case 'functions': {
+            value = function () {};
+
+            break;
+          }
+
+          case 'async functions': {
+            value = async function () {};
+
+            break;
+          }
+
+          case 'generator functions': {
+            value = function* () {};
+
+            break;
+          }
+
+          case 'the Proxy constructor': {
+            value = Proxy;
+
+            break;
+          }
+          // No default
+        }
 
       if (value) {
         const object = { a: value, b: { c: value } };
@@ -531,7 +564,15 @@ describe('clone', () => {
     });
   });
 
-  const errorTypes = ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError'];
+  const errorTypes = [
+    'Error',
+    'EvalError',
+    'RangeError',
+    'ReferenceError',
+    'SyntaxError',
+    'TypeError',
+    'URIError',
+  ];
 
   lodashStable.each(errorTypes, type => {
     it(`should not clone ${type}s`, () => {

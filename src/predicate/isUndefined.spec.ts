@@ -3,7 +3,7 @@ import { isUndefined } from './isUndefined';
 
 describe('isUndefined', () => {
   it('returns true if the value is undefined', () => {
-    expect(isUndefined(undefined)).toBe(true);
+    expect(isUndefined()).toBe(true);
   });
 
   it('returns false if the value is not undefined', () => {

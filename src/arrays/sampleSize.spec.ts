@@ -11,6 +11,7 @@ describe('sampleSize', () => {
 
   it('returns an empty array for size 0', () => {
     const result = sampleSize([1, 2, 3], 0);
+
     expect(result).toEqual([]);
   });
 
@@ -24,7 +25,7 @@ describe('sampleSize', () => {
 
   it('throws an error if the size is greater than the array length', () => {
     expect(() => sampleSize([1, 2, 3], 4)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Size must be less than or equal to the length of array.]`
+      `[Error: Size must be less than or equal to the length of array.]`,
     );
   });
 });

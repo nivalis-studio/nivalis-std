@@ -7,8 +7,8 @@ describe('isRegExp', () => {
     expect(isRegExp(/abc/)).toBe(true);
     expect(isRegExp(/abc/g)).toBe(true);
     expect(isRegExp(/abc/i)).toBe(true);
-    expect(isRegExp(/abc/m)).toBe(true);
-    expect(isRegExp(/abc/s)).toBe(true);
+    expect(isRegExp(/abc/)).toBe(true);
+    expect(isRegExp(/abc/)).toBe(true);
     expect(isRegExp(/abc/u)).toBe(true);
     expect(isRegExp(/abc/y)).toBe(true);
   });

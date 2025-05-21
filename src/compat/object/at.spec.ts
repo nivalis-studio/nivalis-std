@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { at } from './at';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
@@ -7,25 +6,33 @@ import { map } from '../array/map';
 import { reject } from '../array/reject';
 import { isArray } from '../predicate/isArray';
 import { constant } from '../util/constant';
+import { at } from './at';
 
 describe('at', () => {
   const array = ['a', 'b', 'c'];
 
   it('should return the elements corresponding to the specified keys', () => {
     const actual = at(array, [0, 2]);
+
     expect(actual).toEqual(['a', 'c']);
   });
 
   it('should return `undefined` for nonexistent keys', () => {
     const actual = at(array, [2, 4, 0]);
+
     expect(actual).toEqual(['c', undefined, 'a']);
   });
 
   it('should work with non-index keys on array values', () => {
-    const values = reject(empties, value => value === 0 || isArray(value)).concat(-1, 1.1);
+    const values = [
+      ...reject(empties, value => value === 0 || isArray(value)),
+      -1,
+      1.1,
+    ];
 
     const testArray = values.reduce((result: any[], value) => {
       result[value as any] = 1;
+
       return result;
     }, []);
 
@@ -33,10 +40,13 @@ describe('at', () => {
 
     const validPaths = values.filter(
       (value): value is PropertyKey =>
-        typeof value === 'string' || typeof value === 'number' || typeof value === 'symbol'
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'symbol',
     );
 
     const actual = at(testArray, validPaths);
+
     expect(actual).toEqual(expected.slice(0, validPaths.length));
   });
 
@@ -47,17 +57,18 @@ describe('at', () => {
 
   it('should accept multiple key arguments', () => {
     const actual = at(['a', 'b', 'c', 'd'], 3, 0, 2);
+
     expect(actual).toEqual(['d', 'a', 'c']);
   });
 
   it('should work with a falsey `object` when keys are given', () => {
-    const expected = map(falsey, constant(Array(4).fill(undefined)));
+    const expected = map(falsey, constant(Array.from({ length: 4 }).fill()));
 
     const actual = map(falsey, object => {
       try {
         return at(object, 0, 1, 'pop', 'push');
-      } catch (e) {
-        return Array(4).fill(undefined);
+      } catch {
+        return Array.from({ length: 4 }).fill();
       }
     });
 
@@ -66,17 +77,20 @@ describe('at', () => {
 
   it('should work with an `arguments` object for `object`', () => {
     const actual = at(args, [2, 0]);
+
     expect(actual).toEqual([3, 1]);
   });
 
   it('should work with `arguments` object as secondary arguments', () => {
     const actual = at([1, 2, 3, 4, 5], args);
+
     expect(actual).toEqual([2, 3, 4]);
   });
 
   it('should work with an object for `object`', () => {
     const object = { a: [{ b: { c: 3 } }, 4] };
     const actual = at(object, ['a[0].b.c', 'a[1]']);
+
     expect(actual).toEqual([3, 4]);
   });
 
@@ -84,9 +98,11 @@ describe('at', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const actual = at(new (Foo as any)(), 'b');
+
     expect(actual).toEqual([2]);
   });
 

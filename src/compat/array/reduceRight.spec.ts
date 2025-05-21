@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { reduceRight } from './reduceRight';
 import { empties } from '../_internal/empties';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
+import { reduceRight } from './reduceRight';
 
 describe('reduceRight', () => {
   const array = [1, 2, 3];
@@ -22,7 +22,7 @@ describe('reduceRight', () => {
         // eslint-disable-next-line
         args || (args = Array.prototype.slice.call(arguments));
       },
-      0 as any
+      0 as any,
     );
 
     expect(args).toEqual([0, 3, 2, array]);
@@ -53,7 +53,7 @@ describe('reduceRight', () => {
         // eslint-disable-next-line
         args || (args = Array.prototype.slice.call(arguments));
       },
-      0
+      0,
     );
 
     expect(args).toEqual(expected);
@@ -72,7 +72,11 @@ describe('reduceRight', () => {
   });
 
   it(`should reduce a collection to a single value`, () => {
-    const actual = reduceRight(['a', 'b', 'c'], (accumulator, value) => accumulator + value, '');
+    const actual = reduceRight(
+      ['a', 'b', 'c'],
+      (accumulator, value) => accumulator + value,
+      '',
+    );
 
     expect(actual).toBe('cba');
   });
@@ -86,7 +90,7 @@ describe('reduceRight', () => {
         // eslint-disable-next-line
         // @ts-ignore
         actual.push(reduceRight(value, lodashStable.noop));
-      } catch (e) {
+      } catch {
         //
       }
     });
@@ -101,8 +105,8 @@ describe('reduceRight', () => {
       try {
         // eslint-disable-next-line
         // @ts-ignore
-        return reduceRight(value, lodashStable.noop, 'x');
-      } catch (e) {
+        reduceRight(value, lodashStable.noop, 'x');
+      } catch {
         //
       }
     });
@@ -111,7 +115,8 @@ describe('reduceRight', () => {
   });
 
   it(`should handle an initial \`accumulator\` value of \`undefined\``, () => {
-    const actual = reduceRight([], lodashStable.noop, undefined);
+    const actual = reduceRight([], lodashStable.noop);
+
     expect(actual).toBe(undefined);
   });
 
@@ -123,6 +128,7 @@ describe('reduceRight', () => {
       array.__proto__ = object;
       expect(reduceRight(array, lodashStable.noop)).toBe(undefined);
     }
+
     // eslint-disable-next-line
     // @ts-ignore
     expect(reduceRight(object, lodashStable.noop)).toBe(undefined);
@@ -131,6 +137,7 @@ describe('reduceRight', () => {
   it(`should use \`isArrayLike\` to determine whether a value is array-like`, () => {
     const isIteratedAsObject = function (object: any) {
       let result = false;
+
       reduceRight(
         object,
         () => {
@@ -138,18 +145,22 @@ describe('reduceRight', () => {
         },
         // eslint-disable-next-line
         // @ts-ignore
-        0
+        0,
       );
+
       return result;
     };
 
-    const values = [-1, '1', 1.1, Object(1), MAX_SAFE_INTEGER + 1];
+    const values = [-1, '1', 1.1, new Object(1), MAX_SAFE_INTEGER + 1];
     const expected = lodashStable.map(values, lodashStable.stubTrue);
 
-    const actual = lodashStable.map(values, length => isIteratedAsObject({ length: length }));
+    const actual = lodashStable.map(values, length =>
+      isIteratedAsObject({ length }),
+    );
 
     // eslint-disable-next-line
     const Foo = function (a: any) {};
+
     Foo.a = 1;
 
     expect(actual).toEqual(expected);
@@ -171,9 +182,10 @@ describe('reduceRight', () => {
           // @ts-ignore
           object.b = 2;
         }
+
         return true;
       },
-      object
+      object,
     );
 
     expect(count).toBe(1);

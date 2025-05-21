@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { cloneDeep } from './cloneDeep';
 import { range } from '../../math/range';
 import { args } from '../_internal/args';
 import { LARGE_ARRAY_SIZE } from '../_internal/LARGE_ARRAY_SIZE';
 import { stubTrue } from '../util/stubTrue';
+import { cloneDeep } from './cloneDeep';
 
 describe('cloneDeep', () => {
   it('should deep clone objects with circular references', () => {
@@ -25,9 +25,9 @@ describe('cloneDeep', () => {
   it('should deep clone objects with lots of circular references', () => {
     const cyclical: any = {};
 
-    range(LARGE_ARRAY_SIZE + 1).forEach(index => {
+    for (const index of range(LARGE_ARRAY_SIZE + 1)) {
       cyclical[`v${index}`] = [index ? cyclical[`v${index - 1}`] : cyclical];
-    });
+    }
 
     const clone = cloneDeep(cyclical);
 
@@ -93,7 +93,7 @@ describe('cloneDeep', () => {
   });
 
   it('should clone boolean objects', () => {
-    const object = Object(false);
+    const object = new Object(false);
 
     const actual = cloneDeep(object);
 
@@ -162,7 +162,7 @@ describe('cloneDeep', () => {
   });
 
   it('should clone number objects', () => {
-    const object = Object(0);
+    const object = new Object(0);
     const actual = cloneDeep(object);
 
     expect(actual).toEqual(object);
@@ -170,7 +170,7 @@ describe('cloneDeep', () => {
   });
 
   it('should clone regexes', () => {
-    const object = /a/gim;
+    const object = /a/gi;
 
     const actual = cloneDeep(object);
 
@@ -196,7 +196,7 @@ describe('cloneDeep', () => {
   });
 
   it('should clone string objects', () => {
-    const object = Object('a');
+    const object = new Object('a');
 
     const actual = cloneDeep(object);
 
@@ -216,6 +216,7 @@ describe('cloneDeep', () => {
   it(`should clone array buffers`, () => {
     const arrayBuffer = new ArrayBuffer(2);
     const actual = cloneDeep(arrayBuffer);
+
     expect(actual.byteLength).toBe(arrayBuffer.byteLength);
     expect(actual).not.toBe(arrayBuffer);
   });
@@ -244,6 +245,7 @@ describe('cloneDeep', () => {
 
   it(`should clone \`lastIndex\` regexp property`, () => {
     const regexp = /c/g;
+
     regexp.exec('abcde');
 
     expect(cloneDeep(regexp).lastIndex).toBe(3);
@@ -251,8 +253,10 @@ describe('cloneDeep', () => {
 
   it(`should clone expando properties`, () => {
     const values = [false, true, 1, 'a'].map(value => {
-      const object = Object(value);
+      const object = new Object(value);
+
       object.a = 1;
+
       return object;
     });
 

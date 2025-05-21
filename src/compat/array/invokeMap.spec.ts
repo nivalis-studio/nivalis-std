@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { invokeMap } from './invokeMap';
 import { stubOne } from '../_internal/stubOne';
+import { invokeMap } from './invokeMap';
 
 describe('invokeMap', () => {
   it('should invoke a methods on each element of `collection`', () => {
@@ -14,7 +14,7 @@ describe('invokeMap', () => {
     const array = [
       function () {
         // eslint-disable-next-line prefer-rest-params
-        return Array.from(arguments);
+        return [...arguments];
       },
     ];
     const actual = invokeMap(array, 'call', null, 'a', 'b', 'c');
@@ -31,7 +31,7 @@ describe('invokeMap', () => {
         return left + this.toUpperCase() + right;
       },
       '(',
-      ')'
+      ')',
     );
 
     expect(actual).toEqual(['(A)', '(B)', '(C)']);
@@ -50,7 +50,7 @@ describe('invokeMap', () => {
     // @ts-expect-error - `path` parameter is not optional
     expect(invokeMap(null)).toEqual([]);
     // @ts-expect-error - `path` parameter is not optional
-    expect(invokeMap(undefined)).toEqual([]);
+    expect(invokeMap()).toEqual([]);
   });
 
   it('should not error on nullish elements', () => {
@@ -71,7 +71,7 @@ describe('invokeMap', () => {
   it('should invoke deep property methods with the correct `this` binding', () => {
     const object = {
       a: {
-        b: function () {
+        b() {
           return this.c;
         },
         c: 1,
@@ -80,17 +80,18 @@ describe('invokeMap', () => {
 
     const paths = ['a.b', ['a', 'b']];
 
-    paths.forEach(path => {
+    for (const path of paths) {
       expect(invokeMap([object], path)).toEqual([1]);
-    });
+    }
   });
 
   it('should bind `this` correctly for array path', () => {
     const singlePropObject = {
-      value: function () {
+      value() {
         return this;
       },
     };
+
     expect(invokeMap([singlePropObject], ['value'])[0]).toBe(singlePropObject);
 
     const emptyPathObject = {
@@ -98,27 +99,32 @@ describe('invokeMap', () => {
         return this;
       },
     };
+
     expect(invokeMap([emptyPathObject], []).length).toBe(1);
     expect(invokeMap([emptyPathObject], [])[0]).toBeUndefined();
 
     const nestedObject = {
       a: {
         b: {
-          c: function () {
+          c() {
             return this;
           },
         },
       },
     };
-    expect(invokeMap([nestedObject], ['a', 'b', 'c'])[0]).toBe(nestedObject.a.b);
+
+    expect(invokeMap([nestedObject], ['a', 'b', 'c'])[0]).toBe(
+      nestedObject.a.b,
+    );
   });
 
   it('should bind `this` correctly for string path', () => {
     const singlePropObject = {
-      value: function () {
+      value() {
         return this;
       },
     };
+
     expect(invokeMap([singlePropObject], 'value')[0]).toBe(singlePropObject);
 
     const emptyPathObject = {
@@ -127,23 +133,25 @@ describe('invokeMap', () => {
       },
     };
     const result = invokeMap([emptyPathObject], '');
+
     expect(result[0]).toBe(emptyPathObject);
 
     const nestedObject = {
       a: {
         b: {
-          c: function () {
+          c() {
             return this;
           },
         },
       },
     };
+
     expect(invokeMap([nestedObject], 'a.b.c')[0]).toBe(nestedObject.a.b);
 
     const objectWithEmptyPart = {
       a: {
         '': {
-          c: function () {
+          c() {
             return this;
           },
         },
@@ -151,6 +159,7 @@ describe('invokeMap', () => {
     };
 
     const aEmptyDotC = invokeMap([objectWithEmptyPart], 'a..c');
+
     expect(aEmptyDotC[0]).toBeUndefined();
   });
 });

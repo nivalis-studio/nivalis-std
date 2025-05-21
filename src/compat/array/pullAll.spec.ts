@@ -16,6 +16,7 @@ describe('pullAll', () => {
 
   it(`\`_.pullAll\` should preserve holes in arrays`, () => {
     const array = [1, 2, 3, 4];
+
     delete array[1];
     delete array[3];
 
@@ -26,6 +27,7 @@ describe('pullAll', () => {
 
   it(`\`_.pullAll\` should treat holes as \`undefined\``, () => {
     const array = [1, 2, 3];
+
     delete array[1];
 
     pull(array, [undefined]);
@@ -33,9 +35,9 @@ describe('pullAll', () => {
   });
 
   it(`\`_.pullAll\` should match \`NaN\``, () => {
-    const array = [1, NaN, 3, NaN];
+    const array = [1, Number.NaN, 3, Number.NaN];
 
-    pull(array, [NaN]);
+    pull(array, [Number.NaN]);
     expect(array).toEqual([1, 3]);
   });
 

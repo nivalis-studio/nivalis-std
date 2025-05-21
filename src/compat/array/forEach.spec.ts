@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { forEach } from './forEach';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { slice } from '../_internal/slice';
 import { stubTrue } from '../util/stubTrue';
+import { forEach } from './forEach';
 
 describe('forEach', () => {
   it('should iterate over array elements', () => {
@@ -103,14 +103,15 @@ describe('forEach', () => {
     const expected = [1, 0, array];
 
     func(array, function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-      args || (args = slice.call(arguments));
+      // eslint-disable-next-line prefer-rest-params
+      args ||= slice.call(arguments);
     });
     expect(args).toEqual(expected);
   });
 
   it(`\`_.${methodName}\` should treat sparse arrays as dense`, () => {
     const array = [1];
+
     array[2] = 3;
 
     const expected = [
@@ -120,9 +121,11 @@ describe('forEach', () => {
     ];
 
     const argsList: any[] = [];
+
     func(array, function () {
       // eslint-disable-next-line prefer-rest-params
       argsList.push(slice.call(arguments));
+
       return true;
     });
 
@@ -133,10 +136,13 @@ describe('forEach', () => {
 
   it(`\`_.${methodName}\` should not iterate custom properties on arrays`, () => {
     const array: any = [1, 2, 3];
+
     array.a = 1;
     const keys: any[] = [];
+
     func(array, (value, key) => {
       keys.push(key);
+
       return isEvery;
     });
 
@@ -149,9 +155,11 @@ describe('forEach', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const values: any[] = [];
+
     // eslint-disable-next-line
     // @ts-ignore
     func(new Foo(), value => {
@@ -162,25 +170,29 @@ describe('forEach', () => {
 
   it(`\`_.${methodName}\` should return the collection`, () => {
     const array = [1, 2, 3];
+
     expect(func(array, Boolean)).toBe(array);
   });
 
   it(`\`_.${methodName}\` should use \`isArrayLike\` to determine whether a value is array-like`, () => {
     const isIteratedAsObject = function (object: any) {
       let result = false;
+
       func(object, () => {
         result = true;
       });
+
       return result;
     };
 
-    const values = [-1, '1', 1.1, Object(1), MAX_SAFE_INTEGER + 1];
+    const values = [-1, '1', 1.1, new Object(1), MAX_SAFE_INTEGER + 1];
     const expected = values.map(stubTrue);
 
-    const actual = values.map(length => isIteratedAsObject({ length: length }));
+    const actual = values.map(length => isIteratedAsObject({ length }));
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const Foo = function (a: any) {};
+
     Foo.a = 1;
 
     expect(actual).toEqual(expected);
@@ -197,6 +209,7 @@ describe('forEach', () => {
         if (++count === 1) {
           array.push(2);
         }
+
         return true;
       });
 
@@ -214,6 +227,7 @@ describe('forEach', () => {
         // @ts-ignore
         object.b = 2;
       }
+
       return true;
     });
 
@@ -226,6 +240,7 @@ describe('forEach', () => {
 
     func(array, (value, other) => {
       values.push(Array.isArray(value) ? other : value);
+
       return false;
     });
 
@@ -238,6 +253,7 @@ describe('forEach', () => {
 
     func(object, (value, other) => {
       values.push(Array.isArray(value) ? other : value);
+
       return false;
     });
 

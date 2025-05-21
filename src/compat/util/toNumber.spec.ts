@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { toNumber } from './toNumber';
 import { flatMap } from '../../array/flatMap';
 import { identity } from '../../function/identity';
 import { falsey } from '../_internal/falsey';
@@ -7,6 +6,7 @@ import { MAX_INTEGER } from '../_internal/MAX_INTEGER';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { symbol } from '../_internal/symbol';
 import { whitespace } from '../_internal/whitespace';
+import { toNumber } from './toNumber';
 
 describe('toNumber', () => {
   it(`should preserve the sign of \`0\``, () => {
@@ -18,16 +18,17 @@ describe('toNumber', () => {
       [-0, -Infinity],
     ];
 
-    [0, 1].forEach(index => {
+    for (const index of [0, 1]) {
       const others = values.map(index ? Object : identity);
 
       const actual = others.map(value => {
         const result = toNumber(value);
+
         return [result, 1 / result];
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   function negative(string: string) {
@@ -43,7 +44,7 @@ describe('toNumber', () => {
   }
 
   it(`should pass thru primitive number values`, () => {
-    const values = [0, 1, NaN];
+    const values = [0, 1, Number.NaN];
 
     const actual = values.map(toNumber);
 
@@ -51,18 +52,26 @@ describe('toNumber', () => {
   });
 
   it(`should convert number primitives and objects to numbers`, () => {
-    const values = [2, 1.2, MAX_SAFE_INTEGER, MAX_INTEGER, Infinity, NaN];
+    const values = [
+      2,
+      1.2,
+      MAX_SAFE_INTEGER,
+      MAX_INTEGER,
+      Infinity,
+      Number.NaN,
+    ];
 
     const expected = values.map(value => {
       const neg = -value;
+
       return [value, value, neg, neg];
     });
 
     const actual = values.map(value => [
       toNumber(value),
-      toNumber(Object(value)),
+      toNumber(new Object(value)),
       toNumber(-value),
-      toNumber(Object(-value)),
+      toNumber(new Object(-value)),
     ]);
 
     expect(actual).toEqual(expected);
@@ -88,18 +97,22 @@ describe('toNumber', () => {
     const expected = values.map(value => {
       const n = Number(value);
       const neg = -n;
+
       return [n, n, n, n, n, n, neg, neg];
     });
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toNumber(mod(value)), toNumber(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toNumber(mod(value)),
+        toNumber(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert binary/octal strings to numbers`, () => {
-    const numbers = [42, 5349, 1715004];
+    const numbers = [42, 5349, 1_715_004];
     const transforms = [identity, pad];
     const values = ['0b101010', '0o12345', '0x1a2b3c'];
 
@@ -107,11 +120,12 @@ describe('toNumber', () => {
 
     const actual = values.map(value => {
       const upper = value.toUpperCase();
+
       return flatMap(transforms, mod => [
         toNumber(mod(value)),
-        toNumber(Object(mod(value))),
+        toNumber(new Object(mod(value))),
         toNumber(mod(upper)),
-        toNumber(Object(mod(upper))),
+        toNumber(new Object(mod(upper))),
       ]);
     });
 
@@ -122,20 +136,32 @@ describe('toNumber', () => {
     const transforms = [identity, pad, positive, negative];
     const values = ['0b', '0o', '0x', '0b1010102', '0o123458', '0x1a2b3x'];
 
-    const expected = values.map(() => [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN]);
+    const expected = values.map(() => [
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+      Number.NaN,
+    ]);
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toNumber(mod(value)), toNumber(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toNumber(mod(value)),
+        toNumber(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert symbols to  'NaN'`, () => {
-    const object1 = Object(symbol);
-    const object2 = Object(symbol);
+    const object1 = new Object(symbol);
+    const object2 = new Object(symbol);
     const values = [symbol, object1, object2];
-    const expected = values.map(() => NaN);
+    const expected = values.map(() => Number.NaN);
 
     object2.valueOf = undefined;
     const actual = values.map(toNumber);
@@ -146,9 +172,13 @@ describe('toNumber', () => {
   it(`should convert empty values to \`0\` or \`NaN\``, () => {
     const values = falsey.concat(whitespace);
 
-    const expected = values.map(value => (value !== whitespace ? Number(value) : 0));
+    const expected = values.map(value =>
+      value === whitespace ? 0 : Number(value),
+    );
 
-    const actual = values.map((value, index) => (index ? toNumber(value) : toNumber()));
+    const actual = values.map((value, index) =>
+      index ? toNumber(value) : toNumber(),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -174,7 +204,22 @@ describe('toNumber', () => {
       { toString: () => '0b101010' },
     ];
 
-    const expected = [NaN, 0, 1, NaN, NaN, 2.2, 1.1, 1.1, NaN, NaN, 5349, 5349, 42, 42];
+    const expected = [
+      Number.NaN,
+      0,
+      1,
+      Number.NaN,
+      Number.NaN,
+      2.2,
+      1.1,
+      1.1,
+      Number.NaN,
+      Number.NaN,
+      5349,
+      5349,
+      42,
+      42,
+    ];
 
     const actual = values.map(toNumber);
 

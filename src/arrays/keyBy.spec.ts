@@ -9,7 +9,11 @@ describe('keyBy', () => {
     ];
 
     const result = keyBy(people, person => person.name);
-    expect(result).toEqual({ mike: { name: 'mike', age: 20 }, jake: { name: 'jake', age: 30 } });
+
+    expect(result).toEqual({
+      mike: { name: 'mike', age: 20 },
+      jake: { name: 'jake', age: 30 },
+    });
   });
 
   it('should map each element of an array by number key', () => {
@@ -19,7 +23,11 @@ describe('keyBy', () => {
     ];
 
     const result = keyBy(people, person => person.age);
-    expect(result).toEqual({ 20: { name: 'mike', age: 20 }, 30: { name: 'jake', age: 30 } });
+
+    expect(result).toEqual({
+      20: { name: 'mike', age: 20 },
+      30: { name: 'jake', age: 30 },
+    });
   });
 
   it('should map each element of an array by symbol key', () => {
@@ -31,6 +39,7 @@ describe('keyBy', () => {
     ];
 
     const result = keyBy(people, person => person.id);
+
     expect(result).toEqual({
       [id1]: { id: id1, name: 'mike', age: 20 },
       [id2]: { id: id2, name: 'jake', age: 30 },

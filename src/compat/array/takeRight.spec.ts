@@ -17,15 +17,15 @@ describe('takeRight', () => {
   });
 
   it('should return an empty array when `n` < `1`', () => {
-    [0, -1, -Infinity].forEach(n => {
+    for (const n of [0, -1, -Infinity]) {
       expect(takeRight(array, n)).toEqual([]);
-    });
+    }
   });
 
   it('should return all elements when `n` >= `length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach(n => {
+    for (const n of [3, 4, 2 ** 32, Infinity]) {
       expect(takeRight(array, n)).toEqual(array);
-    });
+    }
   });
 
   it('should work as an iteratee for methods like `map`', () => {
@@ -35,6 +35,7 @@ describe('takeRight', () => {
       [7, 8, 9],
     ];
     const actual = array.map(item => takeRight(item));
+
     expect(actual).toEqual([[3], [6], [9]]);
   });
 

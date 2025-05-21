@@ -6,11 +6,9 @@ import { toString } from '../util/toString.ts';
 /**
  * Binds methods of an object to the object itself, overwriting the existing method.
  * Method names may be specified as individual arguments or as arrays of method names.
- *
- * @param {Object} object - The object to bind methods to.
+ * @param {object} object - The object to bind methods to.
  * @param {...(string|string[]|number|IArguments)} [methodNames] - The method names to bind, specified individually or in arrays.
- * @returns {Object} - Returns the object.
- *
+ * @returns {object} - Returns the object.
  * @example
  * const view = {
  *   'label': 'docs',
@@ -22,13 +20,15 @@ import { toString } from '../util/toString.ts';
  * bindAll(view, ['click']);
  * jQuery(element).on('click', view.click);
  * // => Logs 'clicked docs' when clicked.
- *
  * @example
  * // Using individual method names
  * bindAll(view, 'click');
  * // => Same as above
  */
-export function bindAll<T>(object: T, ...methodNames: Array<string | string[]>): T {
+export function bindAll<T>(
+  object: T,
+  ...methodNames: Array<string | string[]>
+): T {
   if (object == null) {
     return object;
   }
@@ -42,12 +42,12 @@ export function bindAll<T>(object: T, ...methodNames: Array<string | string[]>):
   }
 
   const methods: any[] = [];
-  for (let i = 0; i < methodNames.length; i++) {
-    const name = methodNames[i];
+
+  for (const name of methodNames) {
     if (isArray(name)) {
       methods.push(...name);
     } else if (name && typeof name === 'object' && 'length' in name) {
-      methods.push(...Array.from(name));
+      methods.push(...name);
     } else {
       methods.push(name);
     }
@@ -57,8 +57,7 @@ export function bindAll<T>(object: T, ...methodNames: Array<string | string[]>):
     return object;
   }
 
-  for (let i = 0; i < methods.length; i++) {
-    const key = methods[i];
+  for (const key of methods) {
     const stringKey = toString(key) as keyof typeof object;
     const func = object[stringKey];
 

@@ -10,21 +10,18 @@
  *
  * The resulting match can be used to convert camelCase, snake_case, kebab-case, and other mixed formats into
  * a consistent format like snake case. It also supports emojis and other Unicode characters.
- *
  * @example
  * const matches = 'camelCaseHTTPRequest🚀'.match(CASE_SPLIT_PATTERN);
  * // matches: ['camel', 'Case', 'HTTP', 'Request', '🚀']
  */
 export const CASE_SPLIT_PATTERN =
-  /\p{Lu}?\p{Ll}+|[0-9]+|\p{Lu}+(?!\p{Ll})|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{L}+/gu;
+  /\p{Lu}?\p{Ll}+|\d+|\p{Lu}+(?!\p{Ll})|[\p{Emoji_Presentation}\p{Extended_Pictographic}]|\p{L}+/gu;
 
 /**
  * Splits `string` into an array of its words, treating spaces and punctuation marks as separators.
- *
  * @param {string} str The string to inspect.
  * @param {RegExp | string} [pattern] The pattern to match words.
  * @returns {string[]} Returns the words of `string`.
- *
  * @example
  * words('fred, barney, & pebbles');
  * // => ['fred', 'barney', 'pebbles']
@@ -36,5 +33,5 @@ export const CASE_SPLIT_PATTERN =
  * // => ['Lunedì', '18', 'Set']
  */
 export function words(str: string): string[] {
-  return Array.from(str.match(CASE_SPLIT_PATTERN) ?? []);
+  return [...(str.match(CASE_SPLIT_PATTERN) ?? [])];
 }

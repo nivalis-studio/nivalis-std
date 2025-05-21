@@ -3,7 +3,6 @@ import { Semaphore } from './semaphore.ts';
 /**
  * A Mutex (mutual exclusion lock) for async functions.
  * It allows only one async task to access a critical section at a time.
- *
  * @example
  * const mutex = new Mutex();
  *
@@ -25,7 +24,6 @@ export class Mutex {
   /**
    * Checks if the mutex is currently locked.
    * @returns {boolean} True if the mutex is locked, false otherwise.
-   *
    * @example
    * const mutex = new Mutex();
    * console.log(mutex.isLocked); // false
@@ -41,7 +39,6 @@ export class Mutex {
   /**
    * Acquires the mutex, blocking if necessary until it is available.
    * @returns {Promise<void>} A promise that resolves when the mutex is acquired.
-   *
    * @example
    * const mutex = new Mutex();
    * await mutex.acquire();
@@ -52,12 +49,11 @@ export class Mutex {
    * }
    */
   async acquire(): Promise<void> {
-    return this.semaphore.acquire();
+    await this.semaphore.acquire();
   }
 
   /**
    * Releases the mutex, allowing another waiting task to proceed.
-   *
    * @example
    * const mutex = new Mutex();
    * await mutex.acquire();

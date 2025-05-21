@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { flattenDepth } from './flattenDepth';
 import { args } from '../_internal/args';
+import { flattenDepth } from './flattenDepth';
 
 describe('flattenDepth', () => {
   it('should flattenDepth `arguments` objects', () => {
@@ -12,7 +12,7 @@ describe('flattenDepth', () => {
   });
 
   it('should treat sparse arrays as dense', () => {
-    const array = [[1, 2, 3], Array(3)];
+    const array = [[1, 2, 3], Array.from({ length: 3 })];
     const expected = [1, 2, 3, undefined, undefined, undefined];
     const actual = flattenDepth(array);
 
@@ -25,6 +25,7 @@ describe('flattenDepth', () => {
     const array = [object];
     const expected = ['a'];
     const actual = flattenDepth(array);
+
     expect(actual).toEqual(expected);
   });
 
@@ -54,11 +55,13 @@ describe('flattenDepth', () => {
 
   it('should use a default `depth` of `1`', () => {
     const array = [1, [2, [3, [4]], 5]];
+
     expect(flattenDepth(array)).toEqual([1, 2, [3, [4]], 5]);
   });
 
   it('should treat a `depth` of < `1` as a shallow clone', () => {
     const array = [1, [2, [3, [4]], 5]];
+
     for (const depth of [-1, 0]) {
       expect(flattenDepth(array, depth)).toEqual([1, [2, [3, [4]], 5]]);
     }
@@ -66,6 +69,7 @@ describe('flattenDepth', () => {
 
   it('should coerce `depth` to an integer', () => {
     const array = [1, [2, [3, [4]], 5]];
+
     expect(flattenDepth(array, 2.2)).toEqual([1, 2, 3, [4], 5]);
   });
 

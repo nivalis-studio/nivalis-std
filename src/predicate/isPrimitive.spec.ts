@@ -4,7 +4,7 @@ import { isPrimitive } from './isPrimitive';
 describe('isPrimitive', () => {
   it('returns `true` for primitives', () => {
     expect(isPrimitive(null)).toBe(true);
-    expect(isPrimitive(undefined)).toBe(true);
+    expect(isPrimitive()).toBe(true);
     expect(isPrimitive('123')).toBe(true);
     expect(isPrimitive(false)).toBe(true);
     expect(isPrimitive(true)).toBe(true);

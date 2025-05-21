@@ -1,6 +1,6 @@
 import { debounce as debounceToolkit } from '../../function/debounce.ts';
 
-interface DebounceOptions {
+type DebounceOptions = {
   /**
    * An optional AbortSignal to cancel the debounced function.
    */
@@ -23,13 +23,13 @@ interface DebounceOptions {
    * @default Infinity
    */
   maxWait?: number;
-}
+};
 
-export interface DebouncedFunction<F extends (...args: any[]) => any> {
+export type DebouncedFunction<F extends (...args: any[]) => any> = {
   (...args: Parameters<F>): ReturnType<F> | undefined;
-  cancel(): void;
-  flush(): void;
-}
+  cancel: () => void;
+  flush: () => void;
+};
 
 /**
  * Creates a debounced function that delays invoking the provided function until after `debounceMs` milliseconds
@@ -43,7 +43,6 @@ export interface DebouncedFunction<F extends (...args: any[]) => any> {
  * (since one debounced function call cannot trigger the function twice).
  *
  * You can also set a `maxWait` time, which is the maximum time the function is allowed to be delayed before it is called.
- *
  * @template F - The type of function.
  * @param {F} func - The function to debounce.
  * @param {number} debounceMs - The number of milliseconds to delay.
@@ -53,7 +52,6 @@ export interface DebouncedFunction<F extends (...args: any[]) => any> {
  * @param {boolean} options.trailing - If `true`, the function will be invoked on the trailing edge of the timeout.
  * @param {number} options.maxWait - The maximum time `func` is allowed to be delayed before it's invoked.
  * @returns A new debounced function with a `cancel` method.
- *
  * @example
  * const debouncedFunction = debounce(() => {
  *   console.log('Function executed');
@@ -80,7 +78,7 @@ export interface DebouncedFunction<F extends (...args: any[]) => any> {
 export function debounce<F extends (...args: any[]) => any>(
   func: F,
   debounceMs = 0,
-  options: DebounceOptions = {}
+  options: DebounceOptions = {},
 ): DebouncedFunction<F> {
   if (typeof options !== 'object') {
     options = {};
@@ -88,7 +86,7 @@ export function debounce<F extends (...args: any[]) => any>(
 
   const { signal, leading = false, trailing = true, maxWait } = options;
 
-  const edges = Array(2);
+  const edges = Array.from({ length: 2 });
 
   if (leading) {
     edges[0] = 'leading';
@@ -98,7 +96,7 @@ export function debounce<F extends (...args: any[]) => any>(
     edges[1] = 'trailing';
   }
 
-  let result: ReturnType<F> | undefined = undefined;
+  let result: ReturnType<F> | undefined;
   let pendingAt: number | null = null;
 
   const _debounced = debounceToolkit(
@@ -107,7 +105,7 @@ export function debounce<F extends (...args: any[]) => any>(
       pendingAt = null;
     },
     debounceMs,
-    { signal, edges }
+    { signal, edges },
   );
 
   const debounced = function (this: any, ...args: Parameters<F>) {
@@ -128,11 +126,13 @@ export function debounce<F extends (...args: any[]) => any>(
     }
 
     _debounced.apply(this, args);
+
     return result;
   };
 
   const flush = () => {
     _debounced.flush();
+
     return result;
   };
 

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
+import { delay } from '../promise';
 import { debounce } from './debounce';
 // adjust the import path as necessary
-import { delay } from '../promise';
 
 describe('debounce', () => {
   it('should debounce function calls', async () => {
@@ -80,7 +80,9 @@ describe('debounce', () => {
     const debounceMs = 50;
     const debouncedFunc = debounce(func, debounceMs);
 
-    expect(() => debouncedFunc.cancel()).not.toThrow();
+    expect(() => {
+      debouncedFunc.cancel();
+    }).not.toThrow();
   });
 
   it('should call the function with correct arguments', async () => {
@@ -145,7 +147,10 @@ describe('debounce', () => {
 
     expect(func).toHaveBeenCalledTimes(1);
 
-    const listenerCount = addEventListenerSpy.mock.calls.filter(([event]) => event === 'abort').length;
+    const listenerCount = addEventListenerSpy.mock.calls.filter(
+      ([event]) => event === 'abort',
+    ).length;
+
     expect(listenerCount).toBe(1);
 
     addEventListenerSpy.mockRestore();

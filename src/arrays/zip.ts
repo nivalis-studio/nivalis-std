@@ -5,11 +5,9 @@
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T
  * @param {T[]} arr1 - The first array to zip.
  * @returns {Array<[T]>} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const result = zip(arr1);
@@ -24,19 +22,20 @@ export function zip<T>(arr1: readonly T[]): Array<[T]>;
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T, U
  * @param {T[]} arr1 - The first array to zip.
  * @param {U[]} arr2 - The second array to zip.
  * @returns {Array<[T, U]>} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
  * const result = zip(arr1, arr2);
  * // result will be [[1, 'a'], [2, 'b'], [3, 'c']]
  */
-export function zip<T, U>(arr1: readonly T[], arr2: readonly U[]): Array<[T, U]>;
+export function zip<T, U>(
+  arr1: readonly T[],
+  arr2: readonly U[],
+): Array<[T, U]>;
 
 /**
  * Combines multiple arrays into a single array of tuples.
@@ -45,13 +44,11 @@ export function zip<T, U>(arr1: readonly T[], arr2: readonly U[]): Array<[T, U]>
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T, U, V
  * @param {T[]} arr1 - The first array to zip.
  * @param {U[]} arr2 - The second array to zip.
  * @param {V[]} arr3 - The third array to zip.
  * @returns {Array<[T, U, V]>} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
@@ -59,7 +56,11 @@ export function zip<T, U>(arr1: readonly T[], arr2: readonly U[]): Array<[T, U]>
  * const result = zip(arr1, arr2, arr3);
  * // result will be [[1, 'a', true], [2, 'b', false], [3, 'c', undefined]]
  */
-export function zip<T, U, V>(arr1: readonly T[], arr2: readonly U[], arr3: readonly V[]): Array<[T, U, V]>;
+export function zip<T, U, V>(
+  arr1: readonly T[],
+  arr2: readonly U[],
+  arr3: readonly V[],
+): Array<[T, U, V]>;
 
 /**
  * Combines multiple arrays into a single array of tuples.
@@ -68,14 +69,12 @@ export function zip<T, U, V>(arr1: readonly T[], arr2: readonly U[], arr3: reado
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T, U, V, W
  * @param {T[]} arr1 - The first array to zip.
  * @param {U[]} arr2 - The second array to zip.
  * @param {V[]} arr3 - The third array to zip.
  * @param {W[]} arr4 - The fourth array to zip.
  * @returns {Array<[T, U, V, W]>} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
@@ -88,7 +87,7 @@ export function zip<T, U, V, W>(
   arr1: readonly T[],
   arr2: readonly U[],
   arr3: readonly V[],
-  arr4: readonly W[]
+  arr4: readonly W[],
 ): Array<[T, U, V, W]>;
 
 /**
@@ -98,11 +97,9 @@ export function zip<T, U, V, W>(
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T
  * @param {...Array<readonly T[]>} arrs - The arrays to zip together.
  * @returns {T[][]} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
@@ -119,11 +116,9 @@ export function zip<T>(...arrs: Array<readonly T[]>): T[][];
  * containing the corresponding elements from the input arrays. If the input arrays are of
  * different lengths, the resulting array will have the length of the longest input array,
  * with undefined values for missing elements.
- *
  * @template T
  * @param {...Array<readonly T[]>} arrs - The arrays to zip together.
  * @returns {T[][]} A new array of tuples containing the corresponding elements from the input arrays.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const arr2 = ['a', 'b', 'c'];
@@ -136,20 +131,24 @@ export function zip<T>(...arrs: Array<readonly T[]>): T[][] {
   // const rowCount = Math.max(...arrs.map(x => x.length));
   let rowCount = 0;
 
-  for (let i = 0; i < arrs.length; i++) {
-    if (arrs[i].length > rowCount) {
-      rowCount = arrs[i].length;
+  for (const arr of arrs) {
+    if (arr.length > rowCount) {
+      rowCount = arr.length;
     }
   }
+
   const columnCount = arrs.length;
-  const result = Array(rowCount);
+  const result = new Array(rowCount);
 
   for (let i = 0; i < rowCount; ++i) {
-    const row = Array(columnCount);
+    const row = new Array(columnCount);
+
     for (let j = 0; j < columnCount; ++j) {
       row[j] = arrs[j][i];
     }
+
     result[i] = row;
   }
+
   return result;
 }

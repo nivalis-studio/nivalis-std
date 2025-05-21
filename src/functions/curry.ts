@@ -1,10 +1,8 @@
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {() => R} func - The function to curry.
  * @returns {() => R} A curried function.
- *
  * @example
  * function noArgFunc() {
  *   return 42;
@@ -17,10 +15,8 @@ export function curry<R>(func: () => R): () => R;
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(p: P) => R} func - The function to curry.
  * @returns {(p: P) => R} A curried function.
- *
  * @example
  * function oneArgFunc(a: number) {
  *   return a * 2;
@@ -33,10 +29,8 @@ export function curry<P, R>(func: (p: P) => R): (p: P) => R;
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(p1: P1, p2: P2) => R} func - The function to curry.
  * @returns {(p1: P1) => (p2: P2) => R} A curried function.
- *
  * @example
  * function twoArgFunc(a: number, b: number) {
  *   return a + b;
@@ -45,15 +39,15 @@ export function curry<P, R>(func: (p: P) => R): (p: P) => R;
  * const add5 = curriedTwoArgFunc(5);
  * console.log(add5(10)); // 15
  */
-export function curry<P1, P2, R>(func: (p1: P1, p2: P2) => R): (p1: P1) => (p2: P2) => R;
+export function curry<P1, P2, R>(
+  func: (p1: P1, p2: P2) => R,
+): (p1: P1) => (p2: P2) => R;
 
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(p1: P1, p2: P2, p3: P3) => R} func - The function to curry.
  * @returns {(p1: P1) => (p2: P2) => (p3: P3) => R} A curried function.
- *
  * @example
  * function threeArgFunc(a: number, b: number, c: number) {
  *   return a + b + c;
@@ -63,15 +57,15 @@ export function curry<P1, P2, R>(func: (p1: P1, p2: P2) => R): (p1: P1) => (p2: 
  * const add3 = add1(2);
  * console.log(add3(3)); // 6
  */
-export function curry<P1, P2, P3, R>(func: (p1: P1, p2: P2, p3: P3) => R): (p1: P1) => (p2: P2) => (p3: P3) => R;
+export function curry<P1, P2, P3, R>(
+  func: (p1: P1, p2: P2, p3: P3) => R,
+): (p1: P1) => (p2: P2) => (p3: P3) => R;
 
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(p1: P1, p2: P2, p3: P3, p4: P4) => R} func - The function to curry.
  * @returns {(p1: P1) => (p2: P2) => (p3: P3) => (p4: P4) => R} A curried function.
- *
  * @example
  * function fourArgFunc(a: number, b: number, c: number, d: number) {
  *   return a + b + c + d;
@@ -83,16 +77,14 @@ export function curry<P1, P2, P3, R>(func: (p1: P1, p2: P2, p3: P3) => R): (p1: 
  * console.log(add6(4)); // 10
  */
 export function curry<P1, P2, P3, P4, R>(
-  func: (p1: P1, p2: P2, p3: P3, p4: P4) => R
+  func: (p1: P1, p2: P2, p3: P3, p4: P4) => R,
 ): (p1: P1) => (p2: P2) => (p3: P3) => (p4: P4) => R;
 
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R} func - The function to curry.
  * @returns {(p1: P1) => (p2: P2) => (p3: P3) => (p4: P4) => (p5: P5) => R} A curried function.
- *
  * @example
  * function fiveArgFunc(a: number, b: number, c: number, d: number, e: number) {
  *   return a + b + c + d + e;
@@ -105,16 +97,14 @@ export function curry<P1, P2, P3, P4, R>(
  * console.log(add10(5)); // 15
  */
 export function curry<P1, P2, P3, P4, P5, R>(
-  func: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R
+  func: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R,
 ): (p1: P1) => (p2: P2) => (p3: P3) => (p4: P4) => (p5: P5) => R;
 
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(...args: any[]) => any} func - The function to curry.
  * @returns {(...args: any[]) => any} A curried function that can be called with a single argument at a time.
- *
  * @example
  * function sum(a: number, b: number, c: number) {
  *   return a + b + c;
@@ -136,10 +126,8 @@ export function curry(func: (...args: any[]) => any): (...args: any[]) => any;
 /**
  * Curries a function, allowing it to be called with a single argument at a time and returning a new function that takes the next argument.
  * This process continues until all arguments have been provided, at which point the original function is called with all accumulated arguments.
- *
  * @param {(...args: any[]) => any} func - The function to curry.
  * @returns {(...args: any[]) => any} A curried function that can be called with a single argument at a time.
- *
  * @example
  * function sum(a: number, b: number, c: number) {
  *   return a + b + c;
@@ -166,14 +154,18 @@ export function curry(func: (...args: any[]) => any): (...args: any[]) => any {
   } as any;
 }
 
-function makeCurry<F extends (...args: any) => any>(origin: F, argsLength: number, args: any[]) {
+function makeCurry<F extends (...args: any) => any>(
+  origin: F,
+  argsLength: number,
+  args: any[],
+) {
   if (args.length === argsLength) {
     return origin(...args);
-  } else {
-    const next = function (arg: Parameters<F>[0]) {
-      return makeCurry(origin, argsLength, [...args, arg]);
-    };
-
-    return next as any;
   }
+
+  const next = function (arg: Parameters<F>[0]) {
+    return makeCurry(origin, argsLength, [...args, arg]);
+  };
+
+  return next as any;
 }

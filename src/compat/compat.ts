@@ -99,7 +99,11 @@ export { bind } from './function/bind.ts';
 export { bindKey } from './function/bindKey.ts';
 export { curry } from './function/curry.ts';
 export { curryRight } from './function/curryRight.ts';
-export { debounce, type DebouncedFunction, type DebouncedFunction as DebouncedFunc } from './function/debounce.ts';
+export {
+  debounce,
+  type DebouncedFunction,
+  type DebouncedFunction as DebouncedFunc,
+} from './function/debounce.ts';
 export { defer } from './function/defer.ts';
 export { delay } from './function/delay.ts';
 export { flip } from './function/flip.ts';

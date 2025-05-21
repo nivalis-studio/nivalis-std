@@ -2,7 +2,6 @@
  * Converts a deep key string into an array of path segments.
  *
  * This function takes a string representing a deep key (e.g., 'a.b.c' or 'a[b][c]') and breaks it down into an array of strings, each representing a segment of the path.
- *
  * @param {string} deepKey - The deep key string to convert.
  * @returns {string[]} An array of strings, each representing a segment of the path.
  *
@@ -60,22 +59,21 @@ export function toPath(deepKey: string): string[] {
       } else {
         key += char;
       }
-    } else {
-      if (char === '[') {
-        // Start of bracketed segment
-        bracket = true;
-        if (key) {
-          result.push(key);
-          key = '';
-        }
-      } else if (char === '.') {
-        if (key) {
-          result.push(key);
-          key = '';
-        }
-      } else {
-        key += char;
+    } else if (char === '[') {
+      // Start of bracketed segment
+      bracket = true;
+
+      if (key) {
+        result.push(key);
+        key = '';
       }
+    } else if (char === '.') {
+      if (key) {
+        result.push(key);
+        key = '';
+      }
+    } else {
+      key += char;
     }
 
     index++;

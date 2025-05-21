@@ -4,10 +4,8 @@ import { isSymbol } from '../predicate/isSymbol.ts';
  * Converts `value` to a number.
  *
  * Unlike `Number()`, this function returns `NaN` for symbols.
- *
  * @param {unknown} value - The value to convert.
  * @returns {number} Returns the number.
- *
  * @example
  * toNumber(3.2); // => 3.2
  * toNumber(Number.MIN_VALUE); // => 5e-324
@@ -18,7 +16,7 @@ import { isSymbol } from '../predicate/isSymbol.ts';
  */
 export function toNumber(value?: unknown): number {
   if (isSymbol(value)) {
-    return NaN;
+    return Number.NaN;
   }
 
   return Number(value);

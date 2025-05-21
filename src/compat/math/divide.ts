@@ -5,11 +5,9 @@ import { toString } from '../util/toString.ts';
  * Divide two numbers.
  *
  * If either of the numbers is `NaN`, the function returns `NaN`.
- *
  * @param {number} value The first number in a division.
  * @param {number} other The second number in a division.
  * @returns {number} The quotient of value and other.
- *
  * @example
  * divide(6, 3); // => 2
  * divide(2, NaN); // => NaN

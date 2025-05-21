@@ -14,7 +14,7 @@ describe('once', () => {
   });
 
   it('should work with functions returning undefined', () => {
-    const func = vi.fn(() => undefined);
+    const func = vi.fn(() => {});
     const onceFunc = once(func);
 
     expect(onceFunc()).toBeUndefined();

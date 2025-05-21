@@ -15,13 +15,14 @@ describe('isDate', () => {
     expect(isDate(/a/)).toBe(false);
     expect(isDate(Symbol('2024'))).toBe(false);
     expect(isDate(null)).toBe(false);
-    expect(isDate(undefined)).toBe(false);
+    expect(isDate()).toBe(false);
   });
 
   it('should work on date within object', () => {
     const obj = {
       date: new Date(),
     };
+
     expect(isDate(obj.date)).toBe(true);
   });
 });

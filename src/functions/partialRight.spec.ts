@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { curry } from '../compat/function/curry';
 import { identity } from './identity';
 import { partialRight } from './partialRight';
-import { curry } from '../compat/function/curry';
 
 describe('partialRight', () => {
   const { placeholder } = partialRight;
+
   it('partialRight partially applies arguments', () => {
     const par = partialRight(identity, 'a');
+
     expect(par()).toBe('a');
   });
 
@@ -15,6 +17,7 @@ describe('partialRight', () => {
       return [a, b];
     };
     const par = partialRight(fn, 'a');
+
     expect(par('b')).toEqual(['b', 'a']);
   });
 
@@ -23,21 +26,23 @@ describe('partialRight', () => {
       return arguments.length;
     };
     const par = partialRight(fn);
+
     expect(par()).toBe(0);
   });
 
   it('partialRight works when there are no partially applied arguments and the created function is invoked with additional arguments', () => {
     const par = partialRight(identity);
+
     expect(par('a')).toBe('a');
   });
 
   it('partialRight supports placeholders', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (..._: any[]) {
       // eslint-disable-next-line prefer-rest-params
-      return Array.from(arguments);
+      return [...arguments];
     };
     let par: any = partialRight(fn, placeholder, 'b', placeholder);
+
     expect(par('a', 'c')).toEqual(['a', 'b', 'c']);
     expect(par('a')).toEqual(['a', 'b', undefined]);
     expect(par()).toEqual([undefined, 'b', undefined]);
@@ -47,9 +52,9 @@ describe('partialRight', () => {
   });
 
   it('partialRight creates a function with a length of 0', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (_a: string, _b: string, _c: string) {};
     const par = partialRight(fn, 'a');
+
     expect(par.length).toBe(0);
   });
 
@@ -83,9 +88,9 @@ describe('partialRight', () => {
 
   it(`partialRight should work with curried functions`, () => {
     const fn = function (a: any, b: any, c: any) {
-        return a + b + c;
-      },
-      curried = curry(partialRight(fn, 1), 2);
+      return a + b + c;
+    };
+    const curried = curry(partialRight(fn, 1), 2);
 
     expect(curried(2, 3)).toBe(6);
     expect(curried(2)(3)).toBe(6);
@@ -93,11 +98,17 @@ describe('partialRight', () => {
 
   it('partialRight should work with placeholders and curried functions', () => {
     const fn = function () {
-        // eslint-disable-next-line prefer-rest-params
-        return Array.from(arguments);
-      },
-      curried = curry(fn),
-      par = partialRight(curried, partialRight.placeholder, 'b', partialRight.placeholder, 'd');
+      // eslint-disable-next-line prefer-rest-params
+      return [...arguments];
+    };
+    const curried = curry(fn);
+    const par = partialRight(
+      curried,
+      partialRight.placeholder,
+      'b',
+      partialRight.placeholder,
+      'd',
+    );
 
     expect(par('a', 'c')).toEqual(['a', 'b', 'c', 'd']);
   });

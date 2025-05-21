@@ -8,11 +8,9 @@ import { isArrayLike } from '../predicate/isArrayLike.ts';
  * This function takes an array and returns a new array containing all the elements
  * except for the first one. If the input array is empty or has only one element,
  * an empty array is returned.
- *
  * @template T - The type of elements in the array.
  * @param {ArrayLike<T> | null | undefined} arr - The array to get the tail of.
  * @returns {T[]} A new array containing all elements of the input array except for the first one.
- *
  * @example
  * const arr1 = [1, 2, 3];
  * const result = tail(arr1);
@@ -30,5 +28,6 @@ export function tail<T>(arr: ArrayLike<T> | null | undefined): T[] {
   if (!isArrayLike(arr)) {
     return [];
   }
+
   return tailToolkit(toArray(arr));
 }

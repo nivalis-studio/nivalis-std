@@ -4,7 +4,6 @@ import { iteratee as iterateeToolkit } from '../util/iteratee.ts';
 /**
  * Finds the element in an array that has the maximum value when applying
  * the `iteratee` to each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} items The array of elements to search.
  * @param {((element: T) => number) | keyof T | [keyof T, unknown] | Partial<T>} iteratee
@@ -31,11 +30,15 @@ import { iteratee as iterateeToolkit } from '../util/iteratee.ts';
  */
 export function maxBy<T>(
   items: ArrayLike<T> | null | undefined,
-  iteratee: ((element: T) => number) | keyof T | [keyof T, unknown] | Partial<T>
+  iteratee:
+    | ((element: T) => number)
+    | keyof T
+    | [keyof T, unknown]
+    | Partial<T>,
 ): T | undefined {
   if (items == null) {
     return undefined;
   }
 
-  return maxByToolkit(Array.from(items), iterateeToolkit(iteratee));
+  return maxByToolkit([...items], iterateeToolkit(iteratee));
 }

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { constant, each, stubArray } from '..';
-import { map } from './map';
 import { identity } from '../../function/identity';
 import { falsey } from '../_internal/falsey';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
+import { map } from './map';
 
 describe('map', () => {
   const array = [1, 2];
@@ -18,10 +18,13 @@ describe('map', () => {
 
   it('should work with `_.property` shorthands', () => {
     const objects = [{ a: 'x' }, { a: 'y' }];
+
     expect(map(objects, 'a')).toEqual(['x', 'y']);
     const objects2 = [{ 1: 'x' }, { 1: 'y' }];
+
     expect(map(objects2, 1)).toEqual(['x', 'y']);
     const object3 = [{ [Symbol.for('a')]: 'x' }, { [Symbol.for('a')]: 'y' }];
+
     expect(map(object3, Symbol.for('a'))).toEqual(['x', 'y']);
   });
 
@@ -29,10 +32,12 @@ describe('map', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     // @ts-expect-error - Foo is not a constructor
     const actual = map(new Foo(), identity);
+
     expect(actual).toEqual([1]);
   });
 
@@ -43,7 +48,9 @@ describe('map', () => {
     const expected = values.map(constant([1, 2]));
 
     each([array, object], collection => {
-      const actual = values.map((value, index) => (index ? map(collection, value) : map(collection)));
+      const actual = values.map((value, index) =>
+        index ? map(collection, value) : map(collection),
+      );
 
       expect(actual).toEqual(expected);
     });
@@ -89,6 +96,7 @@ describe('map', () => {
 
   it('should accept a string as the collection', () => {
     const actual = map('abc', identity);
+
     expect(actual).toEqual(['a', 'b', 'c']);
   });
 
@@ -103,8 +111,8 @@ describe('map', () => {
       const expected = [1, 0, array];
 
       func(array, function () {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-        args || (args = Array.prototype.slice.call(arguments));
+        // eslint-disable-next-line prefer-rest-params
+        args ||= Array.prototype.slice.call(arguments);
       });
 
       expect(args).toEqual(expected);
@@ -112,6 +120,7 @@ describe('map', () => {
 
     it(`\`map\` should treat sparse arrays as dense`, () => {
       const array = [1];
+
       array[2] = 3;
 
       const expected = [
@@ -121,9 +130,11 @@ describe('map', () => {
       ];
 
       const argsList: any[] = [];
+
       func(array, function () {
         // eslint-disable-next-line prefer-rest-params
         argsList.push(Array.prototype.slice.call(arguments));
+
         return !(isFind || isSome);
       });
 
@@ -132,10 +143,13 @@ describe('map', () => {
 
     it(`\`map\` should not iterate custom properties on arrays`, () => {
       const array: any = [1, 2, 3];
+
       array.a = 1;
       const keys: any = [];
+
       func(array, (_, key) => {
         keys.push(key);
+
         return false;
       });
 
@@ -148,9 +162,11 @@ describe('map', () => {
       function Foo(this: any) {
         this.a = 1;
       }
+
       Foo.prototype.b = 2;
 
       const values: any[] = [];
+
       // eslint-disable-next-line
       // @ts-ignore
       func(new Foo(), value => {
@@ -162,22 +178,25 @@ describe('map', () => {
     it(`\`map\` should use \`isArrayLike\` to determine whether a value is array-like`, () => {
       const isIteratedAsObject = function (object: any) {
         let result = false;
+
         (func as any)(
           object,
           () => {
             result = true;
           },
-          0
+          0,
         );
+
         return result;
       };
 
-      const values = [-1, '1', 1.1, Object(1), MAX_SAFE_INTEGER + 1];
+      const values = [-1, '1', 1.1, new Object(1), MAX_SAFE_INTEGER + 1];
       const expected = map(values, () => true);
 
-      const actual = map(values, length => isIteratedAsObject({ length: length }));
+      const actual = map(values, length => isIteratedAsObject({ length }));
 
       const Foo = function () {};
+
       Foo.a = 1;
 
       expect(actual).toEqual(expected);
@@ -193,6 +212,7 @@ describe('map', () => {
         if (++count === 1) {
           array.push(2);
         }
+
         return !(isFind || isSome);
       });
 
@@ -207,6 +227,7 @@ describe('map', () => {
         if (++count === 1) {
           object.b = 2;
         }
+
         return !(isFind || isSome);
       });
 

@@ -23,7 +23,7 @@ describe('padEnd', () => {
   });
 
   it('should not pad a string if the length is not a number', () => {
-    expect(padEnd('abc', NaN)).toBe('abc');
+    expect(padEnd('abc', Number.NaN)).toBe('abc');
   });
 
   it('should not pad a string if the length is not an integer', () => {
@@ -40,28 +40,30 @@ describe('padEnd', () => {
   });
 
   it(`\`padEnd\` should treat negative \`length\` as \`0\``, () => {
-    [0, -2].forEach(length => {
+    for (const length of [0, -2]) {
       expect(padEnd('abc', length)).toBe('abc');
-    });
+    }
   });
 
   it(`\`padEnd\` should coerce \`length\` to a number`, () => {
-    ['', '4'].forEach(length => {
+    for (const length of ['', '4']) {
       const actual = length ? 'abc ' : 'abc';
+
       // @ts-expect-error - invalid length
       expect(padEnd('abc', length)).toBe(actual);
-    });
+    }
   });
 
   it(`\`padEnd\` should treat nullish values as empty strings`, () => {
-    [undefined, '_-'].forEach(chars => {
-      const expected = chars ? chars : '  ';
+    for (const chars of [undefined, '_-']) {
+      const expected = chars || '  ';
+
       // @ts-expect-error - invalid string
       expect(padEnd(null, 2, chars)).toBe(expected);
       // @ts-expect-error - invalid string
       expect(padEnd(undefined, 2, chars)).toBe(expected);
       expect(padEnd('', 2, chars)).toBe(expected);
-    });
+    }
   });
 
   it('should pad a string to a given length', () => {
@@ -69,7 +71,9 @@ describe('padEnd', () => {
     const values = [, undefined];
     const expected = values.map(() => 'abc   ');
 
-    const actual = values.map((value, index) => (index ? padEnd('abc', 6, value) : padEnd('abc', 6)));
+    const actual = values.map((value, index) =>
+      index ? padEnd('abc', 6, value) : padEnd('abc', 6),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -79,7 +83,7 @@ describe('padEnd', () => {
   });
 
   it('should coerce `string` to a string', () => {
-    const values = [Object('abc'), { toString: () => 'abc' }];
+    const values = [new Object('abc'), { toString: () => 'abc' }];
     const expected = values.map(() => true);
 
     const actual = values.map(value => padEnd(value, 6) === 'abc   ');

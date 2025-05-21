@@ -14,7 +14,7 @@ describe('isError', () => {
   it("should return 'false' for non-error objects", () => {
     expect(isError({})).toBe(false);
     expect(isError(null)).toBe(false);
-    expect(isError(undefined)).toBe(false);
+    expect(isError()).toBe(false);
     expect(isError('')).toBe(false);
     expect(isError(1)).toBe(false);
     expect(isError(true)).toBe(false);
@@ -31,6 +31,7 @@ describe('isError', () => {
 
   it('should work with an error object from another realm', () => {
     const realm = { error: new Error() };
+
     expect(isError(realm.error)).toBe(true);
   });
 });

@@ -4,14 +4,12 @@
  * This method differs from `bind` by allowing bound functions to reference methods that may be redefined or don't yet exist.
  *
  * The `bindKey.placeholder` value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
- *
  * @template T - The type of the object to bind.
  * @template K - The type of the key to bind.
  * @param {T} object - The object to invoke the method on.
  * @param {K} key - The key of the method.
  * @param {...any} partialArgs - The arguments to be partially applied.
  * @returns {T[K] extends (...args: any[]) => any ? (...args: any[]) => ReturnType<T[K]> : never} - Returns the new bound function.
- *
  * @example
  * const object = {
  *   user: 'fred',
@@ -40,7 +38,9 @@ export function bindKey<T extends Record<PropertyKey, any>, K extends keyof T>(
   object: T,
   key: K,
   ...partialArgs: any[]
-): T[K] extends (...args: any[]) => any ? (...args: any[]) => ReturnType<T[K]> : never {
+): T[K] extends (...args: any[]) => any
+  ? (...args: any[]) => ReturnType<T[K]>
+  : never {
   const bound = function (this: any, ...providedArgs: any[]) {
     const args: any[] = [];
 
@@ -49,9 +49,7 @@ export function bindKey<T extends Record<PropertyKey, any>, K extends keyof T>(
     // we have args with [1, 2, 3, 4].
     let startIndex = 0;
 
-    for (let i = 0; i < partialArgs.length; i++) {
-      const arg = partialArgs[i];
-
+    for (const arg of partialArgs) {
       if (arg === bindKey.placeholder) {
         args.push(providedArgs[startIndex++]);
       } else {
@@ -75,4 +73,5 @@ export function bindKey<T extends Record<PropertyKey, any>, K extends keyof T>(
 }
 
 const bindKeyPlaceholder: unique symbol = Symbol('bindKey.placeholder');
+
 bindKey.placeholder = bindKeyPlaceholder;

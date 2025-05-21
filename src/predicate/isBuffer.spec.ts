@@ -4,12 +4,13 @@ import { isBuffer } from './isBuffer';
 describe('isBuffer', () => {
   it('should return true for Buffer instances', () => {
     const buffer = Buffer.from('test');
+
     expect(isBuffer(buffer)).toBe(true);
   });
 
   it('should return false for non-Buffer instances', () => {
     expect(isBuffer(null)).toBe(false);
-    expect(isBuffer(undefined)).toBe(false);
+    expect(isBuffer()).toBe(false);
     expect(isBuffer(123)).toBe(false);
     expect(isBuffer('string')).toBe(false);
     expect(isBuffer([])).toBe(false);
@@ -19,6 +20,7 @@ describe('isBuffer', () => {
 
   it('should return false when Buffer is not defined', () => {
     const originalBuffer = global.Buffer;
+
     // eslint-disable-next-line
     // @ts-ignore
     delete global.Buffer;

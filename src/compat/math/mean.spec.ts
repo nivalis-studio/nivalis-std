@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { mean } from './mean';
 import { empties } from '../_internal/empties';
 import { stubNaN } from '../_internal/stubNaN';
 import { map } from '../array/map';
+import { mean } from './mean';
 
 describe('mean', () => {
   it('should return the mean of an array of numbers', () => {
     const array = [4, 2, 8, 6];
+
     expect(mean(array)).toBe(5);
   });
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { constant, each, map, noop } from '..';
-import { methodOf as methodOfToolkit } from './methodOf';
-import { times } from './times';
 import { stubFour } from '../_internal/stubFour';
 import { stubOne } from '../_internal/stubOne';
 import { stubThree } from '../_internal/stubThree';
 import { stubTwo } from '../_internal/stubTwo';
+import { times } from './times';
+import { methodOf as methodOfToolkit } from './methodOf';
 
 describe('methodOf', () => {
   it('should create a function that calls a method of a given key', () => {
@@ -13,6 +13,7 @@ describe('methodOf', () => {
 
     each(['a', ['a']], path => {
       const methodOf = methodOfToolkit(object);
+
       expect(methodOf.length).toBe(1);
       expect(methodOf(path)).toBe(1);
     });
@@ -23,6 +24,7 @@ describe('methodOf', () => {
 
     each(['a.b', ['a', 'b']], path => {
       const methodOf = methodOfToolkit(object);
+
       expect(methodOf(path)).toBe(2);
     });
   });
@@ -32,12 +34,14 @@ describe('methodOf', () => {
 
     each([1, [1]], path => {
       const methodOf = methodOfToolkit(array);
+
       expect(methodOf(path)).toBe(1);
     });
   });
 
   it('should coerce `path` to a string', () => {
     function fn() {}
+
     fn.toString = constant('fn');
 
     const expected = [1, 2, 3, 4];
@@ -52,6 +56,7 @@ describe('methodOf', () => {
     times(2, index => {
       const actual = map(paths, path => {
         const methodOf = methodOfToolkit(object);
+
         // @ts-expect-error - methodOf should handle nullish values
         return methodOf(index ? [path] : path);
       });
@@ -62,11 +67,13 @@ describe('methodOf', () => {
 
   it('should work with inherited property values', () => {
     function Foo() {}
+
     Foo.prototype.a = stubOne;
 
     each(['a', ['a']], path => {
       // @ts-expect-error - Foo is a constructor
       const methodOf = methodOfToolkit(new Foo());
+
       expect(methodOf(path)).toBe(1);
     });
   });
@@ -76,6 +83,7 @@ describe('methodOf', () => {
 
     each(['a.b', ['a.b']], path => {
       const methodOf = methodOfToolkit(object);
+
       expect(methodOf(path)).toBe(1);
     });
   });
@@ -89,6 +97,7 @@ describe('methodOf', () => {
       const actual = map(values, (value, index) => {
         // @ts-expect-error - methodOf should handle nullish values
         const methodOf = index ? methodOfToolkit() : methodOfToolkit(value);
+
         return methodOf(path);
       });
 
@@ -101,15 +110,22 @@ describe('methodOf', () => {
     const values = [, null, undefined];
     const expected = map(values, noop);
 
-    each(['constructor.prototype.valueOf', ['constructor', 'prototype', 'valueOf']], path => {
-      const actual = map(values, (value, index) => {
-        // @ts-expect-error - methodOf should handle nullish values
-        const methodOf = index ? methodOfToolkit() : methodOfToolkit(value);
-        return methodOf(path);
-      });
+    each(
+      [
+        'constructor.prototype.valueOf',
+        ['constructor', 'prototype', 'valueOf'],
+      ],
+      path => {
+        const actual = map(values, (value, index) => {
+          // @ts-expect-error - methodOf should handle nullish values
+          const methodOf = index ? methodOfToolkit() : methodOfToolkit(value);
 
-      expect(actual).toEqual(expected);
-    });
+          return methodOf(path);
+        });
+
+        expect(actual).toEqual(expected);
+      },
+    );
   });
 
   it('should return `undefined` if parts of `path` are missing', () => {
@@ -123,7 +139,7 @@ describe('methodOf', () => {
 
   it('should apply partial arguments to function', () => {
     const object = {
-      fn: function () {
+      fn() {
         // eslint-disable-next-line prefer-rest-params
         return Array.prototype.slice.call(arguments);
       },
@@ -139,7 +155,7 @@ describe('methodOf', () => {
   it('should invoke deep property methods with the correct `this` binding', () => {
     const object = {
       a: {
-        b: function () {
+        b() {
           return this.c;
         },
         c: 1,

@@ -15,12 +15,10 @@ import { toPath } from '../util/toPath.ts';
  * If the path is an index and the object is an array or an arguments object, the function will verify
  * if the index is valid and within the bounds of the array or arguments object, even if the array or
  * arguments object is sparse (i.e., not all indexes are defined).
- *
  * @param {object} object - The object to query.
  * @param {PropertyKey | PropertyKey[]} path - The path to check. This can be a single property key,
  *        an array of property keys, or a string representing a deep path.
  * @returns {boolean} Returns `true` if the path exists (own or inherited), `false` otherwise.
- *
  * @example
  *
  * const obj = { a: { b: { c: 3 } } };
@@ -40,7 +38,10 @@ import { toPath } from '../util/toPath.ts';
  * hasIn(rect, 'area'); // true
  * has(rect, 'area'); // false - has only checks own properties
  */
-export function hasIn(object: unknown, path: PropertyKey | readonly PropertyKey[]): boolean;
+export function hasIn(
+  object: unknown,
+  path: PropertyKey | readonly PropertyKey[],
+): boolean;
 
 /**
  * Checks if a given path exists in an object, **including inherited properties**.
@@ -54,12 +55,10 @@ export function hasIn(object: unknown, path: PropertyKey | readonly PropertyKey[
  * If the path is an index and the object is an array or an arguments object, the function will verify
  * if the index is valid and within the bounds of the array or arguments object, even if the array or
  * arguments object is sparse (i.e., not all indexes are defined).
- *
  * @param {object} object - The object to query.
  * @param {PropertyKey | PropertyKey[]} path - The path to check. This can be a single property key,
  *        an array of property keys, or a string representing a deep path.
  * @returns {boolean} Returns `true` if the path exists (own or inherited), `false` otherwise.
- *
  * @example
  *
  * const obj = { a: { b: { c: 3 } } };
@@ -79,12 +78,19 @@ export function hasIn(object: unknown, path: PropertyKey | readonly PropertyKey[
  * hasIn(rect, 'area'); // true
  * has(rect, 'area'); // false - has only checks own properties
  */
-export function hasIn(object: any, path: PropertyKey | readonly PropertyKey[]): boolean {
+export function hasIn(
+  object: any,
+  path: PropertyKey | readonly PropertyKey[],
+): boolean {
   let resolvedPath;
 
   if (Array.isArray(path)) {
     resolvedPath = path;
-  } else if (typeof path === 'string' && isDeepKey(path) && object?.[path] == null) {
+  } else if (
+    typeof path === 'string' &&
+    isDeepKey(path) &&
+    object?.[path] == null
+  ) {
     resolvedPath = toPath(path);
   } else {
     resolvedPath = [path];
@@ -96,12 +102,13 @@ export function hasIn(object: any, path: PropertyKey | readonly PropertyKey[]): 
 
   let current = object;
 
-  for (let i = 0; i < resolvedPath.length; i++) {
-    const key = resolvedPath[i];
-
+  for (const key of resolvedPath) {
     // hasIn: check both own and inherited properties
-    if (current == null || !(key in Object(current))) {
-      const isSparseIndex = (Array.isArray(current) || isArguments(current)) && isIndex(key) && key < current.length;
+    if (current == null || !(key in new Object(current))) {
+      const isSparseIndex =
+        (Array.isArray(current) || isArguments(current)) &&
+        isIndex(key) &&
+        key < current.length;
 
       if (!isSparseIndex) {
         return false;

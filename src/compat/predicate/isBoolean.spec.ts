@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { isBoolean } from './isBoolean';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isBoolean } from './isBoolean';
 
 describe('isBoolean', () => {
   it('should return `true` for booleans', () => {
     expect(isBoolean(true)).toBe(true);
     expect(isBoolean(false)).toBe(true);
-    expect(isBoolean(Object(true))).toBe(true);
-    expect(isBoolean(Object(false))).toBe(true);
+    expect(isBoolean(new Object(true))).toBe(true);
+    expect(isBoolean(new Object(false))).toBe(true);
   });
 
   it('should return `false` for non-booleans', () => {

@@ -19,6 +19,7 @@ describe('toPairs', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const expected = [['a', 1]];
@@ -42,6 +43,7 @@ describe('toPairs', () => {
 
   it('should convert maps', () => {
     const map = new Map();
+
     map.set('a', 1);
     map.set('b', 2);
     expect(toPairs(map)).toEqual([
@@ -52,6 +54,7 @@ describe('toPairs', () => {
 
   it('should convert sets', () => {
     const set = new Set();
+
     set.add(1);
     set.add(2);
     expect(toPairs(set)).toEqual([
@@ -61,8 +64,9 @@ describe('toPairs', () => {
   });
 
   it('should convert strings', () => {
-    lodashStable.each(['xo', Object('xo')], string => {
+    lodashStable.each(['xo', new Object('xo')], string => {
       const actual = lodashStable.sortBy(toPairs(string), 0);
+
       expect(actual).toEqual([
         ['0', 'x'],
         ['1', 'o'],

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { takeRightWhile } from './takeRightWhile';
 import { slice } from '../_internal/slice';
 import { toArgs } from '../_internal/toArgs';
+import { takeRightWhile } from './takeRightWhile';
 
 describe('takeRightWhile', () => {
   const array = [1, 2, 3, 4];
@@ -14,11 +14,13 @@ describe('takeRightWhile', () => {
 
   it('should take elements while `predicate` returns truthy', () => {
     const actual = takeRightWhile(array, n => n > 2);
+
     expect(actual).toEqual([3, 4]);
   });
 
   it('should provide correct `predicate` arguments', () => {
     let args;
+
     takeRightWhile(array, function () {
       // eslint-disable-next-line prefer-rest-params
       args = slice.call(arguments);
@@ -47,11 +49,15 @@ describe('takeRightWhile', () => {
     expect(takeRightWhile(null, () => true)).toEqual([]);
     expect(takeRightWhile(undefined, () => true)).toEqual([]);
     expect(takeRightWhile(null)).toEqual([]);
-    expect(takeRightWhile(undefined)).toEqual([]);
+    expect(takeRightWhile()).toEqual([]);
   });
 
   it('should work with array-like objects', () => {
-    expect(takeRightWhile({ 0: 1, 1: 2, 2: 3, length: 3 }, value => value > 1)).toEqual([2, 3]);
-    expect(takeRightWhile(toArgs([1, 2, 3]), value => value > 1)).toEqual([2, 3]);
+    expect(
+      takeRightWhile({ 0: 1, 1: 2, 2: 3, length: 3 }, value => value > 1),
+    ).toEqual([2, 3]);
+    expect(takeRightWhile(toArgs([1, 2, 3]), value => value > 1)).toEqual([
+      2, 3,
+    ]);
   });
 });

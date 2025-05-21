@@ -5,6 +5,7 @@ describe('remove', () => {
   it('should remove elements based on the predicate function', () => {
     const numbers = [1, 2, 3, 4, 5];
     const removed = remove(numbers, value => value % 2 === 0);
+
     expect(numbers).toEqual([1, 3, 5]);
     expect(removed).toEqual([2, 4]);
   });
@@ -13,6 +14,7 @@ describe('remove', () => {
     // eslint-disable-next-line no-sparse-arrays
     const sparseArray = [1, , 3, , 5];
     const removed = remove(sparseArray, value => value === undefined);
+
     expect(sparseArray).toEqual([1, 3, 5]);
     expect(removed).toEqual([undefined, undefined]);
   });
@@ -20,6 +22,7 @@ describe('remove', () => {
   it('should return all elements if all elements are removed', () => {
     const numbers = [1, 2, 3, 4, 5];
     const removed = remove(numbers, () => true);
+
     expect(numbers).toEqual([]);
     expect(removed).toEqual([1, 2, 3, 4, 5]);
   });
@@ -27,6 +30,7 @@ describe('remove', () => {
   it('should not remove any elements if the predicate always returns false', () => {
     const numbers = [1, 2, 3, 4, 5];
     const removed = remove(numbers, () => false);
+
     expect(numbers).toEqual([1, 2, 3, 4, 5]);
     expect(removed).toEqual([]);
   });
@@ -34,6 +38,7 @@ describe('remove', () => {
   it('should work with an empty array', () => {
     const emptyArray: number[] = [];
     const removed = remove(emptyArray, () => true);
+
     expect(emptyArray).toEqual([]);
     expect(removed).toEqual([]);
   });

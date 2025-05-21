@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { nthArg } from './nthArg';
 import { noop } from '../../function';
 import { range } from '../../math';
 import { falsey } from '../_internal/falsey';
 import { stubA } from '../_internal/stubA';
 import { stubB } from '../_internal/stubB';
+import { nthArg } from './nthArg';
 
 describe('nthArg', () => {
   const args = ['a', 'b', 'c', 'd'];
@@ -12,6 +12,7 @@ describe('nthArg', () => {
   it('should create a function that returns its nth argument', () => {
     const actual = args.map((value, index) => {
       const func = nthArg(index);
+
       return func(...args);
     });
 
@@ -21,6 +22,7 @@ describe('nthArg', () => {
   it('should work with a negative `n`', () => {
     const actual = range(1, args.length + 1).map(n => {
       const func = nthArg(-n);
+
       return func(...args);
     });
 
@@ -34,6 +36,7 @@ describe('nthArg', () => {
     let actual = values.map(n => {
       // @ts-expect-error invalid types
       const func = n ? nthArg(n) : nthArg();
+
       return func(...args);
     });
 
@@ -45,6 +48,7 @@ describe('nthArg', () => {
     actual = values.map(n => {
       // @ts-expect-error invalid types
       const func = nthArg(n);
+
       return func(...args);
     });
 
@@ -53,6 +57,7 @@ describe('nthArg', () => {
 
   it('should return `undefined` for empty arrays', () => {
     const func = nthArg(1);
+
     expect(func()).toBe(undefined);
   });
 
@@ -62,6 +67,7 @@ describe('nthArg', () => {
 
     const actual = values.map(n => {
       const func = nthArg(n);
+
       return func(...args);
     });
 

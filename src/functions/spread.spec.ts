@@ -13,11 +13,13 @@ function greet(name: string, greeting = 'Hello'): string {
 describe('spread', () => {
   it('should correctly transform a function with multiple arguments', () => {
     const spreadAdd = spread(add);
+
     expect(spreadAdd([1, 2])).toBe(3);
   });
 
   it('should correctly transform a function with default arguments', () => {
     const spreadGreet = spread(greet);
+
     expect(spreadGreet(['Alice'])).toBe('Hello, Alice!');
     expect(spreadGreet(['Bob', 'Hi'])).toBe('Hi, Bob!');
   });
@@ -28,11 +30,17 @@ describe('spread', () => {
     }
 
     const spreadConcat = spread(concat);
-    expect(spreadConcat(['Hello', 'World', 'Vitest'])).toBe('Hello World Vitest');
+
+    expect(spreadConcat(['Hello', 'World', 'Vitest'])).toBe(
+      'Hello World Vitest',
+    );
   });
 
   it('should maintain the context of `this` when calling the original function', () => {
-    function greetWithContext(this: { greeting: string }, name: string): string {
+    function greetWithContext(
+      this: { greeting: string },
+      name: string,
+    ): string {
       return `${this.greeting}, ${name}!`;
     }
 

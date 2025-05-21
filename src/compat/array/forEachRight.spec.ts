@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { forEachRight } from './forEachRight';
-import { includes } from './includes';
-import { map } from './map';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { identity } from '../compat';
 import { isArray } from '../predicate/isArray';
 import { stubTrue } from '../util/stubTrue';
+import { map } from './map';
+import { includes } from './includes';
+import { forEachRight } from './forEachRight';
 
 describe('forEachRight', () => {
   it(`should provide correct iteratee arguments`, () => {
@@ -14,8 +14,7 @@ describe('forEachRight', () => {
     const expected = [3, 2, array];
 
     forEachRight(array, function (..._args: any[]) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      args || (args = _args);
+      args ||= _args;
     });
 
     expect(args!).toEqual(expected);
@@ -23,6 +22,7 @@ describe('forEachRight', () => {
 
   it(`should treat sparse arrays as dense`, () => {
     const array = [1];
+
     array[2] = 3;
 
     const expected = [
@@ -30,11 +30,14 @@ describe('forEachRight', () => {
       [undefined, 1, array],
       [3, 2, array],
     ];
+
     expected.reverse();
 
     const argsList: any[] = [];
+
     forEachRight(array, function (...args: any[]) {
       argsList.push(args);
+
       return true;
     });
 
@@ -43,10 +46,13 @@ describe('forEachRight', () => {
 
   it(`should not iterate custom properties on arrays`, () => {
     const array: any = [1, 2, 3];
+
     array.a = 1;
     const keys: any[] = [];
+
     forEachRight(array, (value, key) => {
       keys.push(key);
+
       return false;
     });
 
@@ -57,9 +63,11 @@ describe('forEachRight', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const values: any[] = [];
+
     // @ts-expect-error - Foo is not a constructor
     forEachRight(new Foo(), value => {
       values.push(value);
@@ -69,25 +77,29 @@ describe('forEachRight', () => {
 
   it(`should return the collection`, () => {
     const array = [1, 2, 3];
+
     expect(forEachRight(array, Boolean)).toBe(array);
   });
 
   it(`should use \`isArrayLike\` to determine whether a value is array-like`, () => {
     const isIteratedAsObject = function (object: any) {
       let result = false;
+
       forEachRight(object, () => {
         result = true;
       });
+
       return result;
     };
 
-    const values = [-1, '1', 1.1, Object(1), MAX_SAFE_INTEGER + 1];
+    const values = [-1, '1', 1.1, new Object(1), MAX_SAFE_INTEGER + 1];
     const expected = map(values, stubTrue);
 
-    const actual = map(values, length => isIteratedAsObject({ length: length }));
+    const actual = map(values, length => isIteratedAsObject({ length }));
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const Foo = function (a: any) {};
+
     Foo.a = 1;
 
     expect(actual).toEqual(expected);
@@ -103,6 +115,7 @@ describe('forEachRight', () => {
       if (++count === 1) {
         array.push(2);
       }
+
       return true;
     });
 
@@ -118,6 +131,7 @@ describe('forEachRight', () => {
         // @ts-expect-error - Property 'b' does not exist on type '{ a: number; }'.
         object.b = 2;
       }
+
       return true;
     });
 
@@ -130,6 +144,7 @@ describe('forEachRight', () => {
 
     forEachRight(array, (value, other) => {
       values.push(isArray(value) ? other : value);
+
       return false;
     });
 
@@ -142,6 +157,7 @@ describe('forEachRight', () => {
 
     forEachRight(object, (value, other) => {
       values.push(isArray(value) ? other : value);
+
       return false;
     });
 

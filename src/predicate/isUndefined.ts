@@ -5,10 +5,8 @@
  * It returns `true` if the value is `undefined`, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `undefined`.
- *
  * @param {unknown} x - The value to test if it is undefined.
  * @returns {x is undefined} true if the value is undefined, false otherwise.
- *
  * @example
  * const value1 = undefined;
  * const value2 = null;

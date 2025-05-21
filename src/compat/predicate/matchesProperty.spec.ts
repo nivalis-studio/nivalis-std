@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { matchesProperty } from './matchesProperty';
 import { noop } from '../../function/noop';
 import { range } from '../../math/range';
 import { numberProto } from '../_internal/numberProto';
 import { cloneDeep } from '../object/cloneDeep';
 import { stubFalse } from '../util/stubFalse';
 import { stubTrue } from '../util/stubTrue';
+import { matchesProperty } from './matchesProperty';
 
 describe('matchesProperty', () => {
   it('should create a function that performs a deep comparison between a property value and `srcValue`', () => {
@@ -33,19 +33,21 @@ describe('matchesProperty', () => {
   it('should support deep paths', () => {
     const object = { a: { b: 2 } };
 
-    ['a.b', ['a', 'b']].forEach(path => {
+    for (const path of ['a.b', ['a', 'b']]) {
       const matches = matchesProperty(path, 2);
+
       expect(matches(object)).toBe(true);
-    });
+    }
   });
 
   it('should work with a non-string `path`', () => {
     const array = [1, 2, 3];
 
-    [1, [1]].forEach(path => {
+    for (const path of [1, [1]]) {
       const matches = matchesProperty(path, 2);
+
       expect(matches(array)).toBe(true);
-    });
+    }
   });
 
   it('should preserve the sign of `0`', () => {
@@ -57,7 +59,7 @@ describe('matchesProperty', () => {
       [object2, object1],
       [object2, object1],
     ];
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const values = ['a', 'a', 'b', 'b'];
     const expected = props.map(() => [true, false]);
 
@@ -73,29 +75,32 @@ describe('matchesProperty', () => {
 
   it('should coerce `path` to a string', () => {
     function fn() {}
+
     fn.toString = () => 'fn';
 
     const object: any = { null: 1, undefined: 2, fn: 3, '[object Object]': 4 };
     const paths: any[] = [null, undefined, fn, {}];
     const expected = paths.map(stubTrue);
 
-    range(2).forEach(index => {
+    for (const index of range(2)) {
       const actual = paths.map(path => {
         const matches = matchesProperty(index ? [path] : path, object[path]);
+
         return matches(object);
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it('should match a key over a path', () => {
     const object = { 'a.b': 1, a: { b: 2 } };
 
-    ['a.b', ['a.b']].forEach(path => {
+    for (const path of ['a.b', ['a.b']]) {
       const matches = matchesProperty(path, 1);
+
       expect(matches(object)).toBe(true);
-    });
+    }
   });
 
   it('should return `false` when `object` is nullish', () => {
@@ -103,7 +108,7 @@ describe('matchesProperty', () => {
     const values = [, null, undefined];
     const expected = values.map(stubFalse);
 
-    ['constructor', ['constructor']].forEach(path => {
+    for (const path of ['constructor', ['constructor']]) {
       const matches = matchesProperty(path, 1);
 
       const actual = values.map((value, index) => {
@@ -114,7 +119,7 @@ describe('matchesProperty', () => {
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it('should return `false` for deep paths when `object` is nullish', () => {
@@ -122,7 +127,10 @@ describe('matchesProperty', () => {
     const values = [, null, undefined];
     const expected = values.map(stubFalse);
 
-    ['constructor.prototype.valueOf', ['constructor', 'prototype', 'valueOf']].forEach(path => {
+    for (const path of [
+      'constructor.prototype.valueOf',
+      ['constructor', 'prototype', 'valueOf'],
+    ]) {
       const matches = matchesProperty(path, 1);
 
       const actual = values.map((value, index) => {
@@ -133,30 +141,33 @@ describe('matchesProperty', () => {
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it('should return `false` if parts of `path` are missing', () => {
     const object = {};
 
-    ['a', 'a[1].b.c', ['a'], ['a', '1', 'b', 'c']].forEach(path => {
+    for (const path of ['a', 'a[1].b.c', ['a'], ['a', '1', 'b', 'c']]) {
       const matches = matchesProperty(path, 1);
+
       expect(matches(object)).toBe(false);
-    });
+    }
   });
 
   it('should match inherited string keyed `srcValue` properties', () => {
     function Foo() {}
+
     Foo.prototype.b = 2;
 
     // eslint-disable-next-line
     // @ts-ignore
     const object = { a: new Foo() };
 
-    ['a', ['a']].forEach(path => {
+    for (const path of ['a', ['a']]) {
       const matches = matchesProperty(path, { b: 2 });
+
       expect(matches(object)).toBe(true);
-    });
+    }
   });
 
   it('should not match by inherited `srcValue` properties', () => {
@@ -165,23 +176,24 @@ describe('matchesProperty', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const objects = [{ a: { a: 1 } }, { a: { a: 1, b: 2 } }];
     const expected = objects.map(stubTrue);
 
-    ['a', ['a']].forEach(path => {
+    for (const path of ['a', ['a']]) {
       expect(
         objects.map(
           matchesProperty(
             path,
             // eslint-disable-next-line
             // @ts-ignore
-            new Foo()
-          )
-        )
+            new Foo(),
+          ),
+        ),
       ).toEqual(expected);
-    });
+    }
   });
 
   it('should compare a variety of values', () => {
@@ -195,6 +207,7 @@ describe('matchesProperty', () => {
 
   it('should match `-0` as `0`', () => {
     let matches = matchesProperty('a', -0);
+
     expect(matches({ a: 0 })).toBe(true);
 
     matches = matchesProperty('a', 0);
@@ -214,8 +227,11 @@ describe('matchesProperty', () => {
 
   it('should work with a function for `srcValue`', () => {
     function Foo() {}
+
     Foo.a = 1;
+
     Foo.b = function () {};
+
     Foo.c = 3;
 
     const objects = [{ a: { a: 1 } }, { a: { a: 1, b: Foo.b, c: 3 } }];
@@ -277,17 +293,22 @@ describe('matchesProperty', () => {
       },
     ];
 
-    const actual = objects.filter(matchesProperty('a', [{ a: 1 }, { a: 4, b: 5 }]));
+    const actual = objects.filter(
+      matchesProperty('a', [{ a: 1 }, { a: 4, b: 5 }]),
+    );
+
     expect(actual).toEqual([objects[0]]);
   });
   it('should partial match maps', () => {
     if (Map) {
       const objects = [{ a: new Map() }, { a: new Map() }];
+
       objects[0].a.set('a', 1);
       objects[1].a.set('a', 1);
       objects[1].a.set('b', 2);
 
       const map = new Map();
+
       map.set('b', 2);
       let actual = objects.filter(matchesProperty('a', map));
 
@@ -308,11 +329,13 @@ describe('matchesProperty', () => {
   it('should partial match sets', () => {
     if (Set) {
       const objects = [{ a: new Set() }, { a: new Set() }];
+
       objects[0].a.add(1);
       objects[1].a.add(1);
       objects[1].a.add(2);
 
       const set = new Set();
+
       set.add(2);
       let actual = objects.filter(matchesProperty('a', set));
 
@@ -332,7 +355,7 @@ describe('matchesProperty', () => {
 
   it('should match `undefined` values', () => {
     let objects: any[] = [{ a: 1 }, { a: 1, b: 1 }, { a: 1, b: undefined }];
-    let actual = objects.map(matchesProperty('b', undefined));
+    let actual = objects.map(matchesProperty('b'));
     const expected = [false, false, true];
 
     expect(actual).toEqual(expected);
@@ -352,15 +375,17 @@ describe('matchesProperty', () => {
   it('should match `undefined` values of nested objects', () => {
     const object = { a: { b: undefined } };
 
-    ['a.b', ['a', 'b']].forEach(path => {
-      const matches = matchesProperty(path, undefined);
-      expect(matches(object)).toBe(true);
-    });
+    for (const path of ['a.b', ['a', 'b']]) {
+      const matches = matchesProperty(path);
 
-    ['a.a', ['a', 'a']].forEach(path => {
-      const matches = matchesProperty(path, undefined);
+      expect(matches(object)).toBe(true);
+    }
+
+    for (const path of ['a.a', ['a', 'a']]) {
+      const matches = matchesProperty(path);
+
       expect(matches(object)).toBe(false);
-    });
+    }
   });
 
   it('should match `undefined` values on primitives', () => {
@@ -370,17 +395,21 @@ describe('matchesProperty', () => {
     try {
       // eslint-disable-next-line
       var matches = matchesProperty('b', undefined);
+
       expect(matches(1)).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
+
     numberProto.a = { b: 1, c: undefined };
+
     try {
       matches = matchesProperty('a', { c: undefined });
       expect(matches(1)).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
+
     delete numberProto.a;
     delete numberProto.b;
   });
@@ -398,24 +427,27 @@ describe('matchesProperty', () => {
   });
 
   it('should not change behavior if `srcValue` is modified', () => {
-    [{ a: { b: 2, c: 3 } }, { a: 1, b: 2 }, { a: 1 }].forEach((source: any, index) => {
-      const object = cloneDeep(source);
-      const matches = matchesProperty('a', source);
+    [{ a: { b: 2, c: 3 } }, { a: 1, b: 2 }, { a: 1 }].forEach(
+      (source: any, index) => {
+        const object = cloneDeep(source);
+        const matches = matchesProperty('a', source);
 
-      expect(matches({ a: object })).toBe(true);
+        expect(matches({ a: object })).toBe(true);
 
-      if (index) {
-        source.a = 2;
-        source.b = 1;
-        source.c = 3;
-      } else {
-        source.a.b = 1;
-        source.a.c = 2;
-        source.a.d = 3;
-      }
-      expect(matches({ a: object })).toBe(true);
-      expect(matches({ a: source })).toBe(false);
-    });
+        if (index) {
+          source.a = 2;
+          source.b = 1;
+          source.c = 3;
+        } else {
+          source.a.b = 1;
+          source.a.c = 2;
+          source.a.d = 3;
+        }
+
+        expect(matches({ a: object })).toBe(true);
+        expect(matches({ a: source })).toBe(false);
+      },
+    );
   });
 
   it('should correctly match the boolean property value', () => {

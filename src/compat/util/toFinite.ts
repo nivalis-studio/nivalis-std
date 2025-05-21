@@ -2,10 +2,8 @@ import { toNumber } from './toNumber.ts';
 
 /**
  * Converts `value` to a finite number.
- *
  * @param {unknown} value - The value to convert.
  * @returns {number} Returns the number.
- *
  * @example
  * toNumber(3.2); // => 3.2
  * toNumber(Number.MIN_VALUE); // => 5e-324
@@ -23,6 +21,7 @@ export function toFinite(value?: unknown): number {
 
   if (value === Infinity || value === -Infinity) {
     const sign = value < 0 ? -1 : 1;
+
     return sign * Number.MAX_VALUE;
   }
 

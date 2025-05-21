@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { debounce } from './debounce';
 import { identity } from '../../function/identity';
 import { noop } from '../../function/noop';
 import { delay } from '../../promise/delay';
+import { debounce } from './debounce';
 
 describe('debounce', () => {
   it('should debounce function calls', async () => {
@@ -81,7 +81,9 @@ describe('debounce', () => {
     const debounceMs = 50;
     const debouncedFunc = debounce(func, debounceMs);
 
-    expect(() => debouncedFunc.cancel()).not.toThrow();
+    expect(() => {
+      debouncedFunc.cancel();
+    }).not.toThrow();
   });
 
   it('should call the function with correct arguments', async () => {
@@ -146,7 +148,10 @@ describe('debounce', () => {
 
     expect(func).toHaveBeenCalledTimes(1);
 
-    const listenerCount = addEventListenerSpy.mock.calls.filter(([event]) => event === 'abort').length;
+    const listenerCount = addEventListenerSpy.mock.calls.filter(
+      ([event]) => event === 'abort',
+    ).length;
+
     expect(listenerCount).toBe(1);
 
     addEventListenerSpy.mockRestore();
@@ -211,10 +216,12 @@ describe('debounce', () => {
 
     const debounced = debounce(value => {
       ++callCount;
+
       return value;
     }, 32);
 
     const results = [debounced('a'), debounced('b'), debounced('c')];
+
     expect(results).toEqual([undefined, undefined, undefined]);
     expect(callCount).toBe(0);
 
@@ -223,6 +230,7 @@ describe('debounce', () => {
     expect(callCount).toBe(1);
 
     const results2 = [debounced('d'), debounced('e'), debounced('f')];
+
     expect(results2).toEqual(['c', 'c', 'c']);
     expect(callCount).toBe(1);
 
@@ -233,6 +241,7 @@ describe('debounce', () => {
 
   it('subsequent debounced calls return the last `func` result', async () => {
     const debounced = debounce(identity, 32);
+
     debounced('a');
 
     await delay(64);
@@ -266,7 +275,7 @@ describe('debounce', () => {
         callCount++;
       },
       32,
-      {}
+      {},
     );
 
     debounced();
@@ -285,7 +294,7 @@ describe('debounce', () => {
         callCounts[0]++;
       },
       32,
-      { leading: true }
+      { leading: true },
     );
 
     const withLeadingAndTrailing = debounce(
@@ -293,7 +302,7 @@ describe('debounce', () => {
         callCounts[1]++;
       },
       32,
-      { leading: true }
+      { leading: true },
     );
 
     withLeading();
@@ -323,6 +332,7 @@ describe('debounce', () => {
     await delay(64);
 
     const results2 = [debounced('c'), debounced('d')];
+
     expect(results2).toEqual(['c', 'c']);
   });
 
@@ -335,7 +345,7 @@ describe('debounce', () => {
         withCount++;
       },
       32,
-      { trailing: true }
+      { trailing: true },
     );
 
     const withoutTrailing = debounce(
@@ -343,7 +353,7 @@ describe('debounce', () => {
         withoutCount++;
       },
       32,
-      { trailing: false }
+      { trailing: false },
     );
 
     withTrailing();
@@ -364,10 +374,11 @@ describe('debounce', () => {
     const debounced = debounce(
       (value?: unknown) => {
         ++callCount;
+
         return value;
       },
       32,
-      { maxWait: 64 }
+      { maxWait: 64 },
     );
 
     debounced();
@@ -396,7 +407,7 @@ describe('debounce', () => {
         withCount++;
       },
       64,
-      { maxWait: 128 }
+      { maxWait: 128 },
     );
 
     const withoutMaxWait = debounce(() => {
@@ -404,11 +415,14 @@ describe('debounce', () => {
     }, 96);
 
     const start = Date.now();
+
     while (Date.now() - start < limit) {
       withMaxWait();
       withoutMaxWait();
     }
+
     const actual = [Boolean(withoutCount), Boolean(withCount)];
+
     await delay(1);
     expect(actual).toEqual([false, true]);
   });
@@ -422,7 +436,7 @@ describe('debounce', () => {
         ++callCount;
       },
       200,
-      { maxWait: 200 }
+      { maxWait: 200 },
     );
 
     debounced();
@@ -444,7 +458,7 @@ describe('debounce', () => {
         callCount++;
       },
       32,
-      { maxWait: 64 }
+      { maxWait: 64 },
     );
 
     debounced();
@@ -464,15 +478,15 @@ describe('debounce', () => {
     const object = {};
 
     const debounced = debounce(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function (this: any, _: any) {
         actual = [this];
         // eslint-disable-next-line prefer-rest-params
         Array.prototype.push.apply(actual, arguments as any);
+
         return ++callCount !== 2;
       },
       32,
-      { leading: true, maxWait: 64 }
+      { leading: true, maxWait: 64 },
     );
 
     while (true) {
@@ -529,23 +543,25 @@ describe('debounce', () => {
   it(`\`_.${methodName}\` supports recursive calls`, async () => {
     const actual: any[] = [];
     const args = ['a', 'b', 'c'].map(chr => [{}, chr]);
-    const expected = args.slice();
-    const queue: any[] = args.slice();
+    const expected = [...args];
+    const queue: any[] = [...args];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const funced = func(function (this: any, _: unknown) {
       const current = [this];
+
       // eslint-disable-next-line prefer-rest-params
       Array.prototype.push.apply(current, arguments as any);
       actual.push(current);
 
       const next = queue.shift();
+
       if (next) {
         funced.call(next[0], next[1]);
       }
     }, 32);
 
     const next = queue.shift();
+
     funced.call(next[0], next[1]);
     expect(actual).toEqual(expected.slice(0, isDebounce ? 0 : 1));
 
@@ -562,7 +578,7 @@ describe('debounce', () => {
         callCount++;
       },
       32,
-      { leading: false }
+      { leading: false },
     );
 
     funced();

@@ -7,6 +7,7 @@ describe('findLastKey', () => {
     { a: 1, b: 1 },
     { a: 2, b: 2 },
   ];
+
   it('should return the found key', () => {
     // @ts-expect-error invalid argument
     expect(findLastKey(objects, object => object.a)).toBe('2');
@@ -31,10 +32,11 @@ describe('findLastKey', () => {
 
   it('should return undefined for empty collections', () => {
     const emptyValues = [[], {}, null, undefined, ''];
-    emptyValues.forEach(value => {
+
+    for (const value of emptyValues) {
       // @ts-expect-error invalid argument
       expect(findLastKey(value, { a: 3 })).toBeUndefined();
-    });
+    }
   });
 
   it('should work with an object for `collection`', () => {
@@ -47,7 +49,7 @@ describe('findLastKey', () => {
 
     findLastKey(object, function () {
       // eslint-disable-next-line prefer-rest-params
-      args = Array.from(arguments);
+      args = [...arguments];
     });
 
     expect(args).toEqual([1, 'a', object]);

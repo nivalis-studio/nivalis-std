@@ -6,7 +6,7 @@ describe('sortedIndexBy', () => {
     let args: unknown[];
 
     sortedIndexBy([30, 50], 40, function (value) {
-      args = args || [value];
+      args ||= [value];
     });
     // @ts-expect-error Variable 'args' is used before being assigned.ts(2454)
     expect(args).toEqual([40]);
@@ -29,31 +29,34 @@ describe('sortedIndexBy', () => {
   });
 
   it('should support arrays larger than `MAX_ARRAY_LENGTH / 2`', () => {
-    const MAX_ARRAY_LENGTH = 4294967295;
+    const MAX_ARRAY_LENGTH = 4_294_967_295;
     const MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1;
     const testLengths = [Math.ceil(MAX_ARRAY_LENGTH / 2), MAX_ARRAY_LENGTH];
 
-    testLengths.forEach(length => {
+    for (const length of testLengths) {
       const array: number[] = [];
-      const values = [MAX_ARRAY_LENGTH, NaN, undefined];
+      const values = [MAX_ARRAY_LENGTH, Number.NaN, undefined];
 
       array.length = length;
 
-      values.forEach(value => {
+      for (const value of values) {
         let steps = 0;
 
         const actual = sortedIndexBy(array, value, v => {
           steps++;
+
           return v;
         });
 
-        const expected = !Number.isNaN(value) ? 0 : Math.min(length, MAX_ARRAY_INDEX);
+        const expected = Number.isNaN(value)
+          ? Math.min(length, MAX_ARRAY_INDEX)
+          : 0;
 
         // Check if steps are within expected bounds
         expect(steps).toBeGreaterThanOrEqual(32);
         expect(steps).toBeLessThanOrEqual(33);
         expect(actual).toBe(expected);
-      });
-    });
+      }
+    }
   });
 });

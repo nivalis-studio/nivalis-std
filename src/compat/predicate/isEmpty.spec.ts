@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { isEmpty } from './isEmpty';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { stubTrue } from '../util/stubTrue';
+import { isEmpty } from './isEmpty';
 
 describe('isEmpty', () => {
   it('should return `true` for empty values', () => {
@@ -17,7 +17,7 @@ describe('isEmpty', () => {
     expect(isEmpty(true)).toBe(true);
     expect(isEmpty(slice)).toBe(true);
     expect(isEmpty(1)).toBe(true);
-    expect(isEmpty(NaN)).toBe(true);
+    expect(isEmpty(Number.NaN)).toBe(true);
     expect(isEmpty(/x/)).toBe(true);
     expect(isEmpty(symbol)).toBe(true);
     expect(isEmpty()).toBe(true);
@@ -42,6 +42,7 @@ describe('isEmpty', () => {
 
   it('should work with prototype objects', () => {
     function Foo() {}
+
     Foo.prototype = { constructor: Foo };
 
     expect(isEmpty(Foo.prototype)).toBe(true);
@@ -54,6 +55,7 @@ describe('isEmpty', () => {
     function Foo(this: any, elements: any) {
       Array.prototype.push.apply(this, elements);
     }
+
     Foo.prototype = { length: 0, splice: Array.prototype.splice };
 
     // eslint-disable-next-line
@@ -62,25 +64,26 @@ describe('isEmpty', () => {
   });
 
   it('should work with maps', () => {
-    [new Map()].forEach(map => {
+    for (const map of [new Map()]) {
       expect(isEmpty(map)).toBe(true);
       map.set('a', 1);
       expect(isEmpty(map)).toBe(false);
       map.clear();
-    });
+    }
   });
 
   it('should work with sets', () => {
-    [new Set()].forEach(set => {
+    for (const set of [new Set()]) {
       expect(isEmpty(set)).toBe(true);
       set.add(1);
       expect(isEmpty(set)).toBe(false);
       set.clear();
-    });
+    }
   });
 
   it('should not treat objects with negative lengths as array-like', () => {
     function Foo() {}
+
     Foo.prototype.length = -1;
 
     // eslint-disable-next-line
@@ -90,6 +93,7 @@ describe('isEmpty', () => {
 
   it('should not treat objects with lengths larger than `MAX_SAFE_INTEGER` as array-like', () => {
     function Foo() {}
+
     Foo.prototype.length = MAX_SAFE_INTEGER + 1;
 
     // eslint-disable-next-line
@@ -103,9 +107,11 @@ describe('isEmpty', () => {
 
   it('should return `true` for objects with only enumerable symbol properties', () => {
     const value = { [Symbol('a')]: 1 };
+
     expect(isEmpty(value)).toBe(true);
 
     function Foo() {}
+
     Foo.prototype = { constructor: Foo, [Symbol('a')]: 1 };
     expect(isEmpty(Foo.prototype)).toBe(true);
   });

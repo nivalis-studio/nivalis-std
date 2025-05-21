@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { times } from '../util/times';
 import { shuffle } from './shuffle.ts';
 import { sortBy } from './sortBy';
 import { uniqBy } from './uniqBy';
-import { times } from '../util/times';
 
 describe('shuffle', () => {
   const array = [1, 2, 3];
@@ -34,7 +34,7 @@ describe('shuffle', () => {
   // additional test
   it('should treat nullish values for `collection` as empty', () => {
     expect(shuffle(null)).toEqual([]);
-    expect(shuffle(undefined)).toEqual([]);
+    expect(shuffle()).toEqual([]);
   });
 
   it('should treat array-like objects as arrays', () => {
@@ -47,7 +47,7 @@ describe('shuffle', () => {
 
     const result = shuffle(arrayLike);
 
-    expect(result).not.toBe(Array.from(arrayLike));
+    expect(result).not.toBe([...arrayLike]);
     expect(shuffle(arrayLike).sort()).toEqual(['a', 'b', 'c']);
   });
 });

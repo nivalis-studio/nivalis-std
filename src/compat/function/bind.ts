@@ -4,13 +4,11 @@
  * The `bind.placeholder` value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: Unlike native `Function#bind`, this method doesn't set the `length` property of bound functions.
- *
  * @template F - The type of the function to bind.
  * @param {F} func - The function to bind.
  * @param {unknown} thisObj - The `this` binding of `func`.
  * @param {...any} partialArgs - The arguments to be partially applied.
  * @returns {F} - Returns the new bound function.
- *
  * @example
  * function greet(greeting, punctuation) {
  *   return greeting + ' ' + this.user + punctuation;
@@ -24,7 +22,11 @@
  * bound('hi');
  * // => 'hi fred!'
  */
-export function bind<F extends (...args: any[]) => any>(func: F, thisObj?: unknown, ...partialArgs: any[]): F {
+export function bind<F extends (...args: any[]) => any>(
+  func: F,
+  thisObj?: unknown,
+  ...partialArgs: any[]
+): F {
   const bound = function (this: any, ...providedArgs: any[]) {
     const args: any[] = [];
 
@@ -33,9 +35,7 @@ export function bind<F extends (...args: any[]) => any>(func: F, thisObj?: unkno
     // we have args with [1, 2, 3, 4].
     let startIndex = 0;
 
-    for (let i = 0; i < partialArgs.length; i++) {
-      const arg = partialArgs[i];
-
+    for (const arg of partialArgs) {
       if (arg === bind.placeholder) {
         args.push(providedArgs[startIndex++]);
       } else {
@@ -59,4 +59,5 @@ export function bind<F extends (...args: any[]) => any>(func: F, thisObj?: unkno
 }
 
 const bindPlaceholder: unique symbol = Symbol('bind.placeholder');
+
 bind.placeholder = bindPlaceholder;

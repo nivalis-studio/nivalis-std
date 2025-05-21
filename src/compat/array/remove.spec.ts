@@ -18,13 +18,15 @@ describe('remove', () => {
   it('should provide correct `predicate` arguments', () => {
     const argsList: any[] = [];
     const array = [1, 2, 3];
-    const clone = array.slice();
+    const clone = [...array];
 
     remove(array, function (n, index) {
       // eslint-disable-next-line prefer-rest-params
       const args = Array.prototype.slice.call(arguments);
-      args[2] = args[2].slice();
+
+      args[2] = [...args[2]];
       argsList.push(args);
+
       return isEven(index);
     });
 
@@ -40,6 +42,7 @@ describe('remove', () => {
       { a: 0, b: 1 },
       { a: 1, b: 2 },
     ];
+
     remove(objects, { a: 1 });
     expect(objects).toEqual([{ a: 0, b: 1 }]);
   });
@@ -49,18 +52,21 @@ describe('remove', () => {
       { a: 0, b: 1 },
       { a: 1, b: 2 },
     ];
+
     remove(objects, ['a', 1]);
     expect(objects).toEqual([{ a: 0, b: 1 }]);
   });
 
   it('should work with `_.property` shorthands', () => {
     const objects = [{ a: 0 }, { a: 1 }];
+
     remove(objects, 'a');
     expect(objects).toEqual([{ a: 0 }]);
   });
 
   it('should preserve holes in arrays', () => {
     const array = [1, 2, 3, 4];
+
     delete array[1];
     delete array[3];
 
@@ -72,6 +78,7 @@ describe('remove', () => {
 
   it('should treat holes as `undefined`', () => {
     const array = [1, 2, 3];
+
     delete array[1];
 
     remove(array, n => n == null);

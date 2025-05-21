@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { map } from './map';
-import { unzipWith } from './unzipWith';
 import { unzip } from '../..';
 import { slice } from '../_internal/slice';
 import { constant } from '../util/constant';
+import { unzipWith } from './unzipWith';
+import { map } from './map';
 
 describe('unzipWith', () => {
   it('should unzip arrays combining regrouped elements with `iteratee`', () => {
@@ -27,9 +27,9 @@ describe('unzipWith', () => {
         [2, 4, 6],
       ],
       function () {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-        args || (args = slice.call(arguments));
-      }
+        // eslint-disable-next-line prefer-rest-params
+        args ||= slice.call(arguments);
+      },
     );
 
     expect(args).toEqual([1, 2]);
@@ -44,7 +44,9 @@ describe('unzipWith', () => {
     const values = [, null, undefined];
     const expected = map(values, constant(unzip(array)));
 
-    const actual = map(values, (value, index) => (index ? unzipWith(array, value) : unzipWith(array)));
+    const actual = map(values, (value, index) =>
+      index ? unzipWith(array, value) : unzipWith(array),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -74,6 +76,6 @@ describe('unzipWith', () => {
 
   it('should return an empty array when `array` is null or undefined', () => {
     expect(unzipWith(null)).toEqual([]);
-    expect(unzipWith(undefined)).toEqual([]);
+    expect(unzipWith()).toEqual([]);
   });
 });

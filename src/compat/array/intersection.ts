@@ -8,18 +8,18 @@ import { isArrayLikeObject } from '../predicate/isArrayLikeObject.ts';
  * This function takes multiple arrays and returns a new array containing the elements that are
  * present in all provided arrays. It effectively filters out any elements that are not found
  * in every array.
- *
  * @template T - The type of elements in the arrays.
  * @param {...(ArrayLike<T> | null | undefined)} arrays - The arrays to compare.
  * @returns {T[]} A new array containing the elements that are present in all arrays.
- *
  * @example
  * const array1 = [1, 2, 3, 4, 5];
  * const array2 = [3, 4, 5, 6, 7];
  * const result = intersection(array1, array2);
  * // result will be [3, 4, 5] since these elements are in both arrays.
  */
-export function intersection<T>(...arrays: Array<ArrayLike<T> | null | undefined>): T[] {
+export function intersection<T>(
+  ...arrays: Array<ArrayLike<T> | null | undefined>
+): T[] {
   if (arrays.length === 0) {
     return [];
   }
@@ -28,7 +28,7 @@ export function intersection<T>(...arrays: Array<ArrayLike<T> | null | undefined
     return [];
   }
 
-  let result: T[] = uniq(Array.from(arrays[0]));
+  let result: T[] = uniq([...arrays[0]]);
 
   for (let i = 1; i < arrays.length; i++) {
     const array = arrays[i];
@@ -37,7 +37,7 @@ export function intersection<T>(...arrays: Array<ArrayLike<T> | null | undefined
       return [];
     }
 
-    result = intersectionToolkit(result, Array.from(array));
+    result = intersectionToolkit(result, [...array]);
   }
 
   return result;

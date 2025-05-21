@@ -1,38 +1,41 @@
 import { describe, expect, it } from 'vitest';
-import { matches } from './matches';
 import { noop } from '../../function/noop';
 import { empties } from '../_internal/empties';
 import { stubTrue } from '../util/stubTrue';
+import { matches } from './matches';
 
 describe('matches', () => {
   it(`should perform a deep comparison between \`source\` and \`object\``, () => {
     const object: any = { a: 1, b: 2, c: 3 };
 
     const isMatch1 = matches({ a: 1 });
+
     expect(isMatch1(object)).toBe(true);
 
     const isMatch2 = matches({ b: 2 });
+
     expect(isMatch2(object)).toBe(true);
 
     const isMatch3 = matches({ a: 1, c: 3 });
+
     expect(isMatch3(object)).toBe(true);
 
     const isMatch4 = matches({ c: 3, d: 4 });
+
     expect(isMatch4(object)).toBe(false);
 
     const isMatch5 = matches({ a: { b: { c: 1 } } });
+
     expect(isMatch5({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 })).toBe(true);
   });
 
   it(`should match inherited string keyed \`object\` properties`, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (): Foo;
-    }
+    type FooConstructor = new () => Foo;
 
     const Foo = function Foo(this: Foo) {
       this.a = 1;
@@ -47,14 +50,12 @@ describe('matches', () => {
   });
 
   it(`should not match by inherited \`source\` properties`, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (): Foo;
-    }
+    type FooConstructor = new () => Foo;
 
     const Foo = function Foo(this: Foo) {
       this.a = 1;
@@ -105,6 +106,7 @@ describe('matches', () => {
 
   it(`should work with a function for \`object\``, () => {
     function Foo() {}
+
     Foo.a = { b: 2, c: 3 };
 
     const isMatch = matches({ a: { b: 2 } });
@@ -114,8 +116,11 @@ describe('matches', () => {
 
   it(`should work with a function for \`source\``, () => {
     function Foo() {}
+
     Foo.a = 1;
+
     Foo.b = function () {};
+
     Foo.c = 3;
 
     const objects = [{ a: 1 }, { a: 1, b: Foo.b, c: 3 }];
@@ -125,15 +130,13 @@ describe('matches', () => {
   });
 
   it(`should work with a non-plain \`object\``, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
       c: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (arg: Partial<Foo>): Foo;
-    }
+    type FooConstructor = new (arg: Partial<Foo>) => Foo;
 
     const Foo = function Foo(this: Foo, object: Partial<Foo>) {
       Object.assign(this, object);
@@ -185,16 +188,19 @@ describe('matches', () => {
     ];
 
     const actual = objects.filter(matches({ a: [{ b: 1 }, { b: 4, c: 5 }] }));
+
     expect(actual).toEqual([objects[0]]);
   });
 
   it(`should partial match maps`, () => {
     const objects = [{ a: new Map() }, { a: new Map() }];
+
     objects[0].a.set('a', 1);
     objects[1].a.set('a', 1);
     objects[1].a.set('b', 2);
 
     const map = new Map();
+
     map.set('b', 2);
     let actual = objects.filter(matches({ a: map }));
 
@@ -213,11 +219,13 @@ describe('matches', () => {
 
   it(`should partial match sets`, () => {
     const objects = [{ a: new Set() }, { a: new Set() }];
+
     objects[0].a.add(1);
     objects[1].a.add(1);
     objects[1].a.add(2);
 
     const set = new Set();
+
     set.add(2);
     let actual = objects.filter(matches({ a: set }));
 
@@ -272,26 +280,30 @@ describe('matches', () => {
 
     try {
       const isMatch = matches({ b: undefined });
+
       expect(isMatch(1)).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     try {
       const isMatch = matches({ a: 1, b: undefined });
+
       expect(isMatch(1)).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     // eslint-disable-next-line
     // @ts-ignore
     numberProto.a = { b: 1, c: undefined };
+
     try {
       const isMatch = matches({ a: { c: undefined } });
+
       expect(isMatch(1)).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     // eslint-disable-next-line
@@ -311,8 +323,8 @@ describe('matches', () => {
 
     const actual = values.map((value, index) => {
       try {
-        return index ? isMatch(value) : isMatch(undefined);
-      } catch (e: unknown) {
+        return index ? isMatch(value) : isMatch();
+      } catch {
         /* empty */
       }
     });
@@ -342,8 +354,8 @@ describe('matches', () => {
 
     const actual = values.map((value, index) => {
       try {
-        return index ? isMatch(value) : isMatch(undefined);
-      } catch (e: unknown) {
+        return index ? isMatch(value) : isMatch();
+      } catch {
         /* empty */
       }
     });

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { toInteger } from './toInteger';
 import { flatMap } from '../../array/flatMap';
 import { identity } from '../../function/identity';
 import { falsey } from '../_internal/falsey';
@@ -7,6 +6,7 @@ import { MAX_INTEGER } from '../_internal/MAX_INTEGER';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { symbol } from '../_internal/symbol';
 import { whitespace } from '../_internal/whitespace';
+import { toInteger } from './toInteger';
 
 describe('toInteger', () => {
   it(`should preserve the sign of \`0\``, () => {
@@ -18,16 +18,17 @@ describe('toInteger', () => {
       [-0, -Infinity],
     ];
 
-    [0, 1].forEach(index => {
+    for (const index of [0, 1]) {
       const others = values.map(index ? Object : identity);
 
       const actual = others.map(value => {
         const result = toInteger(value);
+
         return [result, 1 / result];
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   function negative(string: string) {
@@ -43,7 +44,7 @@ describe('toInteger', () => {
   }
 
   it(`should pass thru primitive number values`, () => {
-    const values = [0, 1, NaN];
+    const values = [0, 1, Number.NaN];
     const expected = [0, 1, 0];
     const actual = values.map(toInteger);
 
@@ -51,7 +52,14 @@ describe('toInteger', () => {
   });
 
   it(`should convert number primitives and objects to numbers`, () => {
-    const values = [2, 1.2, MAX_SAFE_INTEGER, MAX_INTEGER, Infinity, NaN];
+    const values = [
+      2,
+      1.2,
+      MAX_SAFE_INTEGER,
+      MAX_INTEGER,
+      Infinity,
+      Number.NaN,
+    ];
 
     const expected = values.map(value => {
       if (value === 1.2) {
@@ -63,14 +71,15 @@ describe('toInteger', () => {
       }
 
       const neg = value === 0 ? 0 : -value;
+
       return [value, value, neg, neg];
     });
 
     const actual = values.map(value => [
       toInteger(value),
-      toInteger(Object(value)),
+      toInteger(new Object(value)),
       toInteger(-value),
-      toInteger(Object(-value)),
+      toInteger(new Object(-value)),
     ]);
 
     expect(actual).toEqual(expected);
@@ -95,26 +104,32 @@ describe('toInteger', () => {
 
     const expected = values.map(value => {
       let n = Number(value);
-      if (n === 1.23456789) {
+
+      if (n === 1.234_567_89) {
         n = 1;
       } else if (n === Infinity) {
         n = MAX_INTEGER;
       } else if (n === Number.MIN_VALUE || n !== n) {
         n = 0;
       }
+
       const neg = n === 0 ? 0 : -n;
+
       return [n, n, n, n, n, n, neg, neg];
     });
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toInteger(mod(value)), toInteger(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toInteger(mod(value)),
+        toInteger(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert binary/octal strings to numbers`, () => {
-    const numbers = [42, 5349, 1715004];
+    const numbers = [42, 5349, 1_715_004];
     const transforms = [identity, pad];
     const values = ['0b101010', '0o12345', '0x1a2b3c'];
 
@@ -122,11 +137,12 @@ describe('toInteger', () => {
 
     const actual = values.map(value => {
       const upper = value.toUpperCase();
+
       return flatMap(transforms, mod => [
         toInteger(mod(value)),
-        toInteger(Object(mod(value))),
+        toInteger(new Object(mod(value))),
         toInteger(mod(upper)),
-        toInteger(Object(mod(upper))),
+        toInteger(new Object(mod(upper))),
       ]);
     });
 
@@ -140,15 +156,18 @@ describe('toInteger', () => {
     const expected = values.map(() => [0, 0, 0, 0, 0, 0, 0, 0]);
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toInteger(mod(value)), toInteger(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toInteger(mod(value)),
+        toInteger(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert symbols to  '0'`, () => {
-    const object1 = Object(symbol);
-    const object2 = Object(symbol);
+    const object1 = new Object(symbol);
+    const object2 = new Object(symbol);
     const values = [symbol, object1, object2];
     const expected = values.map(() => 0);
 
@@ -163,7 +182,9 @@ describe('toInteger', () => {
 
     const expected = values.map(() => 0);
 
-    const actual = values.map((value, index) => (index ? toInteger(value) : toInteger()));
+    const actual = values.map((value, index) =>
+      index ? toInteger(value) : toInteger(),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -200,9 +221,10 @@ describe('toInteger', () => {
     expect(toInteger(-5.6)).toBe(-5);
     expect(toInteger('5.6')).toBe(5);
     expect(toInteger()).toBe(0);
-    expect(toInteger(NaN)).toBe(0);
+    expect(toInteger(Number.NaN)).toBe(0);
 
     const expected = MAX_INTEGER;
+
     expect(toInteger(Infinity)).toBe(expected);
     expect(toInteger(-Infinity)).toBe(-expected);
   });

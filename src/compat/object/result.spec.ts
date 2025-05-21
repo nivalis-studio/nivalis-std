@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { result } from './result';
 import { empties } from '../_internal/empties';
 import { numberProto } from '../_internal/numberProto';
 import { stubB } from '../_internal/stubB';
@@ -8,6 +7,7 @@ import { forEach } from '../array/forEach';
 import { map } from '../array/map';
 import { noop } from '../compat';
 import { constant } from '../util/constant';
+import { result } from './result';
 
 describe('result', () => {
   const object = { a: 1, b: stubB };
@@ -18,6 +18,7 @@ describe('result', () => {
 
   it('should invoke default function values', () => {
     const actual = result(object, 'c', object.b);
+
     expect(actual).toBe('b');
   });
 
@@ -32,7 +33,7 @@ describe('result', () => {
   it('should invoke deep property methods with the correct `this` binding', () => {
     const value = {
       a: {
-        b: function () {
+        b() {
           return this.c;
         },
         c: 1,
@@ -54,7 +55,7 @@ describe('result', () => {
 
   it(`should preserve the sign of \`0\``, () => {
     const object = { '-0': 'a', 0: 'b' };
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
 
     const actual = map(props, key => result(object, key));
 
@@ -63,6 +64,7 @@ describe('result', () => {
 
   it(`should get symbol keyed property values`, () => {
     const object: Record<PropertyKey, unknown> = {};
+
     object[symbol] = 1;
 
     expect(result(object, symbol)).toBe(1);
@@ -86,11 +88,13 @@ describe('result', () => {
 
   it(`should not coerce array paths to strings`, () => {
     const object = { 'a,b,c': 3, a: { b: { c: 4 } } };
+
     expect(result(object, ['a', 'b', 'c'])).toBe(4);
   });
 
   it(`should not ignore empty brackets`, () => {
     const object = { a: { '': 1 } };
+
     expect(result(object, 'a[]')).toBe(1);
   });
 
@@ -103,13 +107,15 @@ describe('result', () => {
       pair => {
         expect(result({}, pair[0])).toBe(undefined);
         expect(result({ '': 3 }, pair[1])).toBe(3);
-      }
+      },
     );
   });
 
   it(`should handle complex paths`, () => {
     const object = {
-      a: { '-1.23': { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: 8 } } } } } } },
+      a: {
+        '-1.23': { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: 8 } } } } } },
+      },
     };
 
     const paths = [
@@ -132,7 +138,10 @@ describe('result', () => {
   it(`should return \`undefined\` for deep paths when \`object\` is nullish`, () => {
     const values = [null, undefined];
     const expected = map(values, noop);
-    const paths = ['constructor.prototype.valueOf', ['constructor', 'prototype', 'valueOf']];
+    const paths = [
+      'constructor.prototype.valueOf',
+      ['constructor', 'prototype', 'valueOf'],
+    ];
 
     forEach(paths, path => {
       const actual = map(values, value => result(value, path));
@@ -170,11 +179,14 @@ describe('result', () => {
 
   it(`should return the default value for \`undefined\` values`, () => {
     const object = { a: {} };
-    const values = empties.concat(true, new Date(), 1, /x/, 'a');
+    const values = [...empties, true, new Date(), 1, /x/, 'a'];
     const expected = map(values, value => [value, value]);
 
     forEach(['a.b', ['a', 'b']], path => {
-      const actual = map(values, value => [result(object, path, value), result(null, path, value)]);
+      const actual = map(values, value => [
+        result(object, path, value),
+        result(null, path, value),
+      ]);
 
       expect(actual).toEqual(expected);
     });

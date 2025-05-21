@@ -5,10 +5,8 @@
  * It returns `true` if the value is a `WeakMap`, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `WeakMap`.
- *
  * @param {unknown} value - The value to test if it is a `WeakMap`.
  * @returns {value is WeakMap<WeakKey, any>} true if the value is a `WeakMap`, false otherwise.
- *
  * @example
  * const value1 = new WeakMap();
  * const value2 = new Map();

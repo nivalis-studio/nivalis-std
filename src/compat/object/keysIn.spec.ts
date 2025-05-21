@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { keysIn } from './keysIn';
 import { args } from '../_internal/args';
 import { primitives } from '../_internal/primitives';
 import { strictArgs } from '../_internal/strictArgs';
 import { stubArray } from '../util/stubArray';
+import { keysIn } from './keysIn';
 
 describe('keys methods', () => {
   const func = keysIn;
@@ -19,6 +19,7 @@ describe('keys methods', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const expected = isKeys ? ['a'] : ['a', 'b'];
@@ -26,7 +27,7 @@ describe('keys methods', () => {
     const actual = func(
       // eslint-disable-next-line
       // @ts-ignore
-      new Foo()
+      new Foo(),
     ).sort();
 
     expect(actual).toEqual(expected);
@@ -34,6 +35,7 @@ describe('keys methods', () => {
 
   it(`\`keysIn\` should treat sparse arrays as dense`, () => {
     const array = [1];
+
     array[2] = 3;
 
     const actual = func(array).sort();
@@ -43,6 +45,7 @@ describe('keys methods', () => {
 
   it(`\`keysIn\` should return keys for custom properties on arrays`, () => {
     const array = [1];
+
     // eslint-disable-next-line
     // @ts-ignore
     array.a = 1;
@@ -83,7 +86,9 @@ describe('keys methods', () => {
     const actual = values.map((value: any) => {
       value.a = 1;
       const result = func(value).sort();
+
       delete value.a;
+
       return result;
     });
 
@@ -99,9 +104,11 @@ describe('keys methods', () => {
       // @ts-ignore
       Object.prototype.a = 1;
       const result = func(value).sort();
+
       // eslint-disable-next-line
       // @ts-ignore
       delete Object.prototype.a;
+
       return result;
     });
 
@@ -109,13 +116,14 @@ describe('keys methods', () => {
   });
 
   it(`\`keysIn\` should work with string objects`, () => {
-    const actual = func(Object('abc')).sort();
+    const actual = func(new Object('abc')).sort();
 
     expect(actual).toEqual(['0', '1', '2']);
   });
 
   it(`\`keysIn\` should return keys for custom properties on string objects`, () => {
-    const object = Object('a');
+    const object = new Object('a');
+
     object.a = 1;
 
     const actual = func(object).sort();
@@ -129,7 +137,7 @@ describe('keys methods', () => {
     String.prototype.a = 1;
 
     const expected = isKeys ? ['0'] : ['0', 'a'];
-    const actual = func(Object('a')).sort();
+    const actual = func(new Object('a')).sort();
 
     expect(actual).toEqual(expected);
 
@@ -146,11 +154,14 @@ describe('keys methods', () => {
   });
 
   it(`\`keysIn\` should coerce primitives to objects (test in IE 9)`, () => {
-    const expected = primitives.map(value => (typeof value === 'string' ? ['0'] : []));
+    const expected = primitives.map(value =>
+      typeof value === 'string' ? ['0'] : [],
+    );
 
     // eslint-disable-next-line
     // @ts-ignore
     const actual = primitives.map(func);
+
     expect(actual).toEqual(expected);
 
     // IE 9 doesn't box numbers in for-in loops.
@@ -167,15 +178,18 @@ describe('keys methods', () => {
 
   it(`\`keysIn\` skips the \`constructor\` property on prototype objects`, () => {
     function Foo() {}
+
     Foo.prototype.a = 1;
 
     const expected = ['a'];
+
     expect(func(Foo.prototype)).toEqual(expected);
 
     Foo.prototype = { constructor: Foo, a: 1 };
     expect(func(Foo.prototype)).toEqual(expected);
 
     const Fake = { prototype: {} };
+
     // eslint-disable-next-line
     // @ts-ignore
     Fake.prototype.constructor = Fake;
@@ -192,9 +206,11 @@ describe('keys methods', () => {
       // @ts-ignore
       Object.prototype.a = 1;
       const result = index ? func(value) : func();
+
       // eslint-disable-next-line
       // @ts-ignore
       delete Object.prototype.a;
+
       return result;
     });
 
@@ -204,6 +220,7 @@ describe('keys methods', () => {
   it('buffers should not have offset or parent keys', () => {
     const buffer = Buffer.from('test');
     const actual = keysIn(buffer);
+
     expect(actual).not.toContain('offset');
     expect(actual).not.toContain('parent');
   });
@@ -211,6 +228,7 @@ describe('keys methods', () => {
   it('typedArray should not have buffer, byteLength, or byteOffset keys', () => {
     const typedArray = new Uint8Array(1);
     const actual = keysIn(typedArray);
+
     expect(actual).not.toContain('buffer');
     expect(actual).not.toContain('byteLength');
     expect(actual).not.toContain('byteOffset');

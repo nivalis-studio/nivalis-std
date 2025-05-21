@@ -25,7 +25,9 @@ describe('without', () => {
   });
 
   it('should handle NaN values correctly', () => {
-    expect(without([NaN, 1, 2, NaN, 3], NaN)).toEqual([1, 2, 3]);
+    expect(without([Number.NaN, 1, 2, Number.NaN, 3], Number.NaN)).toEqual([
+      1, 2, 3,
+    ]);
   });
 
   it('should treat +0 and -0 as equal', () => {

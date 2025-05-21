@@ -13,8 +13,8 @@ describe('unionWith', () => {
           { x: 1, y: 1 },
           { x: 1, y: 2 },
         ],
-        (a, b) => a.x === b.x
-      )
+        (a, b) => a.x === b.x,
+      ),
     ).toEqual([
       { x: 1, y: 2 },
       { x: 2, y: 1 },

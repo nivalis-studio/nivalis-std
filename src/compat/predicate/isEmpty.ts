@@ -1,7 +1,7 @@
+import { isPrototype } from '../_internal/isPrototype.ts';
 import { isArguments } from './isArguments.ts';
 import { isArrayLike } from './isArrayLike.ts';
 import { isTypedArray } from './isTypedArray.ts';
-import { isPrototype } from '../_internal/isPrototype.ts';
 
 declare let Buffer:
   | {
@@ -11,9 +11,7 @@ declare let Buffer:
 
 /**
  * Checks if a given value is empty.
- *
  * @returns {true} Always returns true when no arguments are provided.
- *
  * @example
  * isEmpty(); // true
  */
@@ -21,10 +19,8 @@ export function isEmpty(): true;
 
 /**
  * Checks if a given string is empty.
- *
  * @param {string} value - The string to check.
  * @returns {boolean} `true` if the string is empty, `false` otherwise.
- *
  * @example
  * isEmpty(""); // true
  * isEmpty("hello"); // false
@@ -33,10 +29,8 @@ export function isEmpty(value: string): value is '';
 
 /**
  * Checks if a given Map is empty.
- *
  * @param {Map<any, any>} value - The Map to check.
  * @returns {boolean} `true` if the Map is empty, `false` otherwise.
- *
  * @example
  * isEmpty(new Map()); // true
  * isEmpty(new Map([["key", "value"]])); // false
@@ -45,10 +39,8 @@ export function isEmpty(value: Map<any, any>): boolean;
 
 /**
  * Checks if a given Set is empty.
- *
  * @param {Set<any>} value - The Set to check.
  * @returns {boolean} `true` if the Set is empty, `false` otherwise.
- *
  * @example
  * isEmpty(new Set()); // true
  * isEmpty(new Set([1, 2, 3])); // false
@@ -57,10 +49,8 @@ export function isEmpty(value: Set<any>): boolean;
 
 /**
  * Checks if a given array is empty.
- *
  * @param {any[]} value - The array to check.
  * @returns {boolean} `true` if the array is empty, `false` otherwise.
- *
  * @example
  * isEmpty([]); // true
  * isEmpty([1, 2, 3]); // false
@@ -69,24 +59,20 @@ export function isEmpty(value: any[]): value is [];
 
 /**
  * Checks if a given object is empty.
- *
  * @param {T | null | undefined} value - The object to check.
  * @returns {boolean} `true` if the object is empty, `false` otherwise.
- *
  * @example
  * isEmpty({}); // true
  * isEmpty({ a: 1 }); // false
  */
 export function isEmpty<T extends Record<any, any>>(
-  value: T | null | undefined
+  value: T | null | undefined,
 ): value is Record<keyof T, never> | null | undefined;
 
 /**
  * Checks if a given value is empty.
- *
  * @param {unknown} value - The value to check.
  * @returns {boolean} `true` if the value is empty, `false` otherwise.
- *
  * @example
  * isEmpty(null); // true
  * isEmpty(undefined); // true
@@ -102,10 +88,8 @@ export function isEmpty(value: unknown): boolean;
  * - If the given value is an [array-like object](../predicate/isArrayLike.md), checks if its length is 0.
  * - If the given value is an object, checks if it is an empty object with no properties.
  * - Primitive values (strings, booleans, numbers, or bigints) are considered empty.
- *
  * @param {unknown} [value] - The value to check.
  * @returns {boolean} `true` if the value is empty, `false` otherwise.
- *
  * @example
  * isEmpty(); // true
  * isEmpty(null); // true
@@ -130,7 +114,7 @@ export function isEmpty(value?: unknown): boolean {
     if (
       typeof (value as any).splice !== 'function' &&
       typeof value !== 'string' &&
-      (typeof Buffer === 'undefined' || !Buffer.isBuffer(value)) &&
+      !Buffer?.isBuffer(value) &&
       !isTypedArray(value) &&
       !isArguments(value)
     ) {

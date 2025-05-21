@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { cond } from './cond';
 import { stubFalse, stubTrue } from '../index';
 import { property } from '../object/property';
 import { matches } from '../predicate/matches';
 import { matchesProperty } from '../predicate/matchesProperty';
+import { cond } from './cond';
 
 // Utility functions
 const stubA = () => 'a';
@@ -31,13 +31,14 @@ describe('cond', () => {
     const resultFunc = cond([
       [
         function (...params: unknown[]) {
-          if (!args1.length) {
+          if (args1.length === 0) {
             args1 = params;
           }
+
           return true;
         },
         function (...params: unknown[]) {
-          if (!args2.length) {
+          if (args2.length === 0) {
             args2 = params;
           }
         },
@@ -64,30 +65,32 @@ describe('cond', () => {
 
   it('should return `undefined` when no condition is met', () => {
     const resultFunc = cond([[stubFalse, stubA]]);
+
     expect(resultFunc({ a: 1 })).toBe(undefined);
   });
 
   it('should throw a TypeError if `pairs` is not composed of functions', () => {
-    [false, true].forEach(value => {
+    for (const value of [false, true]) {
       expect(() => {
         cond([[stubTrue, value]])();
       }).toThrow(TypeError);
-    });
+    }
   });
 
   it('should use `this` binding of function for `pairs`', () => {
     const resultFunc = cond([
       [
-        function (this: Record<string, unknown>, a: string) {
+        function (this: { [key: string]: unknown }, a: string) {
           return this[a];
         },
-        function (this: Record<string, unknown>, a: string, b: string) {
+        function (this: { [key: string]: unknown }, a: string, b: string) {
           return this[b];
         },
       ],
     ]);
 
     const object = { resultFunc, a: 1, b: 2 };
+
     expect(object.resultFunc('a', 'b')).toBe(2);
   });
 });

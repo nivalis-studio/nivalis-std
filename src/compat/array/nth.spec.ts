@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { nth } from './nth';
 import { noop } from '../../function';
 import { range } from '../../math';
 import { falsey } from '../_internal/falsey';
 import { stubA } from '../_internal/stubA';
 import { stubB } from '../_internal/stubB';
+import { nth } from './nth';
 
 describe('nth', () => {
   const array = ['a', 'b', 'c', 'd'];
@@ -45,7 +45,9 @@ describe('nth', () => {
     const values = [null, undefined, []];
     const expected = values.map(noop);
 
-    const actual = values.map(array => nth(array, 1));
+    const actual = values.map(array => {
+      nth(array, 1);
+    });
 
     expect(actual).toEqual(expected);
   });

@@ -10,13 +10,12 @@ import { iteratee as createIteratee } from '../util/iteratee.ts';
  * an object where the keys are the generated keys and the values are the corresponding elements.
  * If there are multiple elements generating the same key, the last element among them is used
  * as the value.
- *
  * @template T - The type of elements in the array.
  * @template K - The type of keys.
  * @param {T[]} arr - The array of elements to be mapped.
+ * @param source
  * @param {(item: T) => K} getKeyFromItem - A function that generates a key from an element.
  * @returns {Record<K, T>} An object where keys are mapped to each element of an array.
- *
  * @example
  * const array = [
  *   { category: 'fruit', name: 'apple' },
@@ -37,7 +36,7 @@ export function groupBy<T, K extends PropertyKey>(
     | Partial<T>
     | [keyof T, unknown]
     | PropertyKey
-    | null
+    | null,
 ): Record<K, T[]>;
 
 /**
@@ -46,18 +45,16 @@ export function groupBy<T, K extends PropertyKey>(
  * This function takes an object and a function that generates a key from each value. It returns
  * an object where the keys are the generated keys and the values are arrays of elements that share
  * the same key.
- *
  * @template T - The type of values in the object.
  * @template K - The type of keys.
  * @param {Record<any, T> | null | undefined} source - The object to group.
- * @param {Function | PropertyKey | Array | Object} [getKeyFromItem] - The iteratee to transform keys.
+ * @param {Function | PropertyKey | Array | object} [getKeyFromItem] - The iteratee to transform keys.
  *   - If a function is provided, it's invoked for each element in the collection.
  *   - If a property name (string) is provided, that property of each element is used as the key.
  *   - If a property-value pair (array) is provided, elements with matching property values are used.
  *   - If a partial object is provided, elements with matching properties are used.
  * @returns {Record<K, T>} An object where each key is associated with an array of elements that
  * share that key.
- *
  * @example
  * // Using an object
  * const obj = { a: { category: 'fruit' }, b: { category: 'vegetable' }, c: { category: 'fruit' } };
@@ -71,7 +68,7 @@ export function groupBy<T, K extends PropertyKey>(
     | Partial<T>
     | [keyof T, unknown]
     | PropertyKey
-    | null
+    | null,
 ): Record<K, T[]>;
 
 /**
@@ -80,24 +77,21 @@ export function groupBy<T, K extends PropertyKey>(
  * This function takes an array or object and a function that generates a key from each element or value.
  * It returns an object where the keys are the generated keys and the values are arrays of elements that
  * share the same key.
- *
  * @template T - The type of elements in the array or values in the object.
  * @template K - The type of keys.
  * @param {ArrayLike<T> | Record<any, T> | null | undefined} source - The collection to group.
- * @param {Function | PropertyKey | Array | Object} [_getKeyFromItem] - The iteratee to transform keys.
+ * @param {Function | PropertyKey | Array | object} [_getKeyFromItem] - The iteratee to transform keys.
  *   - If a function is provided, it's invoked for each element in the collection.
  *   - If a property name (string) is provided, that property of each element is used as the key.
  *   - If a property-value pair (array) is provided, elements with matching property values are used.
  *   - If a partial object is provided, elements with matching properties are used.
  * @returns {Record<K, T>} An object where each key is associated with an array of elements that
  * share that key.
- *
  * @example
  * // Using an array
  * const array = [6.1, 4.2, 6.3];
  * const result = groupBy(array, Math.floor);
  * // => { 4: [4.2], 6: [6.1, 6.3] }
- *
  * @example
  * // Using a property name
  * const array = ['one', 'two', 'three'];
@@ -111,13 +105,13 @@ export function groupBy<T, K extends PropertyKey>(
     | Partial<T>
     | [keyof T, unknown]
     | PropertyKey
-    | null
+    | null,
 ): Record<K, T[]> {
   if (source == null) {
     return {} as Record<K, T[]>;
   }
 
-  const items = isArrayLike(source) ? Array.from(source) : Object.values(source);
+  const items = isArrayLike(source) ? [...source] : Object.values(source);
   const getKeyFromItem = createIteratee(_getKeyFromItem ?? identity);
 
   return groupByToolkit<T, K>(items, getKeyFromItem);

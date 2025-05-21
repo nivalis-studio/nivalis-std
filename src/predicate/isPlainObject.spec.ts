@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { runInNewContext } from 'node:vm';
+import { describe, expect, it } from 'vitest';
 import { isPlainObject } from './isPlainObject';
 
 describe('isPlainObject', () => {
@@ -18,13 +18,13 @@ describe('isPlainObject', () => {
       isPlainObject({
         children: [{ key: 'deep-children' }],
         name: 'deep-plain',
-      })
+      }),
     ).toBe(true);
     expect(
       isPlainObject({
         children: [{ key: new Date() }],
         name: 'deep-with-regular-object',
-      })
+      }),
     ).toBe(true);
     expect(isPlainObject({ constructor: { name: 'Object2' } })).toBe(true);
     expect(isPlainObject(JSON.parse('{}'))).toBe(true);
@@ -32,10 +32,10 @@ describe('isPlainObject', () => {
     expect(isPlainObject(new Proxy({ key: 'proxied_key' }, {}))).toBe(true);
     expect(
       isPlainObject({
-        [Symbol.iterator]: function* () {
+        *[Symbol.iterator]() {
           yield 1;
         },
-      })
+      }),
     ).toBe(true);
   });
 
@@ -51,7 +51,7 @@ describe('isPlainObject', () => {
 
     expect(isPlainObject('hello')).toBe(false);
     expect(isPlainObject(false)).toBe(false);
-    expect(isPlainObject(undefined)).toBe(false);
+    expect(isPlainObject()).toBe(false);
     expect(isPlainObject(null)).toBe(false);
     expect(isPlainObject(10)).toBe(false);
     expect(isPlainObject([])).toBe(false);
@@ -59,7 +59,9 @@ describe('isPlainObject', () => {
     expect(isPlainObject(JSON)).toBe(false);
     expect(isPlainObject(Math)).toBe(false);
     expect(isPlainObject(Atomics)).toBe(false);
-    expect(isPlainObject({ [Symbol.toStringTag]: 'string-tagged' })).toBe(false);
+    expect(isPlainObject({ [Symbol.toStringTag]: 'string-tagged' })).toBe(
+      false,
+    );
     expect(isPlainObject(() => 'cool')).toBe(false);
     expect(isPlainObject(new (class Cls {})())).toBe(false);
     expect(isPlainObject(new Intl.Locale('en'))).toBe(false);
@@ -91,8 +93,8 @@ describe('isPlainObject', () => {
           get(target) {
             return target;
           },
-        })
-      )
+        }),
+      ),
     ).toBe(false);
   });
 

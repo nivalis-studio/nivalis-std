@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { transform } from './transform';
 import { noop } from '../../function';
 import { falsey } from '../_internal/falsey';
 import { typedArrays } from '../_internal/typedArrays';
@@ -13,10 +12,13 @@ import { stubFalse } from '../util/stubFalse';
 import { stubObject } from '../util/stubObject';
 import { stubTrue } from '../util/stubTrue';
 import { toPlainObject } from '../util/toPlainObject';
+import { transform } from './transform';
 
-const freeGlobal = typeof global === 'object' && global && global.Object === Object && global;
-const freeSelf = typeof self === 'object' && self && self.Object === Object && self;
-const root = freeGlobal || freeSelf || Function('return this')();
+const freeGlobal =
+  typeof global === 'object' && global && global.Object === Object && global;
+const freeSelf =
+  typeof self === 'object' && self && self.Object === Object && self;
+const root = freeGlobal || freeSelf || new Function('return this')();
 
 function square(n: number): number {
   return n * n;
@@ -41,7 +43,9 @@ describe('transform', () => {
     };
 
     const mapper = function (accumulator: any, index: number) {
-      return index ? transform(object, iteratee, accumulator) : transform(object, iteratee);
+      return index
+        ? transform(object, iteratee, accumulator)
+        : transform(object, iteratee);
     };
 
     const results = map(accumulators, mapper);
@@ -91,13 +95,14 @@ describe('transform', () => {
         (result: any, value: any) => {
           result.push(square(value));
         },
-        []
-      )
+        [],
+      ),
     );
 
     expect(actual).toEqual(expected);
 
     const object = { a: 1, b: 4, c: 9 };
+
     expected = [object, { 0: 1, 1: 4, 2: 9 }, object];
 
     actual = map(values, value =>
@@ -106,8 +111,8 @@ describe('transform', () => {
         (result: any, value: any, key: any) => {
           result[key] = square(value);
         },
-        {}
-      )
+        {},
+      ),
     );
 
     expect(actual).toEqual(expected);
@@ -123,9 +128,12 @@ describe('transform', () => {
   });
 
   it('should treat sparse arrays as dense', () => {
-    const actual = transform(Array(1), (result: any, value: any, index: any) => {
-      result[index] = String(value);
-    });
+    const actual = transform(
+      Array.from({ length: 1 }),
+      (result: any, value: any, index: any) => {
+        result[index] = String(value);
+      },
+    );
 
     expect(actual).toEqual(['undefined']);
   });
@@ -137,7 +145,7 @@ describe('transform', () => {
 
   it('should ensure `object` is an object before using its `[[Prototype]]`', () => {
     const Ctors = [Boolean, Boolean, Number, Number, Number, String, String];
-    const values = [false, true, 0, 1, NaN, '', 'a'];
+    const values = [false, true, 0, 1, Number.NaN, '', 'a'];
     let expected: any = map(values, stubObject);
 
     // @ts-expect-error - Just for testing
@@ -147,7 +155,10 @@ describe('transform', () => {
 
     expected = map(values, stubFalse);
 
-    const actual = map(results, (value, index) => value instanceof Ctors[index]);
+    const actual = map(
+      results,
+      (value, index) => value instanceof Ctors[index],
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -163,7 +174,9 @@ describe('transform', () => {
     const expected = map(falsey, stubObject);
 
     // @ts-expect-error - Just for testing
-    const actual = map(falsey, (object, index) => (index ? transform(object) : transform()));
+    const actual = map(falsey, (object, index) =>
+      index ? transform(object) : transform(),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -176,12 +189,14 @@ describe('transform', () => {
     (object, key) => {
       it(`should provide correct \`iteratee\` arguments when transforming an ${key}`, () => {
         let args: any = null;
+
         transform(object, function (..._args) {
           if (args == null) {
             args = _args;
           }
         });
         const first = args[0];
+
         if (key === 'array') {
           expect(first !== object).toBe(true);
           expect(isArray(first)).toBe(true);
@@ -192,7 +207,7 @@ describe('transform', () => {
           expect(args).toEqual([first, 1, 'a', object]);
         }
       });
-    }
+    },
   );
 
   it(`can exit early when iterating arrays`, () => {
@@ -201,6 +216,7 @@ describe('transform', () => {
 
     transform(array, (value, other) => {
       values.push(isArray(value) ? other : value);
+
       return false;
     });
 
@@ -213,6 +229,7 @@ describe('transform', () => {
 
     transform(object, (value, other) => {
       values.push(isArray(value) ? other : value);
+
       return false;
     });
 

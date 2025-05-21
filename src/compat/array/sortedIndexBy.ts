@@ -6,18 +6,23 @@ import { isSymbol } from '../predicate/isSymbol.ts';
 import { iteratee as iterateeToolkit } from '../util/iteratee.ts';
 
 type PropertyName = string | number | symbol;
-type Iteratee<T, R> = ((value: T) => R) | PropertyName | [PropertyName, any] | Partial<T>;
+type Iteratee<T, R> =
+  | ((value: T) => R)
+  | PropertyName
+  | [PropertyName, any]
+  | Partial<T>;
 
-const MAX_ARRAY_LENGTH = 4294967295;
+const MAX_ARRAY_LENGTH = 4_294_967_295;
 const MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1;
+
 /**
  * This method is like `sortedIndex` except that it accepts `iteratee`
  * which is invoked for `value` and each element of `array` to compute their
  * sort ranking. The iteratee is invoked with one argument: (value).
- *
  * @param {ArrayLike<T> | null | undefined} array The sorted array to inspect.
  * @param {T} value The value to evaluate.
  * @param {(value: T) => R | PropertyName | [PropertyName, any] | Partial<T>} iteratee The iteratee invoked per element.
+ * @param retHighest
  * @returns {number} Returns the index at which `value` should be inserted
  *  into `array`.
  * @example
@@ -29,10 +34,11 @@ export function sortedIndexBy<T, R>(
   array: ArrayLike<T> | null | undefined,
   value: T,
   iteratee?: Iteratee<T, R>,
-  retHighest?: boolean
+  retHighest?: boolean,
 ): number {
   let low = 0;
   let high = array == null ? 0 : array.length;
+
   if (high === 0 || isNil(array)) {
     return 0;
   }
@@ -62,11 +68,17 @@ export function sortedIndexBy<T, R>(
     } else if (valIsNull) {
       setLow = othIsReflexive && othIsDefined && (retHighest || !othIsNull);
     } else if (valIsSymbol) {
-      setLow = othIsReflexive && othIsDefined && !othIsNull && (retHighest || !othIsSymbol);
+      setLow =
+        othIsReflexive &&
+        othIsDefined &&
+        !othIsNull &&
+        (retHighest || !othIsSymbol);
     } else if (othIsNull || othIsSymbol) {
       setLow = false;
     } else {
-      setLow = retHighest ? computed! <= transformedValue : computed! < transformedValue;
+      setLow = retHighest
+        ? computed! <= transformedValue
+        : computed! < transformedValue;
     }
 
     if (setLow) {

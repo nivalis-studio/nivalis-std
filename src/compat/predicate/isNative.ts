@@ -7,11 +7,14 @@ const functionToString = Function.prototype.toString;
 const REGEXP_SYNTAX_CHARS = /[\\^$.*+?()[\]{}|]/g;
 
 /** Used to detect if a method is native. */
-const IS_NATIVE_FUNCTION_REGEXP = RegExp(
+const IS_NATIVE_FUNCTION_REGEXP = new RegExp(
   `^${functionToString
     .call(Object.prototype.hasOwnProperty)
-    .replace(REGEXP_SYNTAX_CHARS, '\\$&')
-    .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?')}$`
+    .replaceAll(REGEXP_SYNTAX_CHARS, '\\$&')
+    .replaceAll(
+      /hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
+      '$1.*?',
+    )}$`,
 );
 
 /**
@@ -19,10 +22,8 @@ const IS_NATIVE_FUNCTION_REGEXP = RegExp(
  *
  * This function tests whether the provided value is a native function implemented by the JavaScript engine.
  * It returns `true` if the value is a native function, and `false` otherwise.
- *
  * @param {unknown} value - The value to test for native function.
  * @returns {boolean} `true` if the value is a native function, `false` otherwise.
- *
  * @example
  * const value1 = Array.prototype.push;
  * const value2 = () => {};
@@ -35,7 +36,9 @@ export function isNative(value?: unknown): boolean {
   }
 
   if ((globalThis as any)?.['__core-js_shared__'] != null) {
-    throw new Error('Unsupported core-js use. Try https://npms.io/search?q=ponyfill.');
+    throw new Error(
+      'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
+    );
   }
 
   return IS_NATIVE_FUNCTION_REGEXP.test(functionToString.call(value));

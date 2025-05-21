@@ -2,13 +2,11 @@ import { flatten } from './flatten.ts';
 
 /**
  * Flattens an array up to the specified depth.
- *
  * @template T - The type of elements within the array.
  * @template D - The depth to which the array should be flattened.
  * @param {ArrayLike<T> | null | undefined} value - The value to flatten.
  * @param {D} depth - The depth level specifying how deep a nested array structure should be flattened. Defaults to 1.
  * @returns {Array<FlatArray<T[], D>> | []} A new array that has been flattened.
- *
  * @example
  * const arr = flatten([1, [2, 3], [4, [5, 6]]], 1);
  * // Returns: [1, 2, 3, 4, [5, 6]]
@@ -18,7 +16,7 @@ import { flatten } from './flatten.ts';
  */
 export function flattenDepth<T, D extends number = 1>(
   value: ArrayLike<T> | null | undefined,
-  depth = 1 as D
+  depth = 1 as D,
 ): Array<FlatArray<T[], D>> | [] {
   return flatten(value, depth);
 }

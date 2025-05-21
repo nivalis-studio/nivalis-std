@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { drop } from './drop';
 import { args } from '../_internal/args';
+import { drop } from './drop';
 
 /**
  * @see https://github.com/lodash/lodash/blob/6a2cc1dfcf7634fea70d1bc5bd22db453df67b42/test/drop.spec.js#L1
@@ -13,15 +13,15 @@ describe('drop', () => {
   });
 
   it('should return all elements when `n` < `1`', () => {
-    [0, -1, -Infinity].forEach(n => {
+    for (const n of [0, -1, -Infinity]) {
       expect(drop(array, n)).toEqual(array);
-    });
+    }
   });
 
   it('should return an empty array when `n` >= `length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach(n => {
+    for (const n of [3, 4, 2 ** 32, Infinity]) {
       expect(drop(array, n)).toEqual([]);
-    });
+    }
   });
 
   it('should coerce `n` to an integer', () => {

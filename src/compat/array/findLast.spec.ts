@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { findLast } from './findLast';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
+import { findLast } from './findLast';
 
 describe('findLast', () => {
   const func = findLast;
@@ -38,12 +38,15 @@ describe('findLast', () => {
 
   it(`should return \`${expected[1]}\` for empty collections`, () => {
     const emptyValues = empties;
-    const expecting = lodashStable.map(emptyValues, lodashStable.constant(expected[1]));
+    const expecting = lodashStable.map(
+      emptyValues,
+      lodashStable.constant(expected[1]),
+    );
 
     const actual = lodashStable.map(emptyValues, value => {
       try {
         return func(value, { a: 3 } as any);
-      } catch (e) {
+      } catch {
         //
       }
     });
@@ -96,7 +99,10 @@ describe('findLast', () => {
       it(`should work with ${key} and a positive \`fromIndex\``, () => {
         const expected = [values[1], undefined];
 
-        const actual = [findLast(collection, resolve(values[1]), 1), findLast(collection, resolve(values[2]), 1)];
+        const actual = [
+          findLast(collection, resolve(values[1]), 1),
+          findLast(collection, resolve(values[2]), 1),
+        ];
 
         expect(actual).toEqual(expected);
       });
@@ -104,11 +110,14 @@ describe('findLast', () => {
       it(`should work with ${key} and a \`fromIndex\` >= \`length\``, () => {
         const indexes = [4, 6, 2 ** 32, Infinity];
 
-        const expected = lodashStable.map(indexes, lodashStable.constant([values[0], undefined, undefined]));
+        const expected = lodashStable.map(
+          indexes,
+          lodashStable.constant([values[0], undefined, undefined]),
+        );
 
         const actual = lodashStable.map(indexes, fromIndex => [
           findLast(collection, resolve(1), fromIndex),
-          findLast(collection, resolve(undefined), fromIndex),
+          findLast(collection, resolve(), fromIndex),
           findLast(collection, resolve(''), fromIndex),
         ]);
 
@@ -116,10 +125,12 @@ describe('findLast', () => {
       });
 
       it(`should work with ${key} and treat falsey \`fromIndex\` values correctly`, () => {
-        const expected = lodashStable.map(falsey, value => (value === undefined ? values[3] : undefined));
+        const expected = lodashStable.map(falsey, value =>
+          value === undefined ? values[3] : undefined,
+        );
 
         const actual = lodashStable.map(falsey, fromIndex =>
-          findLast(collection as any, resolve(values[3]), fromIndex as any)
+          findLast(collection as any, resolve(values[3]), fromIndex as any),
         );
 
         expect(actual).toEqual(expected);
@@ -130,7 +141,7 @@ describe('findLast', () => {
 
         const actual = [
           findLast(collection, resolve(values[0]), 0.1),
-          findLast(collection, resolve(values[0]), NaN),
+          findLast(collection, resolve(values[0]), Number.NaN),
           findLast(collection, resolve(values[2]), '1' as any),
         ];
 
@@ -140,19 +151,27 @@ describe('findLast', () => {
       it(`should work with ${key} and a negative \`fromIndex\``, () => {
         const expected = [values[1], undefined];
 
-        const actual = [findLast(collection, resolve(values[1]), -2), findLast(collection, resolve(values[2]), -2)];
+        const actual = [
+          findLast(collection, resolve(values[1]), -2),
+          findLast(collection, resolve(values[2]), -2),
+        ];
 
         expect(actual).toEqual(expected);
       });
 
       it(`should work with ${key} and a negative \`fromIndex\` <= \`-length\``, () => {
         const indexes = [-4, -6, -Infinity];
-        const expected = lodashStable.map(indexes, lodashStable.constant(values[0]));
+        const expected = lodashStable.map(
+          indexes,
+          lodashStable.constant(values[0]),
+        );
 
-        const actual = lodashStable.map(indexes, fromIndex => findLast(collection, resolve(values[0]), fromIndex));
+        const actual = lodashStable.map(indexes, fromIndex =>
+          findLast(collection, resolve(values[0]), fromIndex),
+        );
 
         expect(actual).toEqual(expected);
       });
-    }
+    },
   );
 });

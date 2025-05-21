@@ -9,6 +9,7 @@ describe('maxBy', () => {
       { name: 'Overmars', age: 20 },
     ];
     const result = maxBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Nunu', age: 30 });
   });
 
@@ -19,12 +20,14 @@ describe('maxBy', () => {
       { name: 'Overmars', age: 30 },
     ];
     const result = maxBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Nunu', age: 30 });
   });
 
   it('if array is single-element, return unique element of array', () => {
     const people = [{ name: 'Mark', age: 25 }];
     const result = maxBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Mark', age: 25 });
   });
 
@@ -32,12 +35,14 @@ describe('maxBy', () => {
     type Person = { name: string; age: number };
     const people: Person[] = [];
     const result = maxBy(people, person => person.age);
+
     expect(result).toBeUndefined();
   });
 
   it('should skip NaN values when comparing elements', () => {
     const numbers = [1, Number.NaN, 3, 2];
     const result = maxBy(numbers, x => x);
+
     expect(result).toBe(3);
   });
 });

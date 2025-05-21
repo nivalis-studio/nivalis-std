@@ -18,7 +18,7 @@ describe('forOwnRight', () => {
 
   it('should return `object` itself', () => {
     expect(forOwnRight(null)).toBe(null);
-    expect(forOwnRight(undefined)).toBe(undefined);
+    expect(forOwnRight()).toBe(undefined);
     expect(forOwnRight([])).toEqual([]);
     expect(forOwnRight([1])).toEqual([1]);
     expect(forOwnRight({ 0: 1, length: 1 })).toEqual({ 0: 1, length: 1 });
@@ -51,6 +51,7 @@ describe('forOwnRight', () => {
 
     forOwnRight(object, (_, key) => {
       keys.push(key);
+
       if (keys.length === 1) {
         return false;
       }
@@ -73,6 +74,7 @@ describe('forOwnRight', () => {
     Foo.prototype.c = 3;
 
     const keys: string[] = [];
+
     forOwnRight(new Foo(), (_, key) => {
       keys.push(key);
     });
@@ -85,12 +87,14 @@ describe('forOwnRight', () => {
       a: 1,
       b: 2,
     };
+
     Object.defineProperty(foo, 'c', {
       value: 3,
       enumerable: false,
     });
 
     const keys: string[] = [];
+
     forOwnRight(foo, (_, key) => {
       keys.push(key);
     });
@@ -106,6 +110,7 @@ describe('forOwnRight', () => {
     };
 
     const keys: string[] = [];
+
     forOwnRight(foo, (_, key) => {
       keys.push(key);
     });
@@ -118,6 +123,7 @@ describe('forOwnRight', () => {
     const a = [1, , , 4];
 
     const keys: string[] = [];
+
     forOwnRight(a, (_, key) => {
       keys.push(key);
     });

@@ -1,5 +1,5 @@
-import { keys as keysToolkit } from './keys.ts';
 import { eq } from '../util/eq.ts';
+import { keys as keysToolkit } from './keys.ts';
 
 /**
  * Assigns the properties of a source object to a target object.
@@ -14,14 +14,12 @@ import { eq } from '../util/eq.ts';
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {O} object - The target object to which properties will be assigned.
  * @param {S} source - The source object whose properties will be assigned to the target object.
  * @param {Function} getValueToAssign - The function to customize assigned values. It takes five arguments:
  *  objValue (the value from object), srcValue (the value from source), key (the property name),
  *  object (the target object), and source (the source object).
  * @returns {O & S} The updated target object with properties from the source object assigned.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -33,7 +31,13 @@ import { eq } from '../util/eq.ts';
 export function assignWith<O, S>(
   object: O,
   source: S,
-  getValueToAssign?: (objValue: any, srcValue: any, key: string, object: O, source: S) => any
+  getValueToAssign?: (
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: O,
+    source: S,
+  ) => any,
 ): O & S;
 
 /**
@@ -49,7 +53,6 @@ export function assignWith<O, S>(
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {O} object - The target object to which properties will be assigned.
  * @param {S1} source1 - The first source object whose properties will be assigned to the target object.
  * @param {S2} source2 - The second source object whose properties will be assigned to the target object.
@@ -57,7 +60,6 @@ export function assignWith<O, S>(
  *  objValue (the value from object), srcValue (the value from source), key (the property name),
  *  object (the target object), and source (the source object).
  * @returns {O & S1 & S2} The updated target object with properties from the source objects assigned.
- *
  * @example
  * const target = { a: 1 };
  * const source1 = { b: 2 };
@@ -71,7 +73,13 @@ export function assignWith<O, S1, S2>(
   object: O,
   source1: S1,
   source2: S2,
-  getValueToAssign?: (objValue: any, srcValue: any, key: string, object: O, source: S1 | S2) => any
+  getValueToAssign?: (
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: O,
+    source: S1 | S2,
+  ) => any,
 ): O & S1 & S2;
 
 /**
@@ -87,7 +95,6 @@ export function assignWith<O, S1, S2>(
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {O} object - The target object to which properties will be assigned.
  * @param {S1} source1 - The first source object whose properties will be assigned to the target object.
  * @param {S2} source2 - The second source object whose properties will be assigned to the target object.
@@ -96,7 +103,6 @@ export function assignWith<O, S1, S2>(
  *  objValue (the value from object), srcValue (the value from source), key (the property name),
  *  object (the target object), and source (the source object).
  * @returns {O & S1 & S2 & S3} The updated target object with properties from the source objects assigned.
- *
  * @example
  * const target = { a: 1 };
  * const source1 = { b: 2 };
@@ -112,7 +118,13 @@ export function assignWith<O, S1, S2, S3>(
   source1: S1,
   source2: S2,
   source3: S3,
-  getValueToAssign?: (objValue: any, srcValue: any, key: string, object: O, source: S1 | S2 | S3) => any
+  getValueToAssign?: (
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: O,
+    source: S1 | S2 | S3,
+  ) => any,
 ): O & S1 & S2 & S3;
 
 /**
@@ -128,7 +140,6 @@ export function assignWith<O, S1, S2, S3>(
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {O} object - The target object to which properties will be assigned.
  * @param {S1} source1 - The first source object whose properties will be assigned to the target object.
  * @param {S2} source2 - The second source object whose properties will be assigned to the target object.
@@ -138,7 +149,6 @@ export function assignWith<O, S1, S2, S3>(
  *  objValue (the value from object), srcValue (the value from source), key (the property name),
  *  object (the target object), and source (the source object).
  * @returns {O & S1 & S2 & S3 & S4} The updated target object with properties from the source objects assigned.
- *
  * @example
  * const target = { a: 1 };
  * const source1 = { b: 2 };
@@ -156,7 +166,13 @@ export function assignWith<O, S1, S2, S3, S4>(
   source2: S2,
   source3: S3,
   source4: S4,
-  getValueToAssign?: (objValue: any, srcValue: any, key: string, object: O, source: S1 | S2 | S3 | S4) => any
+  getValueToAssign?: (
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: O,
+    source: S1 | S2 | S3 | S4,
+  ) => any,
 ): O & S1 & S2 & S3 & S4;
 
 /**
@@ -172,11 +188,9 @@ export function assignWith<O, S1, S2, S3, S4>(
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {any} object - The target object to which properties will be assigned.
  * @param {...any[]} sources - The source objects whose properties will be assigned to the target object.
  * @returns {any} The updated target object with properties from the source objects assigned.
- *
  * @example
  * const target = { a: 1 };
  * const result = assignWith(target, { b: 2 }, { c: 3 }, { a: 4 }, function(objValue, srcValue) {
@@ -199,11 +213,9 @@ export function assignWith(object: any, ...sources: any[]): any;
  * of this function will be directly assigned to the corresponding property. This allows for
  * more precise control over how properties are merged between objects. If not provided,
  * the default behavior is equivalent to using the identity function (returning the source value).
- *
  * @param {any} object - The target object to which properties will be assigned.
  * @param {...any[]} sources - The source objects whose properties will be assigned to the target object.
  * @returns {any} The updated target object with properties from the source objects assigned.
- *
  * @example
  * const target = { a: 1 };
  * const result = assignWith(target, { b: 2 }, { c: 3 }, function(objValue, srcValue) {
@@ -212,7 +224,7 @@ export function assignWith(object: any, ...sources: any[]): any;
  * console.log(result); // Output: { a: 1, b: 2, c: 3 }
  */
 export function assignWith(object: any, ...sources: any[]): any {
-  let getValueToAssign = sources[sources.length - 1];
+  let getValueToAssign = sources.at(-1);
 
   if (typeof getValueToAssign === 'function') {
     sources.pop();
@@ -220,8 +232,8 @@ export function assignWith(object: any, ...sources: any[]): any {
     getValueToAssign = undefined;
   }
 
-  for (let i = 0; i < sources.length; i++) {
-    assignWithImpl(object, sources[i], getValueToAssign);
+  for (const source of sources) {
+    assignWithImpl(object, source, getValueToAssign);
   }
 
   return object;
@@ -230,16 +242,22 @@ export function assignWith(object: any, ...sources: any[]): any {
 function assignWithImpl(
   object: any,
   source: any,
-  getValueToAssign?: (objValue: any, srcValue: any, key: string, object: any, source: any) => any
+  getValueToAssign?: (
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: any,
+    source: any,
+  ) => any,
 ): any {
   const keys = keysToolkit(source);
 
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+  for (const key of keys) {
     const objValue = object[key];
     const srcValue = source[key];
 
-    const newValue = getValueToAssign?.(objValue, srcValue, key, object, source) ?? srcValue;
+    const newValue =
+      getValueToAssign?.(objValue, srcValue, key, object, source) ?? srcValue;
 
     if (!(key in object) || !eq(objValue, newValue)) {
       object[key] = newValue;

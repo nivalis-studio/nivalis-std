@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { delay } from './delay';
 import { delay as delayToolkit } from '../../promise';
 import { slice } from '../_internal/slice';
+import { delay } from './delay';
 
 describe('delay', () => {
   it('should delay `func` execution', async () => {
     let pass = false;
+
     delay(() => {
       pass = true;
     }, 32);
@@ -21,6 +22,7 @@ describe('delay', () => {
 
   it('should provide additional arguments to `func`', async () => {
     let args;
+
     delay(
       function () {
         // eslint-disable-next-line prefer-rest-params
@@ -28,7 +30,7 @@ describe('delay', () => {
       },
       32,
       1,
-      2
+      2,
     );
 
     await delayToolkit(64);
@@ -38,6 +40,7 @@ describe('delay', () => {
 
   it('should use a default `wait` of `0`', async () => {
     let pass = false;
+
     // @ts-expect-error invalid type
     delay(() => {
       pass = true;

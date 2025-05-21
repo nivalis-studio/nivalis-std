@@ -10,11 +10,10 @@ import { isArrayLike } from '../predicate/isArrayLike.ts';
  *
  * Unlike some implementations, this function is optimized for performance
  * by directly accessing the last index of the array.
- *
  * @template T - The type of elements in the array.
+ * @param array
  * @param {ArrayLike<T> | null | undefined} arr - The array from which to get the last element.
  * @returns {T | undefined} The last element of the array, or `undefined` if the array is empty.
- *
  * @example
  * const arr = [1, 2, 3];
  * const lastElement = last(arr);
@@ -28,5 +27,6 @@ export function last<T>(array: ArrayLike<T> | null | undefined): T | undefined {
   if (!isArrayLike(array)) {
     return undefined;
   }
+
   return lastToolkit(toArray(array));
 }

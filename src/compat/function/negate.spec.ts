@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { negate } from './negate';
 import { stubTrue } from '../util/stubTrue';
 import { times } from '../util/times';
+import { negate } from './negate';
 
 describe('negate', () => {
   function isEven(n: number) {
     return n % 2 === 0;
   }
+
   it('should create a function that negates the result of `func`', () => {
     const negateFn = negate(isEven);
 
@@ -32,21 +33,35 @@ describe('negate', () => {
 
     const actual = times(count, index => {
       switch (index) {
-        case 0:
+        case 0: {
           negateFn();
+
           break;
-        case 1:
+        }
+
+        case 1: {
           negateFn(1);
+
           break;
-        case 2:
+        }
+
+        case 2: {
           negateFn(1, 2);
+
           break;
-        case 3:
+        }
+
+        case 3: {
           negateFn(1, 2, 3);
+
           break;
-        case 4:
+        }
+
+        case 4: {
           negateFn(1, 2, 3, 4);
+        }
       }
+
       return argCount === index;
     });
 

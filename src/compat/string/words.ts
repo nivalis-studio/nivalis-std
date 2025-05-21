@@ -14,7 +14,7 @@ const rUnicodeBreak = `[\\p{Z}\\p{P}${rNonCharLatin}]`;
 const rUnicodeMiscUpper = `(?:${rUnicodeUpper}|${rMisc})`;
 const rUnicodeMiscLower = `(?:${rUnicodeLower}|${rMisc})`;
 
-const rUnicodeWord = RegExp(
+const rUnicodeWord = new RegExp(
   [
     `${rUnicodeUpper}?${rUnicodeLower}+${rUnicodeOptContrLower}(?=${rUnicodeBreak}|${rUnicodeUpper}|$)`,
 
@@ -34,25 +34,28 @@ const rUnicodeWord = RegExp(
 
     '\\p{Extended_Pictographic}',
   ].join('|'),
-  'gu'
+  'gu',
 );
 
 /**
  * Splits `string` into an array of its words.
- *
  * @param {string | object} str - The string or object that is to be split into words.
  * @param {RegExp | string} [pattern] - The pattern to match words.
+ * @param guard
  * @returns {string[]} - Returns the words of `string`.
- *
  * @example
  * const wordsArray1 = words('fred, barney, & pebbles');
  * // => ['fred', 'barney', 'pebbles']
- *
  */
-export function words(str?: string | object, pattern: RegExp | string = rUnicodeWord, guard?: unknown): string[] {
+export function words(
+  str?: string | object,
+  pattern: RegExp | string = rUnicodeWord,
+  guard?: unknown,
+): string[] {
   const input = toString(str);
+
   pattern = guard ? rUnicodeWord : pattern;
-  const words = Array.from(input.match(pattern) ?? []);
+  const words = [...(input.match(pattern) ?? [])];
 
   return words.filter(x => x !== '');
 }

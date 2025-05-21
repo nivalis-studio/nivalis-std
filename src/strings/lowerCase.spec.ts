@@ -19,7 +19,9 @@ describe('lowerCase', () => {
   });
 
   it('should handle leading and trailing whitespace', () => {
-    expect(lowerCase('    leading and trailing whitespace    ')).toEqual('leading and trailing whitespace');
+    expect(lowerCase('    leading and trailing whitespace    ')).toEqual(
+      'leading and trailing whitespace',
+    );
   });
 
   it('should handle special characters correctly', () => {

@@ -22,12 +22,14 @@ describe('updateWith', () => {
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const expected = map(props, constant(value));
 
     const actual = map(props, key => {
       const object = { '-0': 'a', 0: 'b' };
+
       updateWith(object, key, updater, noop);
+
       return object[toString(key) as keyof typeof object];
     });
 
@@ -35,7 +37,8 @@ describe('updateWith', () => {
   });
 
   it('should unset symbol keyed property values', () => {
-    const object: Record<symbol, unknown> = {};
+    const object: { [key: symbol]: unknown } = {};
+
     object[symbol] = 1;
 
     expect(unset(object, symbol)).toBe(true);
@@ -90,13 +93,17 @@ describe('updateWith', () => {
 
         updateWith(object, pair[1], updater, noop);
         expect(object).toEqual({ '': value });
-      }
+      },
     );
   });
 
   it('should handle complex paths', () => {
     const object: any = {
-      a: { 1.23: { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } } } },
+      a: {
+        1.23: {
+          '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } },
+        },
+      },
     };
 
     const paths = [
@@ -134,9 +141,12 @@ describe('updateWith', () => {
 
     const actual = map(values, value => {
       try {
-        return [updateWith(value, 'a.b', updater, noop), updateWith(value, ['a', 'b'], updater, noop)];
-      } catch (e: unknown) {
-        return e instanceof Error ? e.message : 'unknown error';
+        return [
+          updateWith(value, 'a.b', updater, noop),
+          updateWith(value, ['a', 'b'], updater, noop),
+        ];
+      } catch (error: unknown) {
+        return error instanceof Error ? error.message : 'unknown error';
       }
     });
 
@@ -160,7 +170,7 @@ describe('updateWith', () => {
   });
 
   it('should not assign values that are the same as their destinations', () => {
-    each(['a', ['a'], { a: 1 }, NaN], value => {
+    each(['a', ['a'], { a: 1 }, Number.NaN], value => {
       const object = {};
       let pass = true;
       const updater = constant(value);
@@ -169,7 +179,7 @@ describe('updateWith', () => {
         configurable: true,
         enumerable: true,
         get: constant(value),
-        set: function () {
+        set() {
           pass = false;
         },
       });
@@ -189,9 +199,10 @@ describe('updateWith', () => {
         path,
         (n: any) => {
           expect(n).toBe(oldValue);
+
           return ++n;
         },
-        noop
+        noop,
       );
 
       expect(object.a[0].b.c).toBe(expected);
@@ -200,13 +211,16 @@ describe('updateWith', () => {
   });
 
   it('should work with a `customizer` callback', () => {
-    const actual = updateWith({ 0: {} }, '[0][1][2]', stubThree, value => (isObject(value) ? undefined : {}));
+    const actual = updateWith({ 0: {} }, '[0][1][2]', stubThree, value =>
+      isObject(value) ? undefined : {},
+    );
 
     expect(actual).toEqual({ 0: { 1: { 2: 3 } } });
   });
 
   it('should work with a `customizer` that returns `undefined`', () => {
     const actual = updateWith({}, 'a[0].b.c', stubFour, noop);
+
     expect(actual).toEqual({ a: [{ b: { c: 4 } }] });
   });
 

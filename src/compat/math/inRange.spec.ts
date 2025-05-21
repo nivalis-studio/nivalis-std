@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { inRange } from './inRange';
 import { falsey } from '../_internal/falsey';
 import { stubTrue } from '../util/stubTrue';
+import { inRange } from './inRange';
 
 describe('inRange', () => {
   it('should work with an `end`', () => {
@@ -19,7 +19,7 @@ describe('inRange', () => {
   });
 
   it('should treat falsy `start` as `0`', () => {
-    falsey.forEach((value, index) => {
+    for (const [index, value] of falsey.entries()) {
       if (index) {
         // eslint-disable-next-line
         // @ts-ignore
@@ -32,7 +32,7 @@ describe('inRange', () => {
         // @ts-ignore
         expect(inRange(0)).toBe(false);
       }
-    });
+    }
   });
 
   it('should swap `start` and `end` when `start` > `end`', () => {
@@ -58,8 +58,8 @@ describe('inRange', () => {
       // eslint-disable-next-line
       // @ts-ignore
       inRange(0, 0, '1'),
-      inRange(0, NaN, 1),
-      inRange(-1, -1, NaN),
+      inRange(0, Number.NaN, 1),
+      inRange(-1, -1, Number.NaN),
     ];
 
     expect(actual).toEqual(actual.map(stubTrue));

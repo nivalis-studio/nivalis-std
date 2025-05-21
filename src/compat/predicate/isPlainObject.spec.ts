@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isPlainObject } from './isPlainObject';
 import { falsey } from '../_internal/falsey';
+import { isPlainObject } from './isPlainObject';
 
 describe('isPlainObject', () => {
   it('should detect plain objects', () => {
@@ -23,6 +23,7 @@ describe('isPlainObject', () => {
 
   it('should return `true` for objects with a `[[Prototype]]` of `null`', () => {
     const object = Object.create(null);
+
     expect(isPlainObject(object)).toBe(true);
 
     object.constructor = Object.prototype.constructor;
@@ -36,6 +37,7 @@ describe('isPlainObject', () => {
   it('should return `true` for objects with a writable `Symbol.toStringTag` property', () => {
     if (Symbol && Symbol.toStringTag) {
       const object = {};
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       object[Symbol.toStringTag] = 'X';
@@ -46,6 +48,7 @@ describe('isPlainObject', () => {
 
   it('should return `false` for objects with a custom `[[Prototype]]`', () => {
     const object = Object.create({ a: 1 });
+
     expect(isPlainObject(object)).toBe(false);
   });
 
@@ -59,7 +62,9 @@ describe('isPlainObject', () => {
   it('should return `false` for non-objects', () => {
     const expected = falsey.map(() => false);
 
-    const actual = falsey.map((value, index) => (index ? isPlainObject(value) : isPlainObject()));
+    const actual = falsey.map((value, index) =>
+      index ? isPlainObject(value) : isPlainObject(),
+    );
 
     expect(actual).toEqual(expected);
 
@@ -71,6 +76,7 @@ describe('isPlainObject', () => {
   it('should return `false` for objects with a read-only `Symbol.toStringTag` property', () => {
     if (Symbol && Symbol.toStringTag) {
       const object = {};
+
       Object.defineProperty(object, Symbol.toStringTag, {
         configurable: true,
         enumerable: false,
@@ -85,6 +91,7 @@ describe('isPlainObject', () => {
   it('should not mutate `value`', () => {
     if (Symbol && Symbol.toStringTag) {
       const proto = {};
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       proto[Symbol.toStringTag] = undefined;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { dropRightWhile } from './dropRightWhile';
 import { args } from '../_internal/args';
 import { slice } from '../_internal/slice';
+import { dropRightWhile } from './dropRightWhile';
 
 /**
  * @see https://github.com/lodash/lodash/blob/6a2cc1dfcf7634fea70d1bc5bd22db453df67b42/test/dropRightWhile.spec.js
@@ -41,13 +41,17 @@ describe('dropRightWhile', () => {
   it('should work with `_.matchesProperty` shorthands', function () {
     expect(dropRightWhile(objects, ['b', 2])).toEqual(objects.slice(0, 2));
     expect(dropRightWhile(objects, [0, 2])).toEqual(objects.slice(0, 2));
-    expect(dropRightWhile(objects, [Symbol.for('a'), 2])).toEqual(objects.slice(0, 2));
+    expect(dropRightWhile(objects, [Symbol.for('a'), 2])).toEqual(
+      objects.slice(0, 2),
+    );
   });
 
   it('should work with `_.property` shorthands', function () {
     expect(dropRightWhile(objects, 'b')).toEqual(objects.slice(0, 1));
     expect(dropRightWhile(objects, 0)).toEqual(objects.slice(0, 1));
-    expect(dropRightWhile(objects, Symbol.for('a'))).toEqual(objects.slice(0, 1));
+    expect(dropRightWhile(objects, Symbol.for('a'))).toEqual(
+      objects.slice(0, 1),
+    );
   });
 
   it('should return an empty array when the collection is null or undefined', () => {
@@ -63,7 +67,9 @@ describe('dropRightWhile', () => {
   });
 
   it('should support array-like', () => {
-    expect(dropRightWhile({ 0: 1, 1: 2, 2: 3, length: 3 }, i => i > 1)).toEqual([1]);
+    expect(dropRightWhile({ 0: 1, 1: 2, 2: 3, length: 3 }, i => i > 1)).toEqual(
+      [1],
+    );
     expect(dropRightWhile('123', i => Number(i) > 1)).toEqual(['1']);
     expect(dropRightWhile(args, i => i > 1)).toEqual([1]);
   });

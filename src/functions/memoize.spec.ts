@@ -6,6 +6,7 @@ describe('memoize', () => {
     const add10 = vi.fn((x: number) => x + 10);
 
     const memoizedAdd10 = memoize(add10);
+
     expect(memoizedAdd10(5)).toBe(15);
     expect(memoizedAdd10(5)).toBe(15);
 
@@ -38,7 +39,8 @@ describe('memoize', () => {
       return (a + this.b + this.c) as number;
     };
     const memoized = memoize(fn);
-    const object = { memoized: memoized, b: 2, c: 3 };
+    const object = { memoized, b: 2, c: 3 };
+
     expect(object.memoized(1)).toBe(6); // {1: 6}
     object.b = 3;
     object.c = 5;
@@ -58,27 +60,33 @@ describe('memoize', () => {
     const fn = (value: string) => value;
     const memoized = memoize(fn);
     const actual = props.map(value => memoized(value));
+
     expect(actual).toEqual(props);
   });
 
   it('should allow custom cache implementation', () => {
     class CustomCache {
-      private __data__: Map<object, string> = new Map();
+      private __data__ = new Map<object, string>();
       get(key: object): string | undefined {
         return this.__data__.get(key);
       }
+
       set(key: object, value: string): void {
         this.__data__.set(key, value);
       }
+
       has(key: object): boolean {
         return this.__data__.has(key);
       }
+
       delete(key: object): boolean | void {
         return this.__data__.delete(key);
       }
+
       clear(): void {
         this.__data__.clear();
       }
+
       get size(): number {
         return this.__data__.size;
       }
@@ -99,7 +107,7 @@ describe('memoize', () => {
 
   it('should work with an immutable cache implementation', () => {
     class ImmutableCache<T> {
-      private __data__: Map<T, string> = new Map();
+      private __data__ = new Map<T, string>();
 
       clear(): ImmutableCache<T> {
         return new ImmutableCache<T>();
@@ -108,12 +116,14 @@ describe('memoize', () => {
       get(key: T): string | undefined {
         return this.__data__.get(key);
       }
+
       has(key: T): boolean {
         return this.__data__.has(key);
       }
 
-      set(key: T, value: string): ImmutableCache<T> {
+      set(key: T, value: string): this {
         this.__data__.set(key, value);
+
         return this;
       }
 

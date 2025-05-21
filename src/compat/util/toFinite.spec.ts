@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { toFinite } from './toFinite';
 import { flatMap } from '../../array/flatMap';
 import { identity } from '../../function/identity';
 import { falsey } from '../_internal/falsey';
@@ -7,6 +6,7 @@ import { MAX_INTEGER } from '../_internal/MAX_INTEGER';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { symbol } from '../_internal/symbol';
 import { whitespace } from '../_internal/whitespace';
+import { toFinite } from './toFinite';
 
 describe('toFinite', () => {
   it(`should preserve the sign of \`0\``, () => {
@@ -18,16 +18,17 @@ describe('toFinite', () => {
       [-0, -Infinity],
     ];
 
-    [0, 1].forEach(index => {
+    for (const index of [0, 1]) {
       const others = values.map(index ? Object : identity);
 
       const actual = others.map(value => {
         const result = toFinite(value);
+
         return [result, 1 / result];
       });
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   function negative(string: string) {
@@ -43,7 +44,7 @@ describe('toFinite', () => {
   }
 
   it(`should pass thru primitive number values`, () => {
-    const values = [0, 1, NaN];
+    const values = [0, 1, Number.NaN];
     const expected = [0, 1, 0];
     const actual = values.map(toFinite);
 
@@ -51,7 +52,14 @@ describe('toFinite', () => {
   });
 
   it(`should convert number primitives and objects to numbers`, () => {
-    const values = [2, 1.2, MAX_SAFE_INTEGER, MAX_INTEGER, Infinity, NaN];
+    const values = [
+      2,
+      1.2,
+      MAX_SAFE_INTEGER,
+      MAX_INTEGER,
+      Infinity,
+      Number.NaN,
+    ];
 
     const expected = values.map(value => {
       if (value === Infinity) {
@@ -61,14 +69,15 @@ describe('toFinite', () => {
       }
 
       const neg = value === 0 ? 0 : -value;
+
       return [value, value, neg, neg];
     });
 
     const actual = values.map(value => [
       toFinite(value),
-      toFinite(Object(value)),
+      toFinite(new Object(value)),
       toFinite(-value),
-      toFinite(Object(-value)),
+      toFinite(new Object(-value)),
     ]);
 
     expect(actual).toEqual(expected);
@@ -93,24 +102,30 @@ describe('toFinite', () => {
 
     const expected = values.map(value => {
       let n = Number(value);
+
       if (n === Infinity) {
         n = MAX_INTEGER;
       } else if (n !== n) {
         n = 0;
       }
+
       const neg = n === 0 ? 0 : -n;
+
       return [n, n, n, n, n, n, neg, neg];
     });
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toFinite(mod(value)), toFinite(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toFinite(mod(value)),
+        toFinite(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert binary/octal strings to numbers`, () => {
-    const numbers = [42, 5349, 1715004];
+    const numbers = [42, 5349, 1_715_004];
     const transforms = [identity, pad];
     const values = ['0b101010', '0o12345', '0x1a2b3c'];
 
@@ -118,11 +133,12 @@ describe('toFinite', () => {
 
     const actual = values.map(value => {
       const upper = value.toUpperCase();
+
       return flatMap(transforms, mod => [
         toFinite(mod(value)),
-        toFinite(Object(mod(value))),
+        toFinite(new Object(mod(value))),
         toFinite(mod(upper)),
-        toFinite(Object(mod(upper))),
+        toFinite(new Object(mod(upper))),
       ]);
     });
 
@@ -136,15 +152,18 @@ describe('toFinite', () => {
     const expected = values.map(() => [0, 0, 0, 0, 0, 0, 0, 0]);
 
     const actual = values.map(value =>
-      flatMap(transforms, mod => [toFinite(mod(value)), toFinite(Object(mod(value)))])
+      flatMap(transforms, mod => [
+        toFinite(mod(value)),
+        toFinite(new Object(mod(value))),
+      ]),
     );
 
     expect(actual).toEqual(expected);
   });
 
   it(`should convert symbols to  '0'`, () => {
-    const object1 = Object(symbol);
-    const object2 = Object(symbol);
+    const object1 = new Object(symbol);
+    const object2 = new Object(symbol);
     const values = [symbol, object1, object2];
     const expected = values.map(() => 0);
 
@@ -159,7 +178,9 @@ describe('toFinite', () => {
 
     const expected = values.map(() => 0);
 
-    const actual = values.map((value, index) => (index ? toFinite(value) : toFinite()));
+    const actual = values.map((value, index) =>
+      index ? toFinite(value) : toFinite(),
+    );
 
     expect(actual).toEqual(expected);
   });

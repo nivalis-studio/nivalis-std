@@ -4,7 +4,7 @@ import { isNotNil } from './isNotNil';
 describe('isNotNil', () => {
   it('returns false if the value is null or undefined', () => {
     expect(isNotNil(null)).toBe(false);
-    expect(isNotNil(undefined)).toBe(false);
+    expect(isNotNil()).toBe(false);
   });
 
   it('returns true if the value is not null nor undefined', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { take } from './take.ts';
 import { args } from '../_internal/args';
+import { take } from './take.ts';
 
 describe('take', () => {
   const array = [1, 2, 3];
@@ -14,15 +14,15 @@ describe('take', () => {
   });
 
   it('should return an empty array when `n` < `1`', () => {
-    [0, -1, -Infinity].forEach(n => {
+    for (const n of [0, -1, -Infinity]) {
       expect(take(array, n)).toEqual([]);
-    });
+    }
   });
 
   it('should return all elements when `n` >= `length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach(n => {
+    for (const n of [3, 4, 2 ** 32, Infinity]) {
       expect(take(array, n)).toEqual(array);
-    });
+    }
   });
 
   it('should return an empty array when the collection is null or undefined', () => {

@@ -1,6 +1,5 @@
 /**
  * Iterates over elements of 'arr' from right to left and invokes 'callback' for each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array to iterate over.
  * @param {(value: T, index: number, arr: T[]) => void} callback - The function invoked per iteration.
@@ -8,7 +7,6 @@
  *  - 'value': The current element being processed in the array.
  *  - 'index': The index of the current element being processed in the array.
  *  - 'arr': The array 'forEachRight' was called upon.
- *
  * @example
  * const array = [1, 2, 3];
  * const result: number[] = [];
@@ -20,10 +18,12 @@
  *
  * console.log(result) // Output: [3, 2, 1]
  */
-export function forEachRight<T>(arr: T[], callback: (value: T, index: number, arr: T[]) => void): void;
+export function forEachRight<T>(
+  arr: T[],
+  callback: (value: T, index: number, arr: T[]) => void,
+): void;
 /**
  * Iterates over elements of 'arr' from right to left and invokes 'callback' for each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array to iterate over.
  * @param {(value: T, index: number, arr: T[]) => void} callback - The function invoked per iteration.
@@ -31,7 +31,6 @@ export function forEachRight<T>(arr: T[], callback: (value: T, index: number, ar
  *  - 'value': The current element being processed in the array.
  *  - 'index': The index of the current element being processed in the array.
  *  - 'arr': The array 'forEachRight' was called upon.
- *
  * @example
  * const array = [1, 2, 3];
  * const result: number[] = [];
@@ -45,12 +44,11 @@ export function forEachRight<T>(arr: T[], callback: (value: T, index: number, ar
  */
 export function forEachRight<T>(
   arr: readonly T[],
-  callback: (value: T, index: number, arr: readonly T[]) => void
+  callback: (value: T, index: number, arr: readonly T[]) => void,
 ): void;
 
 /**
  * Iterates over elements of 'arr' from right to left and invokes 'callback' for each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array to iterate over.
  * @param {(value: T, index: number, arr: T[]) => void} callback - The function invoked per iteration.
@@ -58,7 +56,6 @@ export function forEachRight<T>(
  *  - 'value': The current element being processed in the array.
  *  - 'index': The index of the current element being processed in the array.
  *  - 'arr': The array 'forEachRight' was called upon.
- *
  * @example
  * const array = [1, 2, 3];
  * const result: number[] = [];
@@ -70,9 +67,13 @@ export function forEachRight<T>(
  *
  * console.log(result) // Output: [3, 2, 1]
  */
-export function forEachRight<T>(arr: readonly T[], callback: (value: T, index: number, arr: T[]) => void): void {
+export function forEachRight<T>(
+  arr: readonly T[],
+  callback: (value: T, index: number, arr: T[]) => void,
+): void {
   for (let i = arr.length - 1; i >= 0; i--) {
     const element = arr[i];
+
     callback(element, i, arr as T[]);
   }
 }

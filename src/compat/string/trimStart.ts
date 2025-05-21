@@ -2,18 +2,21 @@ import { trimStart as trimStartToolkit } from '../../string/trimStart.ts';
 
 /**
  * Removes leading whitespace or specified characters from a string.
- *
  * @param {string} str - The string from which leading characters will be trimmed.
  * @param {string | string[]} chars - The character(s) to remove from the end of the string. Defaults to `" "`.
+ * @param guard
  * @returns {string} - The resulting string after the specified leading character has been removed.
- *
  * @example
  * const trimmedStr1 = ltrim('---hello', '-') // returns 'hello'
  * const trimmedStr2 = ltrim('000123', '0') // returns '123'
  * const trimmedStr3 = ltrim('abcabcabc', 'a') // returns 'bcabcabc'
  * const trimmedStr4 = ltrim('xxxtrimmed', 'x') // returns 'trimmed'
  */
-export function trimStart(str: string, chars?: string | string[], guard?: unknown): string {
+export function trimStart(
+  str: string,
+  chars?: string | string[],
+  guard?: unknown,
+): string {
   if (str == null) {
     return '';
   }
@@ -26,15 +29,16 @@ export function trimStart(str: string, chars?: string | string[], guard?: unknow
     case 'string': {
       return trimStartToolkit(str, chars.toString().split(''));
     }
+
     case 'object': {
       if (Array.isArray(chars)) {
         return trimStartToolkit(
           str,
-          chars.flatMap(x => x.toString().split(''))
+          chars.flatMap(x => x.toString().split('')),
         );
-      } else {
-        return trimStartToolkit(str, (chars as any).toString().split(''));
       }
+
+      return trimStartToolkit(str, (chars as any).toString().split(''));
     }
   }
 }

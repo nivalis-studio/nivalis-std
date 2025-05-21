@@ -12,10 +12,8 @@ import { times } from '../util/times.ts';
  * - Sparse arrays with some missing indices are treated like dense arrays.
  * - If the value is `null` or `undefined`, an empty array is returned.
  * - When handling prototype objects, the `constructor` property is excluded from the results.
- *
  * @param {unknown} [object] - The object to inspect for keys.
  * @returns {string[]} An array of string keys from the object.
- *
  * @example
  * const obj = { a: 1, b: 2 };
  * console.log(keysIn(obj)); // ['a', 'b']
@@ -34,6 +32,7 @@ export function keysIn(object?: unknown): string[] {
 
   switch (typeof object) {
     case 'object':
+
     case 'function': {
       if (isArrayLike(object)) {
         return arrayLikeKeysIn(object);
@@ -47,7 +46,7 @@ export function keysIn(object?: unknown): string[] {
     }
 
     default: {
-      return keysInImpl(Object(object));
+      return keysInImpl(new Object(object));
     }
   }
 }
@@ -86,5 +85,8 @@ function arrayLikeKeysIn(object: ArrayLike<any>): string[] {
     filteredKeys.add('byteOffset');
   }
 
-  return [...indices, ...keysInImpl(object).filter(key => !filteredKeys.has(key))];
+  return [
+    ...indices,
+    ...keysInImpl(object).filter(key => !filteredKeys.has(key)),
+  ];
 }

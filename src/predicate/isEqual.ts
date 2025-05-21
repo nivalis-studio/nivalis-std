@@ -1,13 +1,11 @@
-import { isEqualWith } from './isEqualWith.ts';
 import { noop } from '../function/noop.ts';
+import { isEqualWith } from './isEqualWith.ts';
 
 /**
  * Checks if two values are equal, including support for `Date`, `RegExp`, and deep object comparison.
- *
  * @param {unknown} a - The first value to compare.
  * @param {unknown} b - The second value to compare.
  * @returns {boolean} `true` if the values are equal, otherwise `false`.
- *
  * @example
  * isEqual(1, 1); // true
  * isEqual({ a: 1 }, { a: 1 }); // true

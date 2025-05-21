@@ -5,6 +5,7 @@ describe('camelizeKeys', () => {
   it('should convert snake_case keys to camelCase in a flat object', () => {
     const input = { user_id: 1, first_name: 'John', last_name: 'Doe' };
     const expected = { userId: 1, firstName: 'John', lastName: 'Doe' };
+
     expect(toCamelCaseKeys(input)).toEqual(expected);
   });
 
@@ -27,6 +28,7 @@ describe('camelizeKeys', () => {
         },
       },
     };
+
     expect(toCamelCaseKeys(input)).toEqual(expected);
   });
 
@@ -39,6 +41,7 @@ describe('camelizeKeys', () => {
       { userId: 1, firstName: 'John' },
       { userId: 2, firstName: 'Jane' },
     ];
+
     expect(toCamelCaseKeys(input)).toEqual(expected);
   });
 
@@ -55,6 +58,7 @@ describe('camelizeKeys', () => {
         { userId: 2, firstName: 'Jane' },
       ],
     };
+
     expect(toCamelCaseKeys(input)).toEqual(expected);
   });
 
@@ -62,7 +66,7 @@ describe('camelizeKeys', () => {
     expect(toCamelCaseKeys(123)).toBe(123);
     expect(toCamelCaseKeys('string')).toBe('string');
     expect(toCamelCaseKeys(null)).toBe(null);
-    expect(toCamelCaseKeys(undefined)).toBe(undefined);
+    expect(toCamelCaseKeys()).toBe(undefined);
     expect(toCamelCaseKeys(true)).toBe(true);
   });
 
@@ -74,6 +78,7 @@ describe('camelizeKeys', () => {
   it('should preserve object prototype methods', () => {
     const input = { user_id: 1, toString: Object.prototype.toString };
     const result = toCamelCaseKeys(input);
+
     expect(result).toHaveProperty('userId', 1);
     expect(result).toHaveProperty('toString');
     expect(result.toString).toBe(Object.prototype.toString);

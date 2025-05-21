@@ -9,18 +9,25 @@ describe('flattenArrayLike', () => {
       { length: 0 },
     ];
     const expectedOutput = ['a', 'b', 'c', 'd', 'e'];
+
     expect(flattenArrayLike(input)).toEqual(expectedOutput);
   });
 
   it('should ignore non-array-like objects', () => {
-    const input: any[] = [{ length: 2, 0: 'x', 1: 'y' }, 3, { length: 1, 0: 'z' }];
+    const input: any[] = [
+      { length: 2, 0: 'x', 1: 'y' },
+      3,
+      { length: 1, 0: 'z' },
+    ];
     const expectedOutput = ['x', 'y', 'z'];
+
     expect(flattenArrayLike(input)).toEqual(expectedOutput);
   });
 
   it('should return an empty array when input is empty', () => {
     const input: Array<ArrayLike<any>> = [];
     const expectedOutput: any[] = [];
+
     expect(flattenArrayLike(input)).toEqual(expectedOutput);
   });
 
@@ -34,6 +41,7 @@ describe('flattenArrayLike', () => {
       [3, 4],
       [5, 6],
     ];
+
     expect(flattenArrayLike(input)).toEqual(expectedOutput);
   });
 });

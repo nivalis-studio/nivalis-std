@@ -8,12 +8,10 @@ import { orderBy } from './orderBy.ts';
  *
  * The function returns the array of objects sorted in ascending order.
  * If two objects have the same value for the current criterion, it uses the next criterion to determine their order.
- *
  * @template T - The type of the objects in the array.
  * @param {T[]} arr - The array of objects to be sorted.
  * @param {Array<((item: T) => unknown) | keyof T>} criteria - The criteria for sorting. This can be an array of object keys or functions that return values used for sorting.
  * @returns {T[]} - The sorted array.
- *
  * @example
  * const users = [
  *  { user: 'foo', age: 24 },
@@ -32,6 +30,9 @@ import { orderBy } from './orderBy.ts';
  * //   { user : 'foo', age: 24 },
  * // ]
  */
-export function sortBy<T extends object>(arr: readonly T[], criteria: Array<((item: T) => unknown) | keyof T>): T[] {
+export function sortBy<T extends object>(
+  arr: readonly T[],
+  criteria: Array<((item: T) => unknown) | keyof T>,
+): T[] {
   return orderBy(arr, criteria, ['asc']);
 }

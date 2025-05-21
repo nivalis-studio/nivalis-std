@@ -7,10 +7,8 @@ import { isWeakSet as isWeakSetToolkit } from '../../predicate/isWeakSet.ts';
  * It returns `true` if the value is a `WeakSet`, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `WeakSet`.
- *
  * @param {unknown} value - The value to test if it is a `WeakSet`.
  * @returns {value is WeakSet<WeakKey>} true if the value is a `WeakSet`, false otherwise.
- *
  * @example
  * const value1 = new WeakSet();
  * const value2 = new Map();

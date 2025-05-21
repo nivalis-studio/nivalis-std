@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { constant, each, map, toString, unset } from '..';
-import { set } from './set';
 import { symbol } from '../_internal/symbol';
+import { set } from './set';
 
 describe('set', () => {
   const oldValue = 1;
@@ -10,80 +10,112 @@ describe('set', () => {
 
   // --------------------------------------------------------------------------------
   // object
-  //--------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------
   it('should set a value on an object', () => {
-    interface Test {
+    type Test = {
       a: number;
-    }
+    };
     const result = set<Test>({} as Test, 'a', 1);
+
     expect(result).toEqual({ a: 1 });
   });
 
   it('should set a value on an object with nested path', () => {
-    const result = set<{ a: { b: number } }>({} as { a: { b: number } }, 'a.b', 1);
+    const result = set<{ a: { b: number } }>(
+      {} as { a: { b: number } },
+      'a.b',
+      1,
+    );
+
     expect(result).toEqual({ a: { b: 1 } });
   });
 
   it('should set a value on an object with paths with arrays', () => {
-    const result = set<{ a: { b: number } }>({} as { a: { b: number } }, ['a', 'b'], 1);
+    const result = set<{ a: { b: number } }>(
+      {} as { a: { b: number } },
+      ['a', 'b'],
+      1,
+    );
+
     expect(result).toEqual({ a: { b: 1 } });
   });
 
   it('should set a value on an object with nested path', () => {
-    const result = set<{ a: { b: { c: { d: number } } } }>({} as { a: { b: { c: { d: number } } } }, 'a.b.c.d', 1);
+    const result = set<{ a: { b: { c: { d: number } } } }>(
+      {} as { a: { b: { c: { d: number } } } },
+      'a.b.c.d',
+      1,
+    );
+
     expect(result).toEqual({ a: { b: { c: { d: 1 } } } });
   });
 
-  //--------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------
   // array
-  //--------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------
   it('should set a value on an array', () => {
     const result = set<number[]>([] as number[], 0, 1);
+
     expect(result).toEqual([1]);
     expect(result[0]).toEqual(1);
   });
 
   it('should set a value on an array with nested path', () => {
     const result = set<number[][]>([] as number[][], '0.0', 1);
+
     expect(result).toEqual([[1]]);
     expect(result[0][0]).toEqual(1);
   });
 
   it('should set a value on an array with nested path', () => {
     const result = set<number[][][]>([], '0.0.0', 1);
+
     expect(result).toEqual([[[1]]]);
     expect(result[0][0][0]).toEqual(1);
   });
   it('should set a value on an array with nested path', () => {
     const arr = [1, 2, 3];
+
     set(arr, 1, 4);
     expect(arr).toEqual([1, 4, 3]);
     expect(arr[1]).toEqual(4);
   });
 
-  //--------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------
   // object and array
-  //--------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------
   it('should set a value on an object and array', () => {
-    const result = set<Array<{ a: number }>>([] as Array<{ a: number }>, '0.a', 1);
+    const result = set<Array<{ a: number }>>(
+      [] as Array<{ a: number }>,
+      '0.a',
+      1,
+    );
+
     expect(result).toEqual([{ a: 1 }]);
     expect(result[0].a).toEqual(1);
   });
 
   it('should set a value on an object and array', () => {
     const result = set<{ a: number[] }>({} as { a: number[] }, 'a.0', 1);
+
     expect(result).toEqual({ a: [1] });
     expect(result.a[0]).toEqual(1);
   });
 
   it('should set a value on an object and array', () => {
     const result = set<{ a: number[][] }>({} as { a: number[][] }, 'a.0.0', 1);
+
     expect(result).toEqual({ a: [[1]] });
     expect(result.a[0][0]).toEqual(1);
   });
 
   it('should set a value on an object and array', () => {
-    const result = set<{ a: number[][][] }>({} as { a: number[][][] }, 'a[0][0][0]', 1);
+    const result = set<{ a: number[][][] }>(
+      {} as { a: number[][][] },
+      'a[0][0][0]',
+      1,
+    );
+
     expect(result).toEqual({ a: [[[1]]] });
     expect(result.a[0][0][0]).toEqual(1);
   });
@@ -99,12 +131,14 @@ describe('set', () => {
   });
 
   it(`\`set\` should preserve the sign of \`0\``, () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const expected = map(props, constant(value));
 
     const actual = map(props, key => {
       const object: Record<any, any> = { '-0': 'a', 0: 'b' };
+
       set(object, key, updater);
+
       return object[toString(key)];
     });
 
@@ -113,6 +147,7 @@ describe('set', () => {
 
   it(`\`set\` should unset symbol keyed property values`, () => {
     const object: Record<any, any> = {};
+
     // @ts-expect-error - symbol type
     object[symbol] = 1;
 
@@ -168,13 +203,17 @@ describe('set', () => {
 
         set(object, pair[1], updater);
         expect(object).toEqual({ '': value });
-      }
+      },
     );
   });
 
   it(`\`set\` should handle complex paths`, () => {
     const object: Record<any, any> = {
-      a: { 1.23: { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } } } },
+      a: {
+        1.23: {
+          '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } },
+        },
+      },
     };
 
     const paths = [
@@ -213,8 +252,8 @@ describe('set', () => {
     const actual = map(values, (value: any) => {
       try {
         return [set(value, 'a.b', updater), set(value, ['a', 'b'], updater)];
-      } catch (e: any) {
-        return e.message;
+      } catch (error: any) {
+        return error.message;
       }
     });
 
@@ -238,7 +277,7 @@ describe('set', () => {
   });
 
   it(`\`set\` should not assign values that are the same as their destinations`, () => {
-    each(['a', ['a'], { a: 1 }, NaN], value => {
+    each(['a', ['a'], { a: 1 }, Number.NaN], value => {
       const object = {};
       let pass = true;
       const updater = value;
@@ -247,7 +286,7 @@ describe('set', () => {
         configurable: true,
         enumerable: true,
         get: constant(value),
-        set: function () {
+        set() {
           pass = false;
         },
       });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { partial } from './partial';
 import { curry } from '../compat/function/curry';
+import { partial } from './partial';
 
 function identity(arg?: any): any {
   return arg;
@@ -8,8 +8,10 @@ function identity(arg?: any): any {
 
 describe('partial', () => {
   const { placeholder } = partial;
+
   it('partial partially applies arguments', () => {
     const par = partial(identity, 'a');
+
     expect(par()).toBe('a');
   });
 
@@ -18,6 +20,7 @@ describe('partial', () => {
       return [a, b];
     };
     const par = partial(fn, 'a');
+
     expect(par('b')).toEqual(['a', 'b']);
   });
 
@@ -26,21 +29,23 @@ describe('partial', () => {
       return arguments.length;
     };
     const par = partial(fn);
+
     expect(par()).toBe(0);
   });
 
   it('partial works when there are no partially applied arguments and the created function is invoked with additional arguments', () => {
     const par = partial(identity);
+
     expect(par('a')).toBe('a');
   });
 
   it('partial supports placeholders', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (..._: any[]) {
       // eslint-disable-next-line prefer-rest-params
-      return Array.from(arguments);
+      return [...arguments];
     };
     const par = partial(fn, placeholder, 'b', placeholder) as any;
+
     expect(par('a', 'c')).toEqual(['a', 'b', 'c']);
     expect(par('a')).toEqual(['a', 'b', undefined]);
     expect(par()).toEqual([undefined, 'b', undefined]);
@@ -49,9 +54,9 @@ describe('partial', () => {
   });
 
   it('partial creates a function with a length of 0', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (_a: string, _b: string, _c: string) {};
     const par = partial(fn, 'a');
+
     expect(par.length).toBe(0);
   });
 
@@ -85,9 +90,9 @@ describe('partial', () => {
 
   it(`partial should work with curried functions`, () => {
     const fn = function (a: any, b: any, c: any) {
-        return a + b + c;
-      },
-      curried = curry(partial(fn, 1), 2);
+      return a + b + c;
+    };
+    const curried = curry(partial(fn, 1), 2);
 
     expect(curried(2, 3)).toBe(6);
     expect(curried(2)(3)).toBe(6);
@@ -95,11 +100,17 @@ describe('partial', () => {
 
   it('partial should work with placeholders and curried functions', () => {
     const fn = function () {
-        // eslint-disable-next-line prefer-rest-params
-        return Array.from(arguments);
-      },
-      curried = curry(fn),
-      par = partial(curried, partial.placeholder, 'b', partial.placeholder, 'd');
+      // eslint-disable-next-line prefer-rest-params
+      return [...arguments];
+    };
+    const curried = curry(fn);
+    const par = partial(
+      curried,
+      partial.placeholder,
+      'b',
+      partial.placeholder,
+      'd',
+    );
 
     expect(par('a', 'c')).toEqual(['a', 'b', 'c', 'd']);
   });

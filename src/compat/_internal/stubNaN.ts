@@ -1,3 +1,3 @@
 export function stubNaN() {
-  return NaN;
+  return Number.NaN;
 }

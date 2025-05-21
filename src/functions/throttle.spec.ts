@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { throttle } from './throttle';
 import { delay } from '../promise';
+import { throttle } from './throttle';
 
 describe('throttle', () => {
   it('should throttle function calls', () => {
@@ -89,6 +89,7 @@ describe('throttle', () => {
     const throttleMs = 50;
     const func = vi.fn();
     const controller = new AbortController();
+
     controller.abort();
 
     const throttled = throttle(func, throttleMs, { signal: controller.signal });
@@ -121,7 +122,9 @@ describe('throttle', () => {
   it('should execute on leading and trailing when called multiple times with leading and trailing', async () => {
     const callback = vi.fn();
     const throttleMs = 50;
-    const throttled = throttle(callback, throttleMs, { edges: ['leading', 'trailing'] });
+    const throttled = throttle(callback, throttleMs, {
+      edges: ['leading', 'trailing'],
+    });
 
     throttled();
 

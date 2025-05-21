@@ -25,7 +25,9 @@ describe('windowed', () => {
   });
 
   it('should return a list of partial with partial windows of smaller size', () => {
-    expect(windowed([1, 2, 3, 4, 5, 6], 3, 2, { partialWindows: true })).toEqual([
+    expect(
+      windowed([1, 2, 3, 4, 5, 6], 3, 2, { partialWindows: true }),
+    ).toEqual([
       [1, 2, 3],
       [3, 4, 5],
       [5, 6],
@@ -56,22 +58,24 @@ describe('windowed', () => {
 
   it('should throw error on invalid size or step', () => {
     expect(() => windowed([1, 2, 3], 0)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Size must be a positive integer.]`
+      `[Error: Size must be a positive integer.]`,
     );
     expect(() => windowed([1, 2, 3], 1, 0)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Step must be a positive integer.]`
+      `[Error: Step must be a positive integer.]`,
     );
     expect(() => windowed([1, 2, 3], -1)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Size must be a positive integer.]`
+      `[Error: Size must be a positive integer.]`,
     );
     expect(() => windowed([1, 2, 3], 0.5)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Size must be a positive integer.]`
+      `[Error: Size must be a positive integer.]`,
     );
     expect(() => windowed([1, 2, 3], 1, -1)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Step must be a positive integer.]`
+      `[Error: Step must be a positive integer.]`,
     );
-    expect(() => windowed([1, 2, 3], 1, 0.5)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Step must be a positive integer.]`
+    expect(() =>
+      windowed([1, 2, 3], 1, 0.5),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Step must be a positive integer.]`,
     );
   });
 });

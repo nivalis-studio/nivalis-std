@@ -1,21 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import { isFunction } from './isFunction';
 import { args } from '../compat/_internal/args';
 import { falsey } from '../compat/_internal/falsey';
+import { isFunction } from './isFunction';
 
 describe('isFunction', () => {
   it('should return `true` for functions', () => {
     const slice = Array.prototype.slice;
+
     expect(isFunction(slice)).toBe(true);
   });
 
   it('should return `true` for async functions', () => {
     const asyncFunc = async function () {};
+
     expect(isFunction(asyncFunc)).toBe(typeof asyncFunc === 'function');
   });
 
   it('should return `true` for generator functions', () => {
     const genFunc = function* () {};
+
     expect(isFunction(genFunc)).toBe(typeof genFunc === 'function');
   });
 
@@ -40,7 +43,9 @@ describe('isFunction', () => {
     ];
     const funcTag = '[object Function]';
 
-    const expected = arrayViews.map(type => Object.prototype.toString.call(type) === funcTag);
+    const expected = arrayViews.map(
+      type => Object.prototype.toString.call(type) === funcTag,
+    );
     const actual = arrayViews.map(isFunction);
 
     expect(actual).toEqual(expected);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { without } from './without';
 import { args } from '../_internal/args';
+import { without } from './without';
 
 /**
  * @see https://github.com/lodash/lodash/blob/6a2cc1dfcf7634fea70d1bc5bd22db453df67b42/test/without.spec.js#L1
@@ -8,6 +8,7 @@ import { args } from '../_internal/args';
 describe('without', () => {
   it('should return the difference of values', () => {
     const actual = without([2, 1, 2, 3], 1, 2);
+
     expect(actual).toEqual([3]);
   });
 
@@ -22,6 +23,7 @@ describe('without', () => {
 
   it('should remove all occurrences of each value from an array', () => {
     const array = [1, 2, 3, 1, 2, 3];
+
     expect(without(array, 1, 2)).toEqual([3, 3]);
   });
 

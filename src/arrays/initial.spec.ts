@@ -15,12 +15,13 @@ describe('initial', () => {
   });
 
   it('returns all elements except the last one for a large array', () => {
-    const largeArray = Array(1000)
+    const largeArray = Array.from({ length: 1000 })
       .fill(0)
       .map((_, i) => i);
-    const expectedArray = Array(999)
+    const expectedArray = Array.from({ length: 999 })
       .fill(0)
       .map((_, i) => i);
+
     expect(initial(largeArray)).toEqual(expectedArray);
   });
 
@@ -30,6 +31,7 @@ describe('initial', () => {
       [3, 2],
       [3, 3],
     ];
+
     expect(initial(nestedArray)).toEqual([
       [3, 1],
       [3, 2],

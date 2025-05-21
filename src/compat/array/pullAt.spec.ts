@@ -1,8 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { map } from './map';
-import { pullAt } from './pullAt';
-import { reduce } from './reduce';
-import { reject } from './reject';
 import { at } from '../../array';
 import { noop } from '../../function';
 import { empties } from '../_internal/empties';
@@ -10,6 +6,10 @@ import { falsey } from '../_internal/falsey';
 import { stubOne } from '../_internal/stubOne';
 import { isArray } from '../predicate/isArray';
 import { constant } from '../util/constant';
+import { reject } from './reject';
+import { reduce } from './reduce';
+import { pullAt } from './pullAt';
+import { map } from './map';
 
 describe('pullAt', () => {
   it('should modify the array and return removed elements', () => {
@@ -46,6 +46,7 @@ describe('pullAt', () => {
 
   it('should flatten `indexes`', () => {
     let array = ['a', 'b', 'c'];
+
     expect(pullAt(array, 2, 0)).toEqual(['c', 'a']);
     expect(array).toEqual(['b']);
 
@@ -68,15 +69,20 @@ describe('pullAt', () => {
   });
 
   it('should work with non-index paths', () => {
-    const values: any[] = reject(empties, value => value === 0 || isArray(value)).concat(-1, 1.1);
+    const values: any[] = [
+      ...reject(empties, value => value === 0 || isArray(value)),
+      -1,
+      1.1,
+    ];
 
     const array = reduce(
       values,
       (result, value) => {
         (result as any)[value] = 1;
+
         return result;
       },
-      []
+      [],
     );
     let expected: any[] = map(values, stubOne);
     let actual = pullAt(array, values);
@@ -90,12 +96,14 @@ describe('pullAt', () => {
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
 
     const actual = map(props, key => {
       const array = [-1];
+
       // @ts-expect-error - use -0 as a key
       array['-0'] = -2;
+
       return pullAt(array, key);
     });
 
@@ -104,6 +112,7 @@ describe('pullAt', () => {
 
   it('should support deep paths', () => {
     const array: any = [];
+
     array.a = { b: 2 };
 
     let actual = pullAt(array, 'a.b');
@@ -117,8 +126,8 @@ describe('pullAt', () => {
   });
 
   it('should work with a falsey `array` when keys are given', () => {
-    const values: any[] = falsey.slice();
-    const expected = map(values, constant(Array(4)));
+    const values: any[] = [...falsey];
+    const expected = map(values, constant(Array.from({ length: 4 })));
 
     const actual = map(values, array => {
       return pullAt(array, 0, 1, 'pop', 'push');

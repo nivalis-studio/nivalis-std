@@ -21,9 +21,9 @@ describe('escape', () => {
     expect(escape(unescape(escaped))).toBe(escaped);
   });
 
-  ['`', '/'].forEach(chr => {
+  for (const chr of ['`', '/']) {
     it(`should not escape the "${chr}" character`, () => {
       expect(escape(chr)).toBe(chr);
     });
-  });
+  }
 });

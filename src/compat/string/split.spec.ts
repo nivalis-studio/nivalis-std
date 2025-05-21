@@ -4,6 +4,7 @@ import { split } from './split';
 describe('split', () => {
   it('should split a string by `separator`', () => {
     const string = 'abcde';
+
     expect(split(string, 'c')).toEqual(['ab', 'de']);
     expect(split(string, /[bd]/)).toEqual(['a', 'c', 'e']);
     expect(split(string, '', 2)).toEqual(['a', 'b']);
@@ -28,6 +29,7 @@ describe('split', () => {
 
   it('should allow mixed string and array prototype methods', () => {
     const result = split('abc', 'b').join(',');
+
     expect(result).toBe('a,c');
   });
 });

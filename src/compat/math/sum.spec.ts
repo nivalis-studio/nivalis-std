@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { sum } from './sum';
 import { empties } from '../_internal/empties';
 import { stubZero } from '../_internal/stubZero';
+import { sum } from './sum';
 
 describe('sum', () => {
   const array = [6, 4, 2];
@@ -24,7 +24,7 @@ describe('sum', () => {
   });
 
   it(`should not skip \`NaN\` values`, () => {
-    expect(sum([1, NaN])).toEqual(NaN);
+    expect(sum([1, Number.NaN])).toEqual(Number.NaN);
   });
 
   it(`should not coerce values to numbers`, () => {

@@ -3,7 +3,13 @@ import { isPromise } from './isPromise';
 
 describe('isPromise', () => {
   it('returns true if the value is a Promise', () => {
-    expect(isPromise(new Promise<void>(resolve => resolve()))).toBe(true);
+    expect(
+      isPromise(
+        new Promise<void>(resolve => {
+          resolve();
+        }),
+      ),
+    ).toBe(true);
   });
 
   it('returns false if the value is not a Promise', () => {

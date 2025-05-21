@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { attempt } from './attempt';
 import { isEqual } from '../../predicate/isEqual';
+import { attempt } from './attempt';
 
 describe('attempt', () => {
   const errors = [
@@ -30,14 +30,14 @@ describe('attempt', () => {
 
   it('should provide additional arguments to `func`', () => {
     const actual = attempt(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function (_a: unknown, _b: unknown) {
         // eslint-disable-next-line prefer-rest-params
-        return Array.from(arguments);
+        return [...arguments];
       },
       1,
-      2
+      2,
     );
+
     expect(actual).toEqual([1, 2]);
   });
 
@@ -48,7 +48,7 @@ describe('attempt', () => {
       error =>
         attempt(() => {
           throw error;
-        }) === error
+        }) === error,
     );
 
     expect(actual).toEqual(expected);
@@ -58,13 +58,15 @@ describe('attempt', () => {
     const actual = attempt(() => {
       throw 'x';
     });
-    expect(isEqual(actual, Error('x'))).toBeTruthy();
+
+    expect(isEqual(actual, new Error('x'))).toBeTruthy();
   });
 
   it('should preserve custom errors', () => {
     const actual = attempt(() => {
       throw new CustomError('x');
     });
+
     expect(actual instanceof CustomError);
   });
 });

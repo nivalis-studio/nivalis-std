@@ -20,6 +20,7 @@ describe('conformsTo', () => {
     });
 
     let actual = objects.filter(par);
+
     expect(actual).toEqual([objects[0], objects[2]]);
 
     par = conforms({
@@ -39,6 +40,7 @@ describe('conformsTo', () => {
           return value > 1;
         };
       }
+
       b(value: number) {
         return value > 8;
       }
@@ -60,8 +62,9 @@ describe('conformsTo', () => {
     let count = 0;
 
     const par = conforms({
-      a: function () {
+      a() {
         count++;
+
         return true;
       },
     });
@@ -72,9 +75,11 @@ describe('conformsTo', () => {
 
   it(`\`conformsTo\` should work with a function for \`object\``, () => {
     function Foo() {}
+
     Foo.a = 1;
 
     function Bar() {}
+
     Bar.a = 2;
 
     const par = conforms({
@@ -87,6 +92,7 @@ describe('conformsTo', () => {
 
   it(`\`conformsTo\` should work with a function for \`source\``, () => {
     function Foo() {}
+
     Foo.a = (value: number) => value > 1;
 
     const objects = [{ a: 1 }, { a: 2 }];
@@ -145,13 +151,14 @@ describe('conformsTo', () => {
   });
 
   it(`\`conformsTo\` should return \`true\` when comparing an empty \`source\``, () => {
-    const empties = [[], {}, null, undefined, false, 0, NaN, ''];
+    const empties = [[], {}, null, undefined, false, 0, Number.NaN, ''];
     const object = { a: 1 };
     const expected = empties.map(() => true);
 
     const actual = empties.map(value => {
       // @ts-expect-error - invalid argument
       const par = conforms(value);
+
       return par(object);
     });
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { toLength } from './toLength';
 import { MAX_ARRAY_LENGTH } from '../_internal/MAX_ARRAY_LENGTH';
 import { MAX_INTEGER } from '../_internal/MAX_INTEGER';
+import { toLength } from './toLength';
 
 describe('toLength', () => {
   it('should return a valid length', () => {

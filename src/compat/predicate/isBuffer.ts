@@ -7,10 +7,8 @@ import { isBuffer as isBufferToolkit } from '../../predicate/isBuffer.ts';
  * It returns `true` if the value is a Buffer, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `Buffer`.
- *
  * @param {unknown} x - The value to check if it is a Buffer.
  * @returns {boolean} Returns `true` if `x` is a Buffer, else `false`.
- *
  * @example
  * const buffer = Buffer.from("test");
  * console.log(isBuffer(buffer)); // true

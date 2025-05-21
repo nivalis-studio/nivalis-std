@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { isArguments } from './isArguments';
 import { noop } from '../../function';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
@@ -7,6 +6,7 @@ import { slice } from '../_internal/slice';
 import { strictArgs } from '../_internal/strictArgs';
 import { symbol } from '../_internal/symbol';
 import { stubFalse } from '../util/stubFalse';
+import { isArguments } from './isArguments';
 
 describe('isArguments', () => {
   it('should return `true` for `arguments` objects', () => {
@@ -17,7 +17,9 @@ describe('isArguments', () => {
   it('should return `false` for non `arguments` objects', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map((value, index) => (index ? isArguments(value) : isArguments()));
+    const actual = falsey.map((value, index) =>
+      index ? isArguments(value) : isArguments(),
+    );
 
     expect(actual).toEqual(expected);
 

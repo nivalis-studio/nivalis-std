@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { bindAll } from './bindAll';
 import { toArgs } from '../_internal/toArgs';
 import { cloneDeep } from '../object/cloneDeep';
+import { bindAll } from './bindAll';
 
-interface TestObject {
+type TestObject = {
   _n0: number;
   _p0: number;
   _a: number;
@@ -17,7 +17,7 @@ interface TestObject {
   c: () => number;
   d: () => number;
   [key: string]: number | (() => number) | undefined;
-}
+};
 
 describe('bindAll', () => {
   const args = toArgs(['a']);
@@ -32,33 +32,34 @@ describe('bindAll', () => {
     '-0': function () {
       return this._n0;
     },
-    0: function () {
+    0() {
       return this._p0;
     },
-    a: function () {
+    a() {
       return this._a;
     },
-    b: function () {
+    b() {
       return this._b;
     },
-    c: function () {
+    c() {
       return this._c;
     },
-    d: function () {
+    d() {
       return this._d;
     },
   };
 
   it('should accept individual method names', () => {
     const object = cloneDeep(source);
+
     bindAll(object, 'a', 'b');
 
     const actual = ['a', 'b', 'c'].map(key => {
       const method = object[key];
+
       if (typeof method === 'function') {
         return method.call({});
       }
-      return undefined;
     });
 
     expect(actual).toEqual([1, 2, undefined]);
@@ -66,26 +67,29 @@ describe('bindAll', () => {
 
   it('should accept arrays of method names', () => {
     const object = cloneDeep(source);
+
     bindAll(object, ['a', 'b'], ['c']);
 
     const actual = ['a', 'b', 'c', 'd'].map(key => {
       const method = object[key];
+
       if (typeof method === 'function') {
         return method.call({});
       }
-      return undefined;
     });
 
     expect(actual).toEqual([1, 2, 3, undefined]);
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
 
     const actual = props.map(key => {
       const object = cloneDeep(source);
+
       bindAll(object, key);
       const methodKey = Object.is(Number(key), -0) ? '-0' : '0';
+
       return object[methodKey]();
     });
 
@@ -94,20 +98,22 @@ describe('bindAll', () => {
 
   it('should work with an array `object`', () => {
     const array = ['push', 'pop'];
+
     bindAll(array);
     expect(array.pop).toBe(Array.prototype.pop);
   });
 
   it('should work with `arguments` objects as secondary arguments', () => {
     const object = cloneDeep(source);
+
     bindAll(object, args as any);
 
-    const actual = Array.from(args).map((key: string) => {
+    const actual = [...args].map((key: string) => {
       const method = object[key];
+
       if (typeof method === 'function') {
         return method.call({});
       }
-      return undefined;
     });
 
     expect(actual).toEqual([1]);

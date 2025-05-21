@@ -6,5 +6,6 @@ export function mapToEntries(map: Map<any, any>) {
   for (let i = 0; i < arr.length; i++) {
     arr[i] = [keys.next().value, values.next().value];
   }
+
   return arr;
 }

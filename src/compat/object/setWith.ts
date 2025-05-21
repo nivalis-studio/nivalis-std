@@ -8,14 +8,12 @@ import { updateWith } from './updateWith.ts';
  * a value, that value is used for the current path segment. If the customizer returns
  * `undefined`, the method will create an appropriate object based on the path - an array
  * if the next path segment is a valid array index, or an object otherwise.
- *
  * @template T - The type of the object.
  * @param {T} obj - The object to modify.
  * @param {PropertyKey | readonly PropertyKey[]} path - The path of the property to set.
  * @param {unknown} value - The value to set.
  * @param {(value: unknown) => unknown} [customizer] - The function to customize assigned values.
  * @returns {T} - The modified object.
- *
  * @example
  * // Set a value with a customizer that creates arrays for numeric path segments
  * const object = {};
@@ -26,14 +24,14 @@ export function setWith<T extends object | null | undefined>(
   obj: T,
   path: PropertyKey | readonly PropertyKey[],
   value: unknown,
-  customizer?: (value: unknown) => unknown
+  customizer?: (value: unknown) => unknown,
 ): T {
   let customizerFn: (value: unknown) => unknown;
 
   if (typeof customizer === 'function') {
     customizerFn = customizer;
   } else {
-    customizerFn = () => undefined;
+    customizerFn = () => {};
   }
 
   return updateWith(obj, path, () => value, customizerFn);

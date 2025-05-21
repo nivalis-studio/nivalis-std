@@ -15,6 +15,7 @@ describe('once', () => {
 
     const resultFunc = once(() => {
       resultFunc();
+
       return ++count;
     });
 

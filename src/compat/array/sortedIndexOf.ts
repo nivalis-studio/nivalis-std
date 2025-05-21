@@ -1,15 +1,13 @@
-import { sortedIndex } from './sortedIndex.ts';
 import { eq } from '../util/eq.ts';
+import { sortedIndex } from './sortedIndex.ts';
 
 /**
  * Finds the index of the first occurrence of a value in a sorted array, similar to how `Array#indexOf` works, but specifically for sorted arrays.
  *
  * Make sure to provide a sorted array to this function, as it uses a binary search to quickly find the index.
- *
  * @param {ArrayLike<T> | null | undefined} array The sorted array to inspect.
  * @param {T} value The value to search for.
  * @returns {number} Returns the index of the matched value, else -1.
- *
  * @example
  * const numbers = [1, 2, 3, 4, 5];
  * sortedIndexOf(numbers, 11); // Return value: 0
@@ -32,14 +30,19 @@ import { eq } from '../util/eq.ts';
  * const arrayLike = { length: 3, 0: 10, 1: 20, 2: 30 };
  * sortedIndexOf(arrayLike, 20); // Return value: 1
  */
-export function sortedIndexOf<T>(array: ArrayLike<T> | null | undefined, value: T): number {
+export function sortedIndexOf<T>(
+  array: ArrayLike<T> | null | undefined,
+  value: T,
+): number {
   if (!array?.length) {
     return -1;
   }
 
   const index = sortedIndex(array, value);
+
   if (index < array.length && eq(array[index], value)) {
     return index;
   }
+
   return -1;
 }

@@ -12,6 +12,6 @@ describe('meanBy', () => {
     type Person = { name: string; age: number };
     const people: Person[] = [];
 
-    expect(meanBy(people, x => x.age)).toEqual(NaN);
+    expect(meanBy(people, x => x.age)).toEqual(Number.NaN);
   });
 });

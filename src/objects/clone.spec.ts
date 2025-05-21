@@ -10,7 +10,7 @@ describe('clone', () => {
     expect(clone(symbol)).toBe(symbol);
     expect(clone(true)).toBe(true);
     expect(clone(null)).toBe(null);
-    expect(clone(undefined)).toBe(undefined);
+    expect(clone()).toBe(undefined);
     expect(clone(42n)).toBe(42n);
   });
 
@@ -69,7 +69,7 @@ describe('clone', () => {
     class Person {
       constructor(
         public name: string,
-        public age: number
+        public age: number,
       ) {}
 
       greet() {
@@ -96,7 +96,8 @@ describe('clone', () => {
   });
 
   it('should clone regular expressions', () => {
-    const regex = /abc/gsu;
+    const regex = /abc/gu;
+
     regex.lastIndex = 10;
     const clonedRegex = clone(regex);
 

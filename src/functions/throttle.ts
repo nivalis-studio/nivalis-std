@@ -1,6 +1,6 @@
 import { debounce } from './debounce.ts';
 
-interface ThrottleOptions {
+type ThrottleOptions = {
   /**
    * An optional AbortSignal to cancel the debounced function.
    */
@@ -14,24 +14,25 @@ interface ThrottleOptions {
    * @default ["leading", "trailing"]
    */
   edges?: Array<'leading' | 'trailing'>;
-}
+};
 
-export interface ThrottledFunction<F extends (...args: any[]) => void> {
+export type ThrottledFunction<F extends (...args: any[]) => void> = {
   (...args: Parameters<F>): void;
   cancel: () => void;
   flush: () => void;
-}
+};
 
 /**
  * Creates a throttled function that only invokes the provided function at most once
  * per every `throttleMs` milliseconds. Subsequent calls to the throttled function
  * within the wait time will not trigger the execution of the original function.
- *
  * @template F - The type of function.
  * @param {F} func - The function to throttle.
+ * @param root0
+ * @param root0.signal
+ * @param root0.edges
  * @param {number} throttleMs - The number of milliseconds to throttle executions to.
  * @returns {(...args: Parameters<F>) => void} A new throttled function that accepts the same parameters as the original function.
- *
  * @example
  * const throttledFunction = throttle(() => {
  *   console.log('Function executed');
@@ -51,7 +52,7 @@ export interface ThrottledFunction<F extends (...args: any[]) => void> {
 export function throttle<F extends (...args: any[]) => void>(
   func: F,
   throttleMs: number,
-  { signal, edges = ['leading', 'trailing'] }: ThrottleOptions = {}
+  { signal, edges = ['leading', 'trailing'] }: ThrottleOptions = {},
 ): ThrottledFunction<F> {
   let pendingAt: number | null = null;
 
@@ -60,11 +61,9 @@ export function throttle<F extends (...args: any[]) => void>(
   const throttled = function (...args: Parameters<F>) {
     if (pendingAt == null) {
       pendingAt = Date.now();
-    } else {
-      if (Date.now() - pendingAt >= throttleMs) {
-        pendingAt = Date.now();
-        debounced.cancel();
-      }
+    } else if (Date.now() - pendingAt >= throttleMs) {
+      pendingAt = Date.now();
+      debounced.cancel();
     }
 
     debounced(...args);

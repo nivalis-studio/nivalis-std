@@ -1,4 +1,3 @@
-import { isPlainObject } from './isPlainObject.ts';
 import { getSymbols } from '../compat/_internal/getSymbols.ts';
 import { getTag } from '../compat/_internal/getTag.ts';
 import {
@@ -14,9 +13,9 @@ import {
   float32ArrayTag,
   float64ArrayTag,
   functionTag,
-  int8ArrayTag,
   int16ArrayTag,
   int32ArrayTag,
+  int8ArrayTag,
   mapTag,
   numberTag,
   objectTag,
@@ -24,12 +23,13 @@ import {
   setTag,
   stringTag,
   symbolTag,
-  uint8ArrayTag,
-  uint8ClampedArrayTag,
   uint16ArrayTag,
   uint32ArrayTag,
+  uint8ArrayTag,
+  uint8ClampedArrayTag,
 } from '../compat/_internal/tags.ts';
 import { eq } from '../compat/util/eq.ts';
+import { isPlainObject } from './isPlainObject.ts';
 
 declare let Buffer:
   | {
@@ -54,14 +54,12 @@ declare let Buffer:
  * - `xParent`: The parent of the first value `x`.
  * - `yParent`: The parent of the second value `y`.
  * - `stack`: An internal stack (Map) to handle circular references.
- *
  * @param {unknown} a - The first value to compare.
  * @param {unknown} b - The second value to compare.
  * @param {(x: any, y: any, property?: PropertyKey, xParent?: any, yParent?: any, stack?: Map<any, any>) => boolean | void} areValuesEqual - A function to customize the comparison.
  *   If it returns a boolean, that result will be used. If it returns undefined,
  *   the default equality comparison will be used.
  * @returns {boolean} `true` if the values are equal according to the customizer, otherwise `false`.
- *
  * @example
  * const customizer = (a, b) => {
  *   if (typeof a === 'string' && typeof b === 'string') {
@@ -81,10 +79,18 @@ export function isEqualWith(
     property?: PropertyKey,
     xParent?: any,
     yParent?: any,
-    stack?: Map<any, any>
-  ) => boolean | void
+    stack?: Map<any, any>,
+  ) => boolean | void,
 ): boolean {
-  return isEqualWithImpl(a, b, undefined, undefined, undefined, undefined, areValuesEqual);
+  return isEqualWithImpl(
+    a,
+    b,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    areValuesEqual,
+  );
 }
 
 function isEqualWithImpl(
@@ -100,8 +106,8 @@ function isEqualWithImpl(
     property?: PropertyKey,
     xParent?: any,
     yParent?: any,
-    stack?: Map<any, any>
-  ) => boolean | void
+    stack?: Map<any, any>,
+  ) => boolean | void,
 ): boolean {
   const result = areValuesEqual(a, b, property, aParent, bParent, stack);
 
@@ -115,15 +121,19 @@ function isEqualWithImpl(
       case 'string':
       case 'boolean':
       case 'symbol':
+
       case 'undefined': {
         return a === b;
       }
+
       case 'number': {
         return a === b || Object.is(a, b);
       }
+
       case 'function': {
         return a === b;
       }
+
       case 'object': {
         return areObjectsEqual(a, b, stack, areValuesEqual);
       }
@@ -143,8 +153,8 @@ function areObjectsEqual(
     property?: PropertyKey,
     xParent?: any,
     yParent?: any,
-    stack?: Map<any, any>
-  ) => boolean | void
+    stack?: Map<any, any>,
+  ) => boolean | void,
 ) {
   if (Object.is(a, b)) {
     return true;
@@ -166,8 +176,9 @@ function areObjectsEqual(
   }
 
   switch (aTag) {
-    case stringTag:
+    case stringTag: {
       return a.toString() === b.toString();
+    }
 
     case numberTag: {
       const x = a.valueOf();
@@ -178,8 +189,10 @@ function areObjectsEqual(
 
     case booleanTag:
     case dateTag:
-    case symbolTag:
+
+    case symbolTag: {
       return Object.is(a.valueOf(), b.valueOf());
+    }
 
     case regexpTag: {
       return a.source === b.source && a.flags === b.flags;
@@ -190,7 +203,7 @@ function areObjectsEqual(
     }
   }
 
-  stack = stack ?? new Map();
+  stack ??= new Map();
 
   const aStack = stack.get(a);
   const bStack = stack.get(b);
@@ -210,7 +223,18 @@ function areObjectsEqual(
         }
 
         for (const [key, value] of a.entries()) {
-          if (!b.has(key) || !isEqualWithImpl(value, b.get(key), key, a, b, stack, areValuesEqual)) {
+          if (
+            !b.has(key) ||
+            !isEqualWithImpl(
+              value,
+              b.get(key),
+              key,
+              a,
+              b,
+              stack,
+              areValuesEqual,
+            )
+          ) {
             return false;
           }
         }
@@ -223,13 +247,20 @@ function areObjectsEqual(
           return false;
         }
 
-        const aValues = Array.from(a.values());
-        const bValues = Array.from(b.values());
+        const aValues = [...a.values()];
+        const bValues = [...b.values()];
 
-        for (let i = 0; i < aValues.length; i++) {
-          const aValue = aValues[i];
+        for (const aValue of aValues) {
           const index = bValues.findIndex(bValue => {
-            return isEqualWithImpl(aValue, bValue, undefined, a, b, stack, areValuesEqual);
+            return isEqualWithImpl(
+              aValue,
+              bValue,
+              undefined,
+              a,
+              b,
+              stack,
+              areValuesEqual,
+            );
           });
 
           if (index === -1) {
@@ -253,9 +284,10 @@ function areObjectsEqual(
       case int32ArrayTag:
       case bigInt64ArrayTag:
       case float32ArrayTag:
+
       case float64ArrayTag: {
         // Buffers are also treated as [object Uint8Array]s.
-        if (typeof Buffer !== 'undefined' && Buffer.isBuffer(a) !== Buffer.isBuffer(b)) {
+        if (Buffer !== undefined && Buffer.isBuffer(a) !== Buffer.isBuffer(b)) {
           return false;
         }
 
@@ -277,7 +309,12 @@ function areObjectsEqual(
           return false;
         }
 
-        return areObjectsEqual(new Uint8Array(a), new Uint8Array(b), stack, areValuesEqual);
+        return areObjectsEqual(
+          new Uint8Array(a),
+          new Uint8Array(b),
+          stack,
+          areValuesEqual,
+        );
       }
 
       case dataViewTag: {
@@ -285,7 +322,12 @@ function areObjectsEqual(
           return false;
         }
 
-        return areObjectsEqual(new Uint8Array(a), new Uint8Array(b), stack, areValuesEqual);
+        return areObjectsEqual(
+          new Uint8Array(a),
+          new Uint8Array(b),
+          stack,
+          areValuesEqual,
+        );
       }
 
       case errorTag: {
@@ -294,7 +336,12 @@ function areObjectsEqual(
 
       case objectTag: {
         const areEqualInstances =
-          areObjectsEqual(a.constructor, b.constructor, stack, areValuesEqual) ||
+          areObjectsEqual(
+            a.constructor,
+            b.constructor,
+            stack,
+            areValuesEqual,
+          ) ||
           (isPlainObject(a) && isPlainObject(b));
 
         if (!areEqualInstances) {
@@ -308,23 +355,25 @@ function areObjectsEqual(
           return false;
         }
 
-        for (let i = 0; i < aKeys.length; i++) {
-          const propKey = aKeys[i];
-          const aProp = (a as any)[propKey];
+        for (const propKey of aKeys) {
+          const aProp = a[propKey];
 
           if (!Object.hasOwn(b, propKey)) {
             return false;
           }
 
-          const bProp = (b as any)[propKey];
+          const bProp = b[propKey];
 
-          if (!isEqualWithImpl(aProp, bProp, propKey, a, b, stack, areValuesEqual)) {
+          if (
+            !isEqualWithImpl(aProp, bProp, propKey, a, b, stack, areValuesEqual)
+          ) {
             return false;
           }
         }
 
         return true;
       }
+
       default: {
         return false;
       }

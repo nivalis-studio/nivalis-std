@@ -4,7 +4,6 @@
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template R The return type of the function.
  * @param {() => R} func The function to invoke.
  * @returns {() => R} Returns the new function.
@@ -21,7 +20,6 @@ export function partialRight<R>(func: () => R): () => R;
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template R The return type of the function.
  * @param {(arg1: T1) => R} func The function to partially apply arguments to.
@@ -40,7 +38,6 @@ export function partialRight<T1, R>(func: (arg1: T1) => R, arg1: T1): () => R;
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template R The return type of the function.
  * @param {(arg1: T1) => R} func The function to partially apply arguments to.
@@ -58,7 +55,6 @@ export function partialRight<T1, R>(func: (arg1: T1) => R): (arg1: T1) => R;
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template R The return type of the function.
  * @param {(arg1: T1) => R} func The function to partially apply arguments to.
@@ -77,7 +73,6 @@ export function partialRight<T1, R>(func: (arg1: T1) => R, arg1: T1): () => R;
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template R The return type of the function.
@@ -88,7 +83,9 @@ export function partialRight<T1, R>(func: (arg1: T1) => R, arg1: T1): () => R;
  * const subtractFive = partialRight(subtract);
  * console.log(subtractFive(10, 5)); // => 5
  */
-export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R): (arg1: T1, arg2: T2) => R;
+export function partialRight<T1, T2, R>(
+  func: (arg1: T1, arg2: T2) => R,
+): (arg1: T1, arg2: T2) => R;
 
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -96,7 +93,6 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R): (arg1:
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template R The return type of the function.
@@ -109,7 +105,11 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R): (arg1:
  * const concatWithHello = partialRight(concat, 'Hello', partialRight.placeholder);
  * console.log(concatWithHello(' World!')); // => 'Hello World!'
  */
-export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T1, arg2: Placeholder): (arg2: T2) => R;
+export function partialRight<T1, T2, R>(
+  func: (arg1: T1, arg2: T2) => R,
+  arg1: T1,
+  arg2: Placeholder,
+): (arg2: T2) => R;
 
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -117,7 +117,6 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template R The return type of the function.
@@ -129,7 +128,10 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T
  * const divideByTwo = partialRight(divide, 2);
  * console.log(divideByTwo(10)); // => 5
  */
-export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg2: T2): (arg1: T1) => R;
+export function partialRight<T1, T2, R>(
+  func: (arg1: T1, arg2: T2) => R,
+  arg2: T2,
+): (arg1: T1) => R;
 
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -137,7 +139,6 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg2: T
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template R The return type of the function.
@@ -150,7 +151,11 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg2: T
  * const multiplyByThreeAndFour = partialRight(multiply, 3, 4);
  * console.log(multiplyByThreeAndFour()); // => 12
  */
-export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T1, arg2: T2): () => R;
+export function partialRight<T1, T2, R>(
+  func: (arg1: T1, arg2: T2) => R,
+  arg1: T1,
+  arg2: T2,
+): () => R;
 
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -158,7 +163,6 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -171,7 +175,7 @@ export function partialRight<T1, T2, R>(func: (arg1: T1, arg2: T2) => R, arg1: T
  * console.log(sumWithFive(1, 2, 5)); // => 8
  */
 export function partialRight<T1, T2, T3, R>(
-  func: (arg1: T1, arg2: T2, arg3: T3) => R
+  func: (arg1: T1, arg2: T2, arg3: T3) => R,
 ): (arg1: T1, arg2: T2, arg3: T3) => R;
 
 /**
@@ -180,7 +184,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -199,7 +202,7 @@ export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg1: T1,
   arg2: Placeholder,
-  arg3: Placeholder
+  arg3: Placeholder,
 ): (arg2: T2, arg3: T3) => R;
 
 /**
@@ -208,7 +211,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -225,7 +227,7 @@ export function partialRight<T1, T2, T3, R>(
 export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg2: T2,
-  arg3: Placeholder
+  arg3: Placeholder,
 ): (arg1: T1, arg3: T3) => R;
 
 /**
@@ -234,7 +236,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -253,7 +254,7 @@ export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg1: T1,
   arg2: T2,
-  arg3: Placeholder
+  arg3: Placeholder,
 ): (arg3: T3) => R;
 
 /**
@@ -262,7 +263,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -277,7 +277,7 @@ export function partialRight<T1, T2, T3, R>(
  */
 export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
-  arg3: T3
+  arg3: T3,
 ): (arg1: T1, arg2: T2) => R;
 
 /**
@@ -286,7 +286,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -305,7 +304,7 @@ export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg1: T1,
   arg2: Placeholder,
-  arg3: T3
+  arg3: T3,
 ): (arg2: T2) => R;
 
 /**
@@ -314,7 +313,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -331,14 +329,14 @@ export function partialRight<T1, T2, T3, R>(
 export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg2: T2,
-  arg3: T3
+  arg3: T3,
 ): (arg1: T1) => R;
 
 export function partialRight<T1, T2, T3, R>(
   func: (arg1: T1, arg2: T2, arg3: T3) => R,
   arg1: T1,
   arg2: T2,
-  arg3: T3
+  arg3: T3,
 ): () => R;
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -346,7 +344,6 @@ export function partialRight<T1, T2, T3, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -356,7 +353,7 @@ export function partialRight<T1, T2, T3, R>(
  * @returns {(arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R} Returns a new function that takes four arguments.
  */
 export function partialRight<T1, T2, T3, T4, R>(
-  func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R
+  func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
 ): (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R;
 
 /**
@@ -365,7 +362,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -383,7 +379,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: Placeholder,
   arg3: Placeholder,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg2: T2, arg3: T3, arg4: T4) => R;
 
 /**
@@ -392,7 +388,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -408,7 +403,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg2: T2,
   arg3: Placeholder,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg1: T1, arg3: T3, arg4: T4) => R;
 
 /**
@@ -417,7 +412,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -435,7 +429,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: T2,
   arg3: Placeholder,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg3: T3, arg4: T4) => R;
 
 /**
@@ -444,7 +438,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -458,7 +451,7 @@ export function partialRight<T1, T2, T3, T4, R>(
 export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg3: T3,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg1: T1, arg2: T2, arg4: T4) => R;
 
 /**
@@ -468,7 +461,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -486,7 +478,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: Placeholder,
   arg3: T3,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg2: T2, arg4: T4) => R;
 
 /**
@@ -495,7 +487,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -511,7 +502,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg2: T2,
   arg3: T3,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg1: T1, arg4: T4) => R;
 
 /**
@@ -520,7 +511,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -538,7 +528,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: T2,
   arg3: T3,
-  arg4: Placeholder
+  arg4: Placeholder,
 ): (arg4: T4) => R;
 
 /**
@@ -547,7 +537,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -559,7 +548,7 @@ export function partialRight<T1, T2, T3, T4, R>(
  */
 export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
-  arg4: T4
+  arg4: T4,
 ): (arg1: T1, arg2: T2, arg3: T3) => R;
 
 /**
@@ -568,7 +557,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -586,7 +574,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: Placeholder,
   arg3: Placeholder,
-  arg4: T4
+  arg4: T4,
 ): (arg2: T2, arg3: T3) => R;
 
 /**
@@ -595,7 +583,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -611,7 +598,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg2: T2,
   arg3: Placeholder,
-  arg4: T4
+  arg4: T4,
 ): (arg1: T1, arg3: T3) => R;
 
 /**
@@ -620,7 +607,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -638,7 +624,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: T2,
   arg3: Placeholder,
-  arg4: T4
+  arg4: T4,
 ): (arg3: T3) => R;
 
 /**
@@ -647,7 +633,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -661,7 +646,7 @@ export function partialRight<T1, T2, T3, T4, R>(
 export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg3: T3,
-  arg4: T4
+  arg4: T4,
 ): (arg1: T1, arg2: T2) => R;
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -669,7 +654,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -687,7 +671,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: Placeholder,
   arg3: T3,
-  arg4: T4
+  arg4: T4,
 ): (arg2: T2) => R;
 
 /**
@@ -696,7 +680,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -712,7 +695,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   func: (arg1: T1, arg2: T2, arg3: T3, arg4: T4) => R,
   arg2: T2,
   arg3: T3,
-  arg4: T4
+  arg4: T4,
 ): (arg1: T1) => R;
 
 /**
@@ -721,7 +704,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template T1 The type of the first argument.
  * @template T2 The type of the second argument.
  * @template T3 The type of the third argument.
@@ -743,7 +725,7 @@ export function partialRight<T1, T2, T3, T4, R>(
   arg1: T1,
   arg2: T2,
   arg3: T3,
-  arg4: T4
+  arg4: T4,
 ): () => R;
 
 /**
@@ -752,7 +734,6 @@ export function partialRight<T1, T2, T3, T4, R>(
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template F The type of the function to partially apply.
  * @param {F} func The function to partially apply arguments to.
  * @param {...any[]} args The arguments to be partially applied.
@@ -762,7 +743,10 @@ export function partialRight<T1, T2, T3, T4, R>(
  * const logError = partialRight(log, 'Error:');
  * logError('Something went wrong!'); // => 'Error: Something went wrong!'
  */
-export function partialRight(func: (...args: any[]) => any, ...args: any[]): (...args: any[]) => any;
+export function partialRight(
+  func: (...args: any[]) => any,
+  ...args: any[]
+): (...args: any[]) => any;
 
 /**
  * This method is like `partial` except that partially applied arguments are appended to the arguments it receives.
@@ -770,12 +754,10 @@ export function partialRight(func: (...args: any[]) => any, ...args: any[]): (..
  * The partialRight.placeholder value, which defaults to a `symbol`, may be used as a placeholder for partially applied arguments.
  *
  * Note: This method doesn't set the `length` property of partially applied functions.
- *
  * @template F The type of the function to partially apply.
  * @param {F} func The function to partially apply arguments to.
  * @param {any[]} partialArgs The arguments to be partially applied.
  * @returns {(...args: any[]) => ReturnType<F>} Returns the new partially applied function.
- *
  * @example
  * function greet(greeting, name) {
  *   return greeting + ' ' + name;
@@ -794,7 +776,11 @@ export function partialRight<F extends (...args: any[]) => any>(
   func: F,
   ...partialArgs: any[]
 ): (...args: any[]) => ReturnType<F> {
-  return partialRightImpl<F, Placeholder>(func, placeholderSymbol, ...partialArgs);
+  return partialRightImpl<F, Placeholder>(
+    func,
+    placeholderSymbol,
+    ...partialArgs,
+  );
 }
 
 export function partialRightImpl<F extends (...args: any[]) => any, P>(
@@ -803,15 +789,17 @@ export function partialRightImpl<F extends (...args: any[]) => any, P>(
   ...partialArgs: any[]
 ): (...args: any[]) => ReturnType<F> {
   const partialedRight = function (this: any, ...providedArgs: any[]) {
-    const placeholderLength = partialArgs.filter(arg => arg === placeholder).length;
+    const placeholderLength = partialArgs.filter(
+      arg => arg === placeholder,
+    ).length;
     const rangeLength = Math.max(providedArgs.length - placeholderLength, 0);
     const remainingArgs: any[] = providedArgs.slice(0, rangeLength);
 
     let providedArgsIndex = rangeLength;
 
-    const substitutedArgs = partialArgs
-      .slice()
-      .map(arg => (arg === placeholder ? providedArgs[providedArgsIndex++] : arg));
+    const substitutedArgs = [...partialArgs].map(arg =>
+      arg === placeholder ? providedArgs[providedArgsIndex++] : arg,
+    );
 
     return func.apply(this, remainingArgs.concat(substitutedArgs));
   };
@@ -824,6 +812,7 @@ export function partialRightImpl<F extends (...args: any[]) => any, P>(
 }
 
 const placeholderSymbol: unique symbol = Symbol('partialRight.placeholder');
+
 partialRight.placeholder = placeholderSymbol;
 
 type Placeholder = typeof placeholderSymbol;

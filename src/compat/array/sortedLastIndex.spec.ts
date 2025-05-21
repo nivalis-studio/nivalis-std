@@ -29,8 +29,8 @@ describe('sortedLastIndex', () => {
 
     const actual = values.map(array => [
       sortedLastIndex(array as any, 1),
-      sortedLastIndex(array as any, undefined),
-      sortedLastIndex(array as any, NaN),
+      sortedLastIndex(array as any),
+      sortedLastIndex(array as any, Number.NaN),
     ]);
 
     expect(actual).toEqual(expected);
@@ -41,17 +41,48 @@ describe('sortedLastIndex', () => {
     const symbol2 = Symbol ? Symbol('b') : null;
     const symbol3 = Symbol ? Symbol('c') : null;
 
-    const expected = [1, '2', {}, symbol1, symbol2, null, undefined, NaN, NaN];
+    const expected = [
+      1,
+      '2',
+      {},
+      symbol1,
+      symbol2,
+      null,
+      undefined,
+      Number.NaN,
+      Number.NaN,
+    ];
 
-    const array1 = [NaN, symbol1, null, 1, '2', {}, symbol2, NaN, undefined];
-    const array2 = ['2', null, 1, symbol1, NaN, {}, NaN, symbol2, undefined];
+    const array1 = [
+      Number.NaN,
+      symbol1,
+      null,
+      1,
+      '2',
+      {},
+      symbol2,
+      Number.NaN,
+      undefined,
+    ];
+    const array2 = [
+      '2',
+      null,
+      1,
+      symbol1,
+      Number.NaN,
+      {},
+      Number.NaN,
+      symbol2,
+      undefined,
+    ];
+
     expect(sortBy(array1)).toEqual(expected);
     expect(sortBy(array2)).toEqual(expected);
     expect(sortedLastIndex(expected, 3)).toBe(2);
     expect(sortedLastIndex(expected, symbol3)).toBe(5);
     expect(sortedLastIndex(expected, null)).toBe(6);
-    expect(sortedLastIndex(expected, undefined)).toBe(7);
-    expect(sortedLastIndex(expected, NaN)).toBe(9);
+    expect(sortedLastIndex(expected)).toBe(7);
+    expect(sortedLastIndex(expected, Number.NaN)).toBe(9);
   });
 
   it(`should handle arrays with nulls`, () => {

@@ -50,7 +50,7 @@ describe('startCase', function () {
 
   it('should handle long strings', function () {
     expect(startCase('thisIsAVeryLongStringWithManyWordsAndNumbers123')).toBe(
-      'This Is A Very Long String With Many Words And Numbers 123'
+      'This Is A Very Long String With Many Words And Numbers 123',
     );
   });
 

@@ -14,6 +14,7 @@ describe('last', () => {
 
   it('should return `undefined` when querying empty arrays', () => {
     const array: number[] = [];
+
     array['-1'] = 1;
 
     expect(last([])).toBe(undefined);

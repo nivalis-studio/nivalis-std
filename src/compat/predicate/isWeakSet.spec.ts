@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isWeakSet } from './isWeakSet';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isWeakSet } from './isWeakSet';
 
 describe('isWeakSet', () => {
   it('should return `true` for weak sets', () => {
@@ -11,7 +11,9 @@ describe('isWeakSet', () => {
   });
 
   it('should return `false` for non weak sets', () => {
-    expect(falsey.map((value, index) => (index ? isWeakSet(value) : isWeakSet()))).toEqual(falsey.map(() => false));
+    expect(
+      falsey.map((value, index) => (index ? isWeakSet(value) : isWeakSet())),
+    ).toEqual(falsey.map(() => false));
 
     expect(isWeakSet(args)).toBe(false);
     expect(isWeakSet([1, 2, 3])).toBe(false);

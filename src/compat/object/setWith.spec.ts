@@ -1,18 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { setWith } from './setWith.ts';
 import { symbol } from '../_internal/symbol.ts';
 import { constant, each, map, toString, unset, update } from '../compat.ts';
 import { isObject } from '../predicate/isObject.ts';
+import { setWith } from './setWith.ts';
 
 describe('setWith', () => {
   it('should work with a `customizer` callback', () => {
-    const actual = setWith({ 0: {} }, '[0][1][2]', 3, value => (isObject(value) ? undefined : {}));
+    const actual = setWith({ 0: {} }, '[0][1][2]', 3, value =>
+      isObject(value) ? undefined : {},
+    );
 
     expect(actual).toEqual({ 0: { 1: { 2: 3 } } });
   });
 
   it('should work with a `customizer` that returns `undefined`', () => {
-    const actual = setWith({}, 'a[0].b.c', 4, () => undefined);
+    const actual = setWith({}, 'a[0].b.c', 4, () => {});
+
     expect(actual).toEqual({ a: [{ b: { c: 4 } }] });
   });
 
@@ -31,12 +34,14 @@ describe('setWith', () => {
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const expected = map(props, constant(value));
 
     const actual = map(props, key => {
       const object = { '-0': 'a', 0: 'b' };
+
       update(object, key, updater);
+
       return object[toString(key) as keyof typeof object];
     });
 
@@ -44,7 +49,8 @@ describe('setWith', () => {
   });
 
   it('should unset symbol keyed property values', () => {
-    const object: Record<symbol, unknown> = {};
+    const object: { [key: symbol]: unknown } = {};
+
     object[symbol] = 1;
 
     expect(unset(object, symbol)).toBe(true);
@@ -99,13 +105,17 @@ describe('setWith', () => {
 
         update(object, pair[1], updater);
         expect(object).toEqual({ '': value });
-      }
+      },
     );
   });
 
   it('should handle complex paths', () => {
     const object: any = {
-      a: { 1.23: { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } } } },
+      a: {
+        1.23: {
+          '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } },
+        },
+      },
     };
 
     const paths = [
@@ -143,9 +153,12 @@ describe('setWith', () => {
 
     const actual = map(values, value => {
       try {
-        return [update(value, 'a.b', updater), update(value, ['a', 'b'], updater)];
-      } catch (e: unknown) {
-        return e instanceof Error ? e.message : 'unknown error';
+        return [
+          update(value, 'a.b', updater),
+          update(value, ['a', 'b'], updater),
+        ];
+      } catch (error: unknown) {
+        return error instanceof Error ? error.message : 'unknown error';
       }
     });
 
@@ -169,7 +182,7 @@ describe('setWith', () => {
   });
 
   it('should not assign values that are the same as their destinations', () => {
-    each(['a', ['a'], { a: 1 }, NaN], value => {
+    each(['a', ['a'], { a: 1 }, Number.NaN], value => {
       const object = {};
       let pass = true;
       const updater = constant(value);
@@ -178,7 +191,7 @@ describe('setWith', () => {
         configurable: true,
         enumerable: true,
         get: constant(value),
-        set: function () {
+        set() {
           pass = false;
         },
       });
@@ -195,6 +208,7 @@ describe('setWith', () => {
     each(['a[0].b.c', ['a', '0', 'b', 'c']], path => {
       update(object, path, (n: any) => {
         expect(n).toBe(oldValue);
+
         return ++n;
       });
 
@@ -205,6 +219,7 @@ describe('setWith', () => {
 
   it('should handle Object as customizer', () => {
     const actual = setWith({}, '[0][1]', 'a', Object);
+
     expect(actual).toEqual({ 0: { 1: 'a' } });
   });
 
@@ -218,16 +233,19 @@ describe('setWith', () => {
 
   it('should work without a customizer', () => {
     const actual = setWith({}, 'a.b.c', 2);
+
     expect(actual).toEqual({ a: { b: { c: 2 } } });
   });
 
   it('should handle array paths', () => {
     const actual = setWith({}, ['a', 'b', 'c'], 3);
+
     expect(actual).toEqual({ a: { b: { c: 3 } } });
   });
 
   it('should handle number paths', () => {
     const obj: unknown[] = [];
+
     setWith(obj, 0, 'value');
     expect(obj).toEqual(['value']);
   });

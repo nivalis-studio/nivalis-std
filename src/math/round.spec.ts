@@ -30,8 +30,8 @@ describe('round function', () => {
   });
 
   it('rounds correctly at high precision levels', () => {
-    expect(round(1.123456789, 5)).toBe(1.12346);
-    expect(round(-1.123456789, 5)).toBe(-1.12346);
+    expect(round(1.123_456_789, 5)).toBe(1.123_46);
+    expect(round(-1.123_456_789, 5)).toBe(-1.123_46);
   });
 
   it('rounds correctly with edge cases', () => {
@@ -49,12 +49,15 @@ describe('round function', () => {
   });
 
   it('works with precision leading to no rounding', () => {
-    expect(round(8.88888, 5)).toBe(8.88888);
+    expect(round(8.888_88, 5)).toBe(8.888_88);
   });
 
   it('handles edge cases where precision is not integer', () => {
     const value = 1.2345;
     const precision = 3.1;
-    expect(() => round(value, precision)).toThrow('Precision must be an integer.');
+
+    expect(() => round(value, precision)).toThrow(
+      'Precision must be an integer.',
+    );
   });
 });

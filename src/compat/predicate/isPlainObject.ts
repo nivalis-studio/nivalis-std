@@ -9,10 +9,8 @@
  *
  * `Symbol.toStringTag` is a built-in symbol that a constructor can use to customize the
  * default string description of objects.
- *
  * @param {unknown} [object] - The value to check.
  * @returns {boolean} - True if the value is a plain object, otherwise false.
- *
  * @example
  * console.log(isPlainObject({})); // true
  * console.log(isPlainObject([])); // false
@@ -20,7 +18,9 @@
  * console.log(isPlainObject(Object.create(null))); // true
  * console.log(isPlainObject(new Map())); // false
  */
-export function isPlainObject(object?: unknown): object is Record<PropertyKey, any> {
+export function isPlainObject(
+  object?: unknown,
+): object is Record<PropertyKey, any> {
   if (typeof object !== 'object') {
     return false;
   }
@@ -42,7 +42,10 @@ export function isPlainObject(object?: unknown): object is Record<PropertyKey, a
       return false;
     }
 
-    const isTagReadonly = !Object.getOwnPropertyDescriptor(object, Symbol.toStringTag)?.writable;
+    const isTagReadonly = !Object.getOwnPropertyDescriptor(
+      object,
+      Symbol.toStringTag,
+    )?.writable;
 
     if (isTagReadonly) {
       return false;

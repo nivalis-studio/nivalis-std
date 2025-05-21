@@ -3,24 +3,34 @@ import { medianBy } from './medianBy';
 
 describe('medianBy', () => {
   it('calculates the median of values extracted from objects with odd number of elements', () => {
-    const result = medianBy([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }], x => x.a);
+    const result = medianBy(
+      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }],
+      x => x.a,
+    );
+
     expect(result).toEqual(3);
   });
 
   it('calculates the median of values extracted from objects with even number of elements', () => {
     const result = medianBy([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }], x => x.a);
+
     expect(result).toEqual(2.5);
   });
 
   it('returns the correct median for unsorted values', () => {
-    const result = medianBy([{ a: 5 }, { a: 2 }, { a: 1 }, { a: 4 }, { a: 3 }], x => x.a);
+    const result = medianBy(
+      [{ a: 5 }, { a: 2 }, { a: 1 }, { a: 4 }, { a: 3 }],
+      x => x.a,
+    );
+
     expect(result).toEqual(3);
   });
 
   it('returns NaN for empty arrays', () => {
     type Person = { name: string; age: number };
     const people: Person[] = [];
-    expect(medianBy(people, x => x.age)).toEqual(NaN);
+
+    expect(medianBy(people, x => x.age)).toEqual(Number.NaN);
   });
 
   it('returns the single element for arrays with one element', () => {

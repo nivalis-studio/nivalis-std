@@ -3,7 +3,9 @@ import { dropRightWhile } from './dropRightWhile';
 
 describe('dropRightWhile', () => {
   it('should drop elements from an array until `canContinueDropping` returns false, from the end', () => {
-    expect(dropRightWhile([1.2, 2.3, 3.4], x => x < 2)).toEqual([1.2, 2.3, 3.4]);
+    expect(dropRightWhile([1.2, 2.3, 3.4], x => x < 2)).toEqual([
+      1.2, 2.3, 3.4,
+    ]);
 
     const items = [
       { id: 1, enabled: false },

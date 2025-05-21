@@ -7,6 +7,7 @@ import { cloneDeep } from './cloneDeep';
 describe('cloneDeep', () => {
   it('should not clone uncloneable objects like `HTMLElement`s', () => {
     const element = document.createElement('div');
+
     element.textContent = 'Hello, World!';
 
     const clonedElement = cloneDeep(element);

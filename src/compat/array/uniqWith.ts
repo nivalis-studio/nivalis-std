@@ -12,12 +12,10 @@ type Comparator<T> = (a: T, b: T) => boolean;
  * If no comparator is provided, shallow equality is used.
  *
  * The order of result values is determined by the order they appear in the input array.
- *
  * @template T - The type of elements in the array.
  * @param {ArrayLike<T> | null | undefined} arr  - The array to process.
  * @param {Comparator<T>} [comparator] - Optional function to compare elements for equality.
  * @returns {T[]} A new array with only unique values based on the comparator.
- *
  * @example
  * const array = [1, 2, 2, 3];
  * const result = uniqWith(array);
@@ -27,10 +25,15 @@ type Comparator<T> = (a: T, b: T) => boolean;
  * const result = uniqWith(array, (a, b) => a % 2 === b % 2)
  * // result will be [1, 2]
  */
-export function uniqWith<T>(arr: ArrayLike<T> | null | undefined, comparator?: Comparator<T>): T[] {
+export function uniqWith<T>(
+  arr: ArrayLike<T> | null | undefined,
+  comparator?: Comparator<T>,
+): T[] {
   if (!isArrayLike(arr)) {
     return [];
   }
 
-  return typeof comparator === 'function' ? uniqWithToolkit(Array.from(arr), comparator) : uniqToolkit(Array.from(arr));
+  return typeof comparator === 'function'
+    ? uniqWithToolkit([...arr], comparator)
+    : uniqToolkit([...arr]);
 }

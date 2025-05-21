@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { isMap } from './isMap';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { weakMap } from '../_internal/weakMap';
 import { stubFalse } from '../util/stubFalse';
+import { isMap } from './isMap';
 
 describe('isMap', () => {
   it('should return `true` for maps', () => {
@@ -15,7 +15,9 @@ describe('isMap', () => {
   it('returns false if the value is not a Map', () => {
     const expected = falsey.map(() => stubFalse());
 
-    const actual = falsey.map((value, index) => (index ? isMap(value) : isMap()));
+    const actual = falsey.map((value, index) =>
+      index ? isMap(value) : isMap(),
+    );
 
     expect(actual).toEqual(expected);
 

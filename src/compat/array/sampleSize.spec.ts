@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { sampleSize } from './sampleSize';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
 import { stubArray } from '../util/stubArray';
+import { sampleSize } from './sampleSize';
 
 describe('sampleSize', () => {
   const array = [1, 2, 3];
@@ -22,10 +22,12 @@ describe('sampleSize', () => {
   });
 
   it('should treat falsey `size` values, except `undefined`, as `0`', () => {
-    const expected = lodashStable.map(falsey, value => (value === undefined ? ['a'] : []));
+    const expected = lodashStable.map(falsey, value =>
+      value === undefined ? ['a'] : [],
+    );
 
     const actual = lodashStable.map(falsey, (size, index) =>
-      index ? sampleSize(['a'], size as any) : sampleSize(['a'])
+      index ? sampleSize(['a'], size as any) : sampleSize(['a']),
     );
 
     expect(actual).toEqual(expected);
@@ -40,12 +42,14 @@ describe('sampleSize', () => {
   it('should return all elements when `n` >= `length`', () => {
     lodashStable.each([3, 4, 2 ** 32, Infinity], n => {
       const actual = sampleSize(array, n).sort();
+
       expect(actual).toEqual(array);
     });
   });
 
   it('should coerce `n` to an integer', () => {
     const actual = sampleSize(array, 1.6);
+
     expect(actual.length).toBe(1);
   });
 
@@ -64,11 +68,14 @@ describe('sampleSize', () => {
     const actual = sampleSize(object, 2);
 
     expect(actual.length).toBe(2);
-    expect(lodashStable.difference(actual, lodashStable.values(object))).toEqual([]);
+    expect(
+      lodashStable.difference(actual, lodashStable.values(object)),
+    ).toEqual([]);
   });
 
   it('should work as an iteratee for methods like `_.map`', () => {
     const actual = lodashStable.map([['a']], sampleSize);
+
     expect(actual).toEqual([['a']]);
   });
 });

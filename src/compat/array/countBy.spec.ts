@@ -6,6 +6,7 @@ describe('countBy', () => {
 
   it('should transform keys by `iteratee`', () => {
     const actual = countBy(array, Math.floor);
+
     expect(actual).toEqual({ 4: 1, 6: 2 });
   });
 
@@ -14,17 +15,23 @@ describe('countBy', () => {
     const values = [, null, undefined]; // eslint-disable-line no-sparse-arrays
     const expected = values.map(() => ({ 4: 1, 6: 2 }));
 
-    const actual = values.map((value, index) => (index ? countBy(array, value) : countBy(array)));
+    const actual = values.map((value, index) =>
+      index ? countBy(array, value) : countBy(array),
+    );
+
     expect(actual).toEqual(expected);
   });
 
   it('should work with `_.property` shorthands', () => {
     const actual = countBy(['one', 'two', 'three'], 'length');
+
     expect(actual).toEqual({ 3: 2, 5: 1 });
   });
 
   it('should only add values to own, not inherited, properties', () => {
-    const actual = countBy(array, n => (Math.floor(n) > 4 ? 'hasOwnProperty' : 'constructor'));
+    const actual = countBy(array, n =>
+      Math.floor(n) > 4 ? 'hasOwnProperty' : 'constructor',
+    );
 
     expect(actual.constructor).toEqual(1);
     expect(actual.hasOwnProperty).toEqual(2);
@@ -43,11 +50,12 @@ describe('countBy', () => {
 
   it('should work with an object for `collection`', () => {
     const actual = countBy({ a: 6.1, b: 4.2, c: 6.3 }, Math.floor);
+
     expect(actual).toEqual({ 4: 1, 6: 2 });
   });
 
   it('should return empty object when collection is nullish', () => {
     expect(countBy(null)).toEqual({});
-    expect(countBy(undefined)).toEqual({});
+    expect(countBy()).toEqual({});
   });
 });

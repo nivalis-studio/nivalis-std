@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { iteratee } from './iteratee';
-import { stubFalse } from './stubFalse';
 import { slice } from '../_internal/slice';
 import { partial, partialRight } from '../index';
 import * as esToolkit from '../index';
+import { stubFalse } from './stubFalse';
+import { iteratee } from './iteratee';
 
 describe('iteratee', () => {
   it('should provide arguments to `func`', () => {
@@ -27,6 +27,7 @@ describe('iteratee', () => {
 
     const actual = values.map((value, index) => {
       const identity = index ? iteratee(value) : iteratee();
+
       return identity(object);
     });
 
@@ -35,6 +36,7 @@ describe('iteratee', () => {
 
   it('should return an iteratee created by `_.matches` when `func` is an object', () => {
     const matches = iteratee({ a: 1, b: 2 });
+
     expect(matches({ a: 1, b: 2, c: 3 })).toBe(true);
     expect(matches({ b: 2 })).toBe(false);
   });
@@ -42,7 +44,7 @@ describe('iteratee', () => {
   it('should not change `_.matches` behavior if `source` is modified', () => {
     const sources: any[] = [{ a: { b: 2, c: 3 } }, { a: 1, b: 2 }, { a: 1 }];
 
-    sources.forEach((source, index) => {
+    for (const [index, source] of sources.entries()) {
       const object = esToolkit.cloneDeep(source);
       const matches = iteratee(source);
 
@@ -57,9 +59,10 @@ describe('iteratee', () => {
         source.a.c = 2;
         source.a.d = 3;
       }
+
       expect(matches(object)).toBe(true);
       expect(matches(source)).toBe(false);
-    });
+    }
   });
 
   it('should return an iteratee created by `_.matchesProperty` when `func` is an array', () => {
@@ -85,7 +88,7 @@ describe('iteratee', () => {
   it('should not change `_.matchesProperty` behavior if `source` is modified', () => {
     const sources: any[] = [{ a: { b: 2, c: 3 } }, { a: 1, b: 2 }, { a: 1 }];
 
-    sources.forEach((source, index) => {
+    for (const [index, source] of sources.entries()) {
       const object = { a: esToolkit.cloneDeep(source) };
       const matches = iteratee(['a', source]);
 
@@ -100,9 +103,10 @@ describe('iteratee', () => {
         source.a.c = 2;
         source.a.d = 3;
       }
+
       expect(matches(object)).toBe(true);
       expect(matches({ a: source })).toBe(false);
-    });
+    }
   });
 
   it('should return an iteratee created by `_.property` when `func` is a number or string', () => {
@@ -125,8 +129,10 @@ describe('iteratee', () => {
   it('should work with functions created by `_.partial` and `_.partialRight`', () => {
     const fn = function (this: any) {
       const result = [this.a];
+
       // eslint-disable-next-line prefer-rest-params
       Array.prototype.push.apply(result, arguments as any);
+
       return result;
     };
 

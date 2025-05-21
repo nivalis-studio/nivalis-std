@@ -15,7 +15,7 @@ describe('median', () => {
   });
 
   it('returns NaN for empty arrays', () => {
-    expect(median([])).toEqual(NaN);
+    expect(median([])).toEqual(Number.NaN);
   });
 
   it('returns the single element for arrays with one element', () => {

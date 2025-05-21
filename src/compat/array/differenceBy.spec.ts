@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { differenceBy } from './differenceBy';
 import { range } from '../../math';
 import { args } from '../_internal/args';
 import { LARGE_ARRAY_SIZE } from '../_internal/LARGE_ARRAY_SIZE';
 import { slice } from '../_internal/slice';
+import { differenceBy } from './differenceBy';
 
 describe('differenceBy', () => {
   it('should accept an `iteratee`', () => {
     let actual: any = differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+
     expect(actual).toEqual([1.2]);
 
     actual = differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], 'x');
@@ -28,6 +29,7 @@ describe('differenceBy', () => {
 
   it('should calculate the difference if iteratee is not provided', () => {
     const actual = differenceBy([2, 1, 2, 3], [3, 4], [3, 2]);
+
     expect(actual).toEqual([1]);
   });
 
@@ -37,11 +39,13 @@ describe('differenceBy', () => {
 
   it(`should return the difference of two arrays`, () => {
     const actual = differenceBy([2, 1], [2, 3]);
+
     expect(actual).toEqual([1]);
   });
 
   it(`should return the difference of multiple arrays`, () => {
     const actual = differenceBy([2, 1, 2, 3], [3, 4], [3, 2]);
+
     expect(actual).toEqual([1]);
   });
 
@@ -56,7 +60,9 @@ describe('differenceBy', () => {
   });
 
   it(`should match \`NaN\``, () => {
-    expect(differenceBy([1, NaN, 3], [NaN, 5, NaN])).toEqual([1, 3]);
+    expect(
+      differenceBy([1, Number.NaN, 3], [Number.NaN, 5, Number.NaN]),
+    ).toEqual([1, 3]);
   });
 
   it(`should work with large arrays`, () => {
@@ -77,7 +83,9 @@ describe('differenceBy', () => {
     const array = [-0, 0];
 
     const actual = array.map(value => {
-      const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(() => value);
+      const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(
+        () => value,
+      );
 
       return differenceBy(array, largeArray);
     });
@@ -85,12 +93,16 @@ describe('differenceBy', () => {
     expect(actual).toEqual([[], []]);
 
     const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(() => 1);
+
     expect(differenceBy([-0, 1], largeArray)).toEqual([-0]);
   });
 
   it(`should work with large arrays of \`NaN\``, () => {
-    const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(() => NaN);
-    expect(differenceBy([1, NaN, 3], largeArray)).toEqual([1, 3]);
+    const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(
+      () => Number.NaN,
+    );
+
+    expect(differenceBy([1, Number.NaN, 3], largeArray)).toEqual([1, 3]);
   });
 
   it(`should work with large arrays of objects`, () => {
@@ -98,7 +110,10 @@ describe('differenceBy', () => {
     const object2 = {};
     const largeArray = Array.from({ length: LARGE_ARRAY_SIZE }).map(() => ({}));
 
-    expect(differenceBy([object1, object2], largeArray)).toEqual([object1, object2]);
+    expect(differenceBy([object1, object2], largeArray)).toEqual([
+      object1,
+      object2,
+    ]);
   });
 
   it(`should work with \`arguments\` objects`, () => {

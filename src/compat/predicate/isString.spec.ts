@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { isString } from './isString';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isString } from './isString';
 
 describe('isString', () => {
   it('returns true if the value is string', () => {
     expect(isString('a')).toBe(true);
-    expect(isString(Object('a'))).toBe(true);
+    expect(isString(new Object('a'))).toBe(true);
   });
 
   it('returns false if the value is not string', () => {

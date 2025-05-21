@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { overSome } from './overSome';
-import { stubFalse } from './stubFalse';
-import { stubString } from './stubString';
-import { stubTrue } from './stubTrue';
 import { slice } from '../_internal/slice';
 import { stubA } from '../_internal/stubA';
 import { stubNull } from '../_internal/stubNull';
 import { stubOne } from '../_internal/stubOne';
 import { stubZero } from '../_internal/stubZero';
+import { stubTrue } from './stubTrue';
+import { stubString } from './stubString';
+import { stubFalse } from './stubFalse';
+import { overSome } from './overSome';
 
 /**
  * @see https://github.com/lodash/lodash/blob/afcd5bc1e8801867c31a17566e0e0edebb083d0e/test/overSome.spec.js#L1
@@ -16,6 +16,7 @@ describe('overSome', () => {
   it('should create a function that returns `true` if any predicates return truthy', () => {
     // @ts-expect-error - invalid argument
     let over = overSome(stubFalse, stubOne, stubString);
+
     expect(over()).toBe(true);
 
     // @ts-expect-error - invalid argument
@@ -27,10 +28,12 @@ describe('overSome', () => {
     let count = 0;
     const countFalse = function () {
       count++;
+
       return false;
     };
     const countTrue = function () {
       count++;
+
       return true;
     };
     const over = overSome(countFalse, countTrue, countFalse);
@@ -41,6 +44,7 @@ describe('overSome', () => {
 
   it('should return `false` if all predicates return falsey', () => {
     let over = overSome(stubFalse, stubFalse, stubFalse);
+
     expect(over()).toBe(false);
 
     // @ts-expect-error - invalid argument
@@ -101,6 +105,7 @@ describe('overSome', () => {
 
   it('should flatten `predicates`', () => {
     const over = overSome(stubFalse, [stubTrue]);
+
     expect(over()).toBe(true);
   });
 
@@ -127,9 +132,9 @@ describe('overSome', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       function (this: any) {
         return this.a;
-      }
+      },
     );
-    const object = { over: over, a: 1, b: 2 };
+    const object = { over, a: 1, b: 2 };
 
     expect(object.over()).toBe(true);
 

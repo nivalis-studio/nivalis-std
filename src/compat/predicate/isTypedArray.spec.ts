@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isTypedArray } from './isTypedArray';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { typedArrays } from '../_internal/typedArrays';
 import { stubFalse } from '../util/stubFalse';
+import { isTypedArray } from './isTypedArray';
 
 /**
  * @see https://github.com/lodash/lodash/blob/main/test/isTypedArray.spec.js
@@ -12,16 +12,29 @@ describe('isTypedArray', () => {
   it('should return `true` for typed arrays', () => {
     const actual = typedArrays.map(type => {
       const Ctor = (globalThis as any)[type];
+
       return Ctor ? isTypedArray(new Ctor(new ArrayBuffer(8))) : false;
     });
 
-    expect(actual).toEqual([true, true, true, true, true, true, true, true, true]);
+    expect(actual).toEqual([
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
   });
 
   it('should return `false` for non typed arrays', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map((value, index) => (index ? isTypedArray(value) : isTypedArray()));
+    const actual = falsey.map((value, index) =>
+      index ? isTypedArray(value) : isTypedArray(),
+    );
 
     expect(actual).toEqual(expected);
 

@@ -5,10 +5,8 @@ import { keys } from './keys.ts';
  *
  * Only checks for own properties with string keys. Inherited properties or
  * properties with Symbol keys are not included.
- *
  * @param {unknown} object The object to inspect.
  * @returns {string[]} An array of function property names.
- *
  * @example
  *
  * function Foo() {
@@ -26,5 +24,7 @@ export function functions(object: unknown): string[] {
     return [];
   }
 
-  return keys(object).filter(key => typeof object[key as keyof typeof object] === 'function');
+  return keys(object).filter(
+    key => typeof object[key as keyof typeof object] === 'function',
+  );
 }

@@ -12,7 +12,6 @@ import { defaults } from './defaults.ts';
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @param {T} object - The target object.
  * @returns {T} The cloned object.
@@ -28,14 +27,16 @@ export function toDefaulted<T extends object>(object: T): T;
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S - The type of the object that provides default values.
  * @param {T} object - The target object that will receive default values.
  * @param {S} source - The object that specifies the default values to apply.
  * @returns {NonNullable<T & S>} A new object that combines the target and default values, ensuring no properties are left undefined.
  */
-export function toDefaulted<T extends object, S extends object>(object: T, source: S): NonNullable<T & S>;
+export function toDefaulted<T extends object, S extends object>(
+  object: T,
+  source: S,
+): NonNullable<T & S>;
 
 /**
  * Creates a new object based on the provided `object`, applying default values from the `sources` to ensure that no properties are left `undefined`.
@@ -46,7 +47,6 @@ export function toDefaulted<T extends object, S extends object>(object: T, sourc
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S1 - The type of the first object that provides default values.
  * @template S2 - The type of the second object that provides default values.
@@ -55,11 +55,11 @@ export function toDefaulted<T extends object, S extends object>(object: T, sourc
  * @param {S2} source2 - The second object that specifies the default values to apply.
  * @returns {NonNullable<T & S1 & S2>} A new object that combines the target and default values, ensuring no properties are left undefined.
  */
-export function toDefaulted<T extends object, S1 extends object, S2 extends object>(
-  object: T,
-  source1: S1,
-  source2: S2
-): NonNullable<T & S1 & S2>;
+export function toDefaulted<
+  T extends object,
+  S1 extends object,
+  S2 extends object,
+>(object: T, source1: S1, source2: S2): NonNullable<T & S1 & S2>;
 
 /**
  * Creates a new object based on the provided `object`, applying default values from the `sources` to ensure that no properties are left `undefined`.
@@ -70,7 +70,6 @@ export function toDefaulted<T extends object, S1 extends object, S2 extends obje
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S1 - The type of the first object that provides default values.
  * @template S2 - The type of the second object that provides default values.
@@ -81,11 +80,16 @@ export function toDefaulted<T extends object, S1 extends object, S2 extends obje
  * @param {S3} source3 - The third object that specifies the default values to apply.
  * @returns {NonNullable<T & S1 & S2 & S3>} A new object that combines the target and default values, ensuring no properties are left undefined.
  */
-export function toDefaulted<T extends object, S1 extends object, S2 extends object, S3 extends object>(
+export function toDefaulted<
+  T extends object,
+  S1 extends object,
+  S2 extends object,
+  S3 extends object,
+>(
   object: T,
   source1: S1,
   source2: S2,
-  source3: S3
+  source3: S3,
 ): NonNullable<T & S1 & S2 & S3>;
 
 /**
@@ -97,7 +101,6 @@ export function toDefaulted<T extends object, S1 extends object, S2 extends obje
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S1 - The type of the first object that provides default values.
  * @template S2 - The type of the second object that provides default values.
@@ -116,7 +119,13 @@ export function toDefaulted<
   S2 extends object,
   S3 extends object,
   S4 extends object,
->(object: T, source1: S1, source2: S2, source3: S3, source4: S4): NonNullable<T & S1 & S2 & S3 & S4>;
+>(
+  object: T,
+  source1: S1,
+  source2: S2,
+  source3: S3,
+  source4: S4,
+): NonNullable<T & S1 & S2 & S3 & S4>;
 
 /**
  * Creates a new object based on the provided `object`, applying default values from the `sources` to ensure that no properties are left `undefined`.
@@ -127,20 +136,21 @@ export function toDefaulted<
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S - The type of the objects that provides default values.
  * @param {T} object - The target object that will receive default values.
  * @param {S[]} sources - The objects that specifies the default values to apply.
  * @returns {object} A new object that combines the target and default values, ensuring no properties are left undefined.
- *
  * @example
  * toDefaulted({ a: 1 }, { a: 2, b: 2 }, { c: 3 }); // { a: 1, b: 2, c: 3 }
  * toDefaulted({ a: 1, b: 2 }, { b: 3 }, { c: 3 }); // { a: 1, b: 2, c: 3 }
  * toDefaulted({ a: null }, { a: 1 }); // { a: null }
  * toDefaulted({ a: undefined }, { a: 1 }); // { a: 1 }
  */
-export function toDefaulted<T extends object, S extends object>(object: T, ...sources: S[]): object;
+export function toDefaulted<T extends object, S extends object>(
+  object: T,
+  ...sources: S[]
+): object;
 
 /**
  * Creates a new object based on the provided `object`, applying default values from the `sources` to ensure that no properties are left `undefined`.
@@ -151,20 +161,21 @@ export function toDefaulted<T extends object, S extends object>(object: T, ...so
  * Once a property has been set, any later values for that property will be ignored.
  *
  * Note: This function creates a new object. If you want to modify the `object`, use the `defaults` function instead.
- *
  * @template T - The type of the object being processed.
  * @template S - The type of the objects that provides default values.
  * @param {T} object - The target object that will receive default values.
  * @param {S[]} sources - The objects that specifies the default values to apply.
  * @returns {object} A new object that combines the target and default values, ensuring no properties are left undefined.
- *
  * @example
  * toDefaulted({ a: 1 }, { a: 2, b: 2 }, { c: 3 }); // { a: 1, b: 2, c: 3 }
  * toDefaulted({ a: 1, b: 2 }, { b: 3 }, { c: 3 }); // { a: 1, b: 2, c: 3 }
  * toDefaulted({ a: null }, { a: 1 }); // { a: null }
  * toDefaulted({ a: undefined }, { a: 1 }); // { a: 1 }
  */
-export function toDefaulted<T extends object, S extends object>(object: T, ...sources: S[]): object {
+export function toDefaulted<T extends object, S extends object>(
+  object: T,
+  ...sources: S[]
+): object {
   const cloned = cloneDeep(object);
 
   return defaults(cloned, ...sources);

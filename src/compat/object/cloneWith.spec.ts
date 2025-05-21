@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { cloneWith } from './cloneWith';
 import { noop } from '../../function/noop';
 import { args } from '../_internal/args';
 import { slice } from '../_internal/slice';
 import { typedArrays } from '../_internal/typedArrays';
+import { cloneWith } from './cloneWith';
 
 describe('cloneWith', () => {
   it('should provide the correct `customizer` arguments', () => {
@@ -17,6 +17,7 @@ describe('cloneWith', () => {
       const length = arguments.length;
       // eslint-disable-next-line prefer-rest-params
       const args = slice.call(arguments, 0, length - (length > 1 ? 1 : 0));
+
       argsList.push(args);
     });
 
@@ -25,6 +26,7 @@ describe('cloneWith', () => {
 
   it('should handle cloning when `customizer` returns `undefined`', () => {
     const actual = cloneWith({ a: { b: 'c' } }, noop);
+
     expect(actual).toEqual({ a: { b: 'c' } });
   });
 
@@ -62,15 +64,18 @@ describe('cloneWith', () => {
 
     const object = { a: 1, b: 2 };
     const actual1 = cloneWith(object, customizer);
+
     expect(actual1).toEqual({ value: 'replaced' });
 
     const array = [1, 2, 3];
     const actual2 = cloneWith(array, customizer);
+
     expect(actual2).toEqual(array);
     expect(actual2).not.toBe(array);
 
     const nestedObject = { a: { b: 1 }, c: [1, 2] };
     const actual3 = cloneWith(nestedObject, customizer);
+
     expect(actual3).toEqual({ value: 'replaced' });
   });
 
@@ -79,6 +84,7 @@ describe('cloneWith', () => {
       if (typeof value === 'number') {
         return value * 2;
       }
+
       if (typeof value === 'string') {
         return value.toUpperCase();
       }
@@ -97,6 +103,7 @@ describe('cloneWith', () => {
     };
 
     const actual = cloneWith(args, customizer);
+
     expect(actual).toEqual(['replaced']);
   });
 
@@ -109,6 +116,7 @@ describe('cloneWith', () => {
     };
 
     const actual = cloneWith(date, customizer);
+
     expect(actual).toEqual(new Date(2000, 0, 1));
   });
 
@@ -118,6 +126,7 @@ describe('cloneWith', () => {
 
     cloneWith(array, function () {
       const length = arguments.length;
+
       // eslint-disable-next-line prefer-rest-params
       argsList.push(slice.call(arguments, 0, length - (length > 1 ? 1 : 0)));
     });
@@ -131,6 +140,7 @@ describe('cloneWith', () => {
     };
 
     const actual = cloneWith({ a: { b: 'c' } }, customizer);
+
     expect(actual).toEqual({ a: { b: 'c' } });
   });
 
@@ -142,6 +152,7 @@ describe('cloneWith', () => {
     };
 
     const actual = cloneWith({ a: { b: 'c' } }, customizer);
+
     expect(actual).toBe(42);
   });
 
@@ -191,8 +202,8 @@ describe('cloneWith', () => {
   });
 
   it('should clone boolean objects when customizer returns undefined', () => {
-    const object = Object(false);
-    const customizer = () => undefined;
+    const object = new Object(false);
+    const customizer = () => {};
     const actual = cloneWith(object, customizer);
 
     expect(actual).toEqual(object);
@@ -240,7 +251,7 @@ describe('cloneWith', () => {
 
   it('should clone null values even with customizer', () => {
     const object = null;
-    const customizer = () => undefined;
+    const customizer = () => {};
     const actual = cloneWith(object, customizer);
 
     expect(actual).toEqual(object);
@@ -248,7 +259,7 @@ describe('cloneWith', () => {
   });
 
   it('should clone number objects when customizer returns undefined', () => {
-    const object = Object(0);
+    const object = new Object(0);
     const actual = cloneWith(object, noop);
 
     expect(actual).toEqual(object);
@@ -256,7 +267,7 @@ describe('cloneWith', () => {
   });
 
   it('should clone regexes when customizer returns undefined', () => {
-    const object = /a/gim;
+    const object = /a/gi;
 
     const actual = cloneWith(object, noop);
 
@@ -274,8 +285,8 @@ describe('cloneWith', () => {
   });
 
   it('should clone string objects when customizer returns undefined', () => {
-    const object = Object('a');
-    const customizer = () => undefined;
+    const object = new Object('a');
+    const customizer = () => {};
     const actual = cloneWith(object, customizer);
 
     expect(actual).toEqual(object);
@@ -285,7 +296,7 @@ describe('cloneWith', () => {
 
   it('should clone undefined values even with customizer', () => {
     const object = undefined;
-    const customizer = () => undefined;
+    const customizer = () => {};
     const actual = cloneWith(object, customizer);
 
     expect(actual).toEqual(object);
@@ -329,9 +340,9 @@ describe('cloneWith', () => {
     const dataView = new DataView(buffer);
 
     dataView.setInt8(0, 42);
-    dataView.setInt16(2, 12345, true);
-    dataView.setFloat32(4, 3.14159, true);
-    dataView.setFloat64(8, 123456789.123456, true);
+    dataView.setInt16(2, 12_345, true);
+    dataView.setFloat32(4, 3.141_59, true);
+    dataView.setFloat64(8, 123_456_789.123_456, true);
 
     const cloned = cloneWith(dataView, noop);
 
@@ -341,9 +352,9 @@ describe('cloneWith', () => {
     expect(cloned.byteLength).toBe(dataView.byteLength);
 
     expect(cloned.getInt8(0)).toBe(42);
-    expect(cloned.getInt16(2, true)).toBe(12345);
-    expect(cloned.getFloat32(4, true)).toBeCloseTo(3.14159, 5);
-    expect(cloned.getFloat64(8, true)).toBeCloseTo(123456789.123456, 10);
+    expect(cloned.getInt16(2, true)).toBe(12_345);
+    expect(cloned.getFloat32(4, true)).toBeCloseTo(3.141_59, 5);
+    expect(cloned.getFloat64(8, true)).toBeCloseTo(123_456_789.123_456, 10);
 
     dataView.setInt8(0, 100);
     expect(cloned.getInt8(0)).toBe(42);
@@ -359,9 +370,11 @@ describe('cloneWith', () => {
 
   it('should clone `lastIndex` regexp property when customizer returns undefined', () => {
     const regexp = /c/g;
+
     regexp.exec('abcde');
 
     const actual = cloneWith(regexp, noop);
+
     expect(actual.lastIndex).toBe(3);
   });
 
@@ -370,9 +383,11 @@ describe('cloneWith', () => {
     const expected = values.map(() => true);
 
     const actual = values.map(value => {
-      const object = Object(value);
+      const object = new Object(value);
+
       object.a = 1;
       const cloned = cloneWith(object, noop);
+
       return cloned.a === 1;
     });
 
@@ -415,6 +430,7 @@ describe('cloneWith', () => {
 
   it('should handle objects with null prototype when customizer returns undefined', () => {
     const obj = Object.create(null);
+
     obj.a = 1;
     obj.b = 2;
 
@@ -425,18 +441,20 @@ describe('cloneWith', () => {
 
   it('should handle objects with modified prototype chain when customizer returns undefined', () => {
     function CustomProto() {}
+
     CustomProto.prototype.customMethod = function () {
       return 'custom';
     };
 
     const obj = Object.create(CustomProto.prototype);
+
     obj.a = 1;
 
     const actual = cloneWith(obj, noop);
 
     expect(actual.a).toBe(1);
     expect(Object.getPrototypeOf(actual)).toBe(CustomProto.prototype);
-    expect((actual as any).customMethod()).toBe('custom');
+    expect(actual.customMethod()).toBe('custom');
   });
 
   it('should clone properties that shadow those on `Object.prototype` when customizer returns undefined', () => {
@@ -463,9 +481,11 @@ describe('cloneWith', () => {
 
     if (Symbol) {
       const symbol2 = Symbol('b');
+
       Foo.prototype[symbol2] = 2;
 
       const symbol3 = Symbol('c');
+
       Object.defineProperty(Foo.prototype, symbol3, {
         configurable: true,
         enumerable: false,
@@ -474,15 +494,17 @@ describe('cloneWith', () => {
       });
 
       const object = { a: { b: new (Foo as any)() } } as any;
+
       object[Symbol.for('a')] = { b: 1 };
 
-      const actual = cloneWith(object, noop) as any;
+      const actual = cloneWith(object, noop);
 
       expect(actual[Symbol.for('a')]).toBe(object[Symbol.for('a')]);
       expect(actual.a).toBe(object.a);
       expect(actual[Symbol.for('a')]).toEqual(object[Symbol.for('a')]);
 
       const symbols = Object.getOwnPropertySymbols(actual.a.b);
+
       expect(symbols.length).toBe(1);
       expect(symbols[0]).toBe(Symbol.for('c'));
       expect(actual.a.b[Symbol.for('c')]).toEqual(object.a.b[Symbol.for('c')]);
@@ -496,6 +518,7 @@ describe('cloneWith', () => {
     const nonEnumSymbol = Symbol('non-enumerable');
 
     const object = { a: 1 } as any;
+
     object[enumSymbol] = 'visible';
 
     Object.defineProperty(object, nonEnumSymbol, {
@@ -512,15 +535,17 @@ describe('cloneWith', () => {
     expect(actual[nonEnumSymbol]).toBeUndefined();
 
     const symbols = Object.getOwnPropertySymbols(actual);
+
     expect(symbols).toContain(enumSymbol);
     expect(symbols).not.toContain(nonEnumSymbol);
   });
 
   it('should clone symbol objects when customizer returns undefined', () => {
     const symbol = Symbol('a');
+
     expect(cloneWith(symbol, noop)).toBe(symbol);
 
-    const object = Object(symbol);
+    const object = new Object(symbol);
     const actual = cloneWith(object, noop);
 
     expect(typeof actual).toBe('object');
@@ -530,6 +555,7 @@ describe('cloneWith', () => {
 
   it('should not clone symbol primitives when customizer returns undefined', () => {
     const symbol = Symbol('a');
+
     expect(cloneWith(symbol, noop)).toBe(symbol);
   });
 
@@ -542,14 +568,14 @@ describe('cloneWith', () => {
 
     try {
       expect(cloneWith(element, noop)).toEqual({});
-    } catch (e) {
+    } catch {
       expect(false).toBe(true);
     }
   });
 
   it('should perform a shallow clone when used as an iteratee for methods like `_.map` and customizer returns undefined', () => {
     const expected = [{ a: [0] }, { b: [1] }];
-    const customizer = () => undefined;
+    const customizer = () => {};
     const actual = expected.map(obj => cloneWith(obj, customizer));
 
     expect(actual).toEqual(expected);
@@ -560,7 +586,7 @@ describe('cloneWith', () => {
 
   lodashStable.each(typedArrays, type => {
     it(`should clone ${type} values when customizer returns undefined`, () => {
-      const Ctor = globalThis[type as keyof typeof globalThis] as any;
+      const Ctor = globalThis[type as keyof typeof globalThis];
 
       if (!Ctor) {
         return;
@@ -594,15 +620,33 @@ describe('cloneWith', () => {
 
       if (type === 'DOM elements' && typeof document !== 'undefined') {
         value = document.body;
-      } else if (type === 'functions') {
-        value = function () {};
-      } else if (type === 'async functions') {
-        value = async function () {};
-      } else if (type === 'generator functions') {
-        value = function* () {};
-      } else if (type === 'the Proxy constructor') {
-        value = Proxy;
-      }
+      } else
+        switch (type) {
+          case 'functions': {
+            value = function () {};
+
+            break;
+          }
+
+          case 'async functions': {
+            value = async function () {};
+
+            break;
+          }
+
+          case 'generator functions': {
+            value = function* () {};
+
+            break;
+          }
+
+          case 'the Proxy constructor': {
+            value = Proxy;
+
+            break;
+          }
+          // No default
+        }
 
       if (value) {
         const object = { a: value, b: { c: value } };
@@ -615,7 +659,15 @@ describe('cloneWith', () => {
     });
   });
 
-  const errorTypes = ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError'];
+  const errorTypes = [
+    'Error',
+    'EvalError',
+    'RangeError',
+    'ReferenceError',
+    'SyntaxError',
+    'TypeError',
+    'URIError',
+  ];
 
   lodashStable.each(errorTypes, type => {
     it(`should not clone ${type}s when customizer returns undefined`, () => {
@@ -650,7 +702,7 @@ describe('cloneWith', () => {
 
     expect(cloned).not.toBe(original);
     expect(cloned instanceof CustomType).toBe(true);
-    expect((cloned as CustomType).value).toBe(10);
+    expect(cloned.value).toBe(10);
   });
 
   it('should customize only the top level value', () => {
@@ -685,9 +737,11 @@ describe('cloneWith', () => {
     const customizer = (value: any) => {
       if (value instanceof Map) {
         const newMap = new Map();
-        value.forEach((val, key) => {
+
+        for (const [key, val] of value.entries()) {
           newMap.set(key.toUpperCase(), val * 10);
-        });
+        }
+
         return newMap;
       }
     };
@@ -706,6 +760,7 @@ describe('cloneWith', () => {
     const customizer = () => null;
 
     const result = cloneWith(obj, customizer);
+
     expect(result).toBe(null);
   });
 

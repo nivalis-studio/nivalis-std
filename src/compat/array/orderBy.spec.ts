@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { orderBy } from './orderBy.ts';
 import { zipObject } from '../../array/zipObject.ts';
 import { partialRight } from '../../function/partialRight.ts';
 import { falsey } from '../_internal/falsey.ts';
+import { orderBy } from './orderBy.ts';
 
 describe('orderBy', () => {
   class Pair {
     constructor(
       public a: number | undefined,
       public b: number,
-      public c: number
+      public c: number,
     ) {
       this.a = a;
       this.b = b;
@@ -46,7 +46,7 @@ describe('orderBy', () => {
     new Pair(undefined, 6, 1),
   ];
 
-  const stableObject = zipObject('abcdefghijklmnopqrst'.split(''), stableArray);
+  const stableObject = zipObject([...'abcdefghijklmnopqrst'], stableArray);
 
   const nestedObj = [
     { id: '4', address: { zipCode: 4, streetName: 'Beta' } },
@@ -58,6 +58,7 @@ describe('orderBy', () => {
 
   it(`should sort multiple properties in ascending order`, () => {
     const actual = orderBy(objects, ['a', 'b']);
+
     expect(actual).toEqual([objects[2], objects[0], objects[3], objects[1]]);
   });
 
@@ -68,6 +69,7 @@ describe('orderBy', () => {
         return object.b;
       },
     ]);
+
     expect(actual).toEqual([objects[2], objects[0], objects[3], objects[1]]);
   });
 
@@ -78,13 +80,21 @@ describe('orderBy', () => {
 
   it(`should not error on nullish elements`, () => {
     let actual;
+
     try {
       actual = orderBy([...objects, null, undefined], ['a', 'b']);
     } catch {
       // do nothing
     }
 
-    expect(actual).toEqual([objects[2], objects[0], objects[3], objects[1], null, undefined]);
+    expect(actual).toEqual([
+      objects[2],
+      objects[0],
+      objects[3],
+      objects[1],
+      null,
+      undefined,
+    ]);
   });
 
   it(`should work as an iteratee for methods like \`_.reduce\``, () => {
@@ -95,21 +105,51 @@ describe('orderBy', () => {
       { a: 'y', 0: 2 },
     ];
 
-    expect(['a'].reduce(orderBy, objects)).toEqual([objects[0], objects[2], objects[1], objects[3]]);
-    expect([0].reduce(orderBy, objects)).toEqual([objects[2], objects[3], objects[0], objects[1]]);
-    expect([[0]].reduce(orderBy, objects)).toEqual([objects[2], objects[3], objects[0], objects[1]]);
+    expect(['a'].reduce(orderBy, objects)).toEqual([
+      objects[0],
+      objects[2],
+      objects[1],
+      objects[3],
+    ]);
+    expect([0].reduce(orderBy, objects)).toEqual([
+      objects[2],
+      objects[3],
+      objects[0],
+      objects[1],
+    ]);
+    expect([[0]].reduce(orderBy, objects)).toEqual([
+      objects[2],
+      objects[3],
+      objects[0],
+      objects[1],
+    ]);
 
     const wrapped = partialRight(orderBy, 'bogus');
 
     // eslint-disable-next-line
     // @ts-ignore
-    expect(['a'].reduce(wrapped, objects)).toEqual([objects[0], objects[2], objects[1], objects[3]]);
+    expect(['a'].reduce(wrapped, objects)).toEqual([
+      objects[0],
+      objects[2],
+      objects[1],
+      objects[3],
+    ]);
     // eslint-disable-next-line
     // @ts-ignore
-    expect([0].reduce(wrapped, objects)).toEqual([objects[2], objects[3], objects[0], objects[1]]);
+    expect([0].reduce(wrapped, objects)).toEqual([
+      objects[2],
+      objects[3],
+      objects[0],
+      objects[1],
+    ]);
     // eslint-disable-next-line
     // @ts-ignore
-    expect([[0]].reduce(wrapped, objects)).toEqual([objects[2], objects[3], objects[0], objects[1]]);
+    expect([[0]].reduce(wrapped, objects)).toEqual([
+      objects[2],
+      objects[3],
+      objects[0],
+      objects[1],
+    ]);
   });
 
   it('should return an empty array when the collection is null or undefined', () => {
@@ -121,7 +161,7 @@ describe('orderBy', () => {
 
   it('should return a shallow copy of the collection when no keys are provided', () => {
     const actual = orderBy(objects);
-    const expected = objects.slice();
+    const expected = [...objects];
 
     expect(actual).toEqual(expected);
   });
@@ -141,8 +181,18 @@ describe('orderBy', () => {
   });
 
   it('should sort by nested key in array format', () => {
-    const actual = orderBy(nestedObj, [['address', 'zipCode'], ['address.streetName']], ['asc', 'desc']);
-    const expected = [nestedObj[2], nestedObj[3], nestedObj[1], nestedObj[0], nestedObj[4]];
+    const actual = orderBy(
+      nestedObj,
+      [['address', 'zipCode'], ['address.streetName']],
+      ['asc', 'desc'],
+    );
+    const expected = [
+      nestedObj[2],
+      nestedObj[3],
+      nestedObj[1],
+      nestedObj[0],
+      nestedObj[4],
+    ];
 
     expect(actual).toEqual(expected);
   });
@@ -162,14 +212,21 @@ describe('orderBy', () => {
   });
 
   it('should sort by a property in ascending order when its order is not specified and the collection is falsey', () => {
-    const actual = falsey.map((order, index) => orderBy(objects, ['a', 'b'], index ? ['desc', order] : ['desc']));
-    const expected = falsey.map(() => [objects[3], objects[1], objects[2], objects[0]]);
+    const actual = falsey.map((order, index) =>
+      orderBy(objects, ['a', 'b'], index ? ['desc', order] : ['desc']),
+    );
+    const expected = falsey.map(() => [
+      objects[3],
+      objects[1],
+      objects[2],
+      objects[0],
+    ]);
 
     expect(actual).toEqual(expected);
   });
 
   it('should work with `orders` specified as string objects', () => {
-    const actual = orderBy(objects, ['a'], [Object('desc')]);
+    const actual = orderBy(objects, ['a'], [new Object('desc')]);
     const expected = [objects[1], objects[3], objects[0], objects[2]];
 
     expect(actual).toEqual(expected);
@@ -177,14 +234,26 @@ describe('orderBy', () => {
 
   it('should work with `deep` property paths', () => {
     const actual = orderBy(nestedObj, ['address.zipCode'], ['asc']);
-    const expected = [nestedObj[2], nestedObj[3], nestedObj[1], nestedObj[0], nestedObj[4]];
+    const expected = [
+      nestedObj[2],
+      nestedObj[3],
+      nestedObj[1],
+      nestedObj[0],
+      nestedObj[4],
+    ];
 
     expect(actual).toEqual(expected);
   });
 
   it('should work with nested `deep` property paths when paths length is 1', () => {
     const actual = orderBy(nestedObj, [['address.zipCode']], ['asc']);
-    const expected = [nestedObj[2], nestedObj[3], nestedObj[1], nestedObj[0], nestedObj[4]];
+    const expected = [
+      nestedObj[2],
+      nestedObj[3],
+      nestedObj[1],
+      nestedObj[0],
+      nestedObj[4],
+    ];
 
     expect(actual).toEqual(expected);
   });
@@ -202,7 +271,7 @@ describe('orderBy', () => {
       [
         [2, 1, 3],
         [3, 2, 1],
-      ].map(orderBy)
+      ].map(orderBy),
     ).toEqual([
       [1, 2, 3],
       [1, 2, 3],
@@ -212,14 +281,66 @@ describe('orderBy', () => {
   it('should move `NaN`, nullish, and symbol values to the end', () => {
     const symbol1 = Symbol ? Symbol('a') : null;
     const symbol2 = Symbol ? Symbol('b') : null;
-    const array = [NaN, undefined, null, 4, symbol1, null, 1, symbol2, undefined, 3, NaN, 2];
-    const expected = [1, 2, 3, 4, symbol1, symbol2, null, null, undefined, undefined, NaN, NaN];
+    const array = [
+      Number.NaN,
+      undefined,
+      null,
+      4,
+      symbol1,
+      null,
+      1,
+      symbol2,
+      undefined,
+      3,
+      Number.NaN,
+      2,
+    ];
+    const expected = [
+      1,
+      2,
+      3,
+      4,
+      symbol1,
+      symbol2,
+      null,
+      null,
+      undefined,
+      undefined,
+      Number.NaN,
+      Number.NaN,
+    ];
 
     expect(orderBy(array)).toEqual(expected);
     expect(orderBy(array, [])).toEqual(expected);
 
-    const array2 = [NaN, undefined, symbol1, null, 'd', null, 'a', symbol2, undefined, 'c', NaN, 'b'];
-    const expected2 = ['a', 'b', 'c', 'd', symbol1, symbol2, null, null, undefined, undefined, NaN, NaN];
+    const array2 = [
+      Number.NaN,
+      undefined,
+      symbol1,
+      null,
+      'd',
+      null,
+      'a',
+      symbol2,
+      undefined,
+      'c',
+      Number.NaN,
+      'b',
+    ];
+    const expected2 = [
+      'a',
+      'b',
+      'c',
+      'd',
+      symbol1,
+      symbol2,
+      null,
+      null,
+      undefined,
+      undefined,
+      Number.NaN,
+      Number.NaN,
+    ];
 
     expect(orderBy(array2)).toEqual(expected2);
     expect(orderBy(array2, [])).toEqual(expected2);

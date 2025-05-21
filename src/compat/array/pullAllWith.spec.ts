@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { pullAllWith } from './pullAllWith';
 import { isEqual } from '../../predicate';
+import { pullAllWith } from './pullAllWith';
 
 describe('pullAllWith', () => {
   const methodName = 'pullAllWith';
@@ -29,6 +29,7 @@ describe('pullAllWith', () => {
 
   it(`\`_.${methodName}\` should preserve holes in arrays`, () => {
     const array = [1, 2, 3, 4];
+
     delete array[1];
     delete array[3];
 
@@ -40,6 +41,7 @@ describe('pullAllWith', () => {
 
   it(`\`_.${methodName}\` should treat holes as undefined`, () => {
     const array = [1, 2, 3];
+
     delete array[1];
 
     pullAllWith(array, [undefined]);
@@ -47,9 +49,9 @@ describe('pullAllWith', () => {
   });
 
   it(`\`_.${methodName}\` should match NaN`, () => {
-    const array = [1, NaN, 3, NaN];
+    const array = [1, Number.NaN, 3, Number.NaN];
 
-    pullAllWith(array, [NaN]);
+    pullAllWith(array, [Number.NaN]);
     expect(array).toEqual([1, 3]);
   });
 
@@ -73,20 +75,22 @@ describe('pullAllWith', () => {
 
   it('should treat -0 and 0 as equal with default comparator', () => {
     const array = [-0, 1, 0];
+
     pullAllWith(array, [0], Object.is);
     expect(array).toEqual([-0, 1]);
   });
 
   it('should handle weird JS values properly', () => {
-    const array = [NaN, undefined, null, false, 0];
-    const values = [NaN, undefined, null];
+    const array = [Number.NaN, undefined, null, false, 0];
+    const values = [Number.NaN, undefined, null];
 
     pullAllWith(array, values);
     expect(array).toEqual([false, 0]);
   });
 
   it('should handle large sparse arrays correctly', () => {
-    const array = new Array(1e5);
+    const array = Array.from({ length: 1e5 });
+
     array[123] = 1;
     array[456] = 2;
     array[789] = 3;

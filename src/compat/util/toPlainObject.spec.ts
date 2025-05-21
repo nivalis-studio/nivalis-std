@@ -1,16 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { toPlainObject } from './toPlainObject';
 import { args } from '../_internal/args';
+import { toPlainObject } from './toPlainObject';
 
 describe('toPlainObject', () => {
   it('should flatten inherited string keyed properties', () => {
     function Foo(this: any) {
       this.b = 2;
     }
+
     Foo.prototype.c = 3;
 
     // @ts-expect-error - Foo is a constructor
-    const actual = Object.assign({ a: 1 }, toPlainObject(new Foo()));
+    const actual = { a: 1, ...toPlainObject(new Foo()) };
+
     expect(actual).toEqual({ a: 1, b: 2, c: 3 });
   });
 
@@ -30,6 +32,7 @@ describe('toPlainObject', () => {
 
   it('should convert objects with an enumerable `__proto__` property to plain objects', () => {
     const object = {};
+
     Object.defineProperty(object, '__proto__', {
       value: { a: 1 },
       enumerable: true,

@@ -9,15 +9,12 @@
  *
  * If the argument is not primitive (e.g., arrays or objects), provide a
  * `getCacheKey` function to generate a unique cache key for proper caching.
- *
  * @template F - The type of the function to be memoized.
  * @param {F} fn - The function to be memoized. It should accept a single argument and return a value.
- * @param {MemoizeOptions<Parameters<F>[0], ReturnType<F>>} [options={}] - Optional configuration for the memoization.
+ * @param {MemoizeOptions<Parameters<F>[0], ReturnType<F>>} [options] - Optional configuration for the memoization.
  * @param {MemoizeCache<any, V>} [options.cache] - The cache object used to store results. Defaults to a new `Map`.
  * @param {(args: A) => unknown} [options.getCacheKey] - An optional function to generate a unique cache key for each argument.
- *
  * @returns The memoized function with an additional `cache` property that exposes the internal cache.
- *
  * @example
  * // Example using the default cache
  * const add = (x: number) => x + 10;
@@ -26,7 +23,6 @@
  * console.log(memoizedAdd(5)); // 15
  * console.log(memoizedAdd(5)); // 15 (cached result)
  * console.log(memoizedAdd.cache.size); // 1
- *
  * @example
  * // Example using a custom resolver
  * const sum = (arr: number[]) => arr.reduce((x, y) => x + y, 0);
@@ -34,7 +30,6 @@
  * console.log(memoizedSum([1, 2])); // 3
  * console.log(memoizedSum([1, 2])); // 3 (cached result)
  * console.log(memoizedSum.cache.size); // 1
- *
  * @example
  * // Example using a custom cache implementation
  * class CustomCache<K, T> implements MemoizeCache<K, T> {
@@ -75,11 +70,14 @@ export function memoize<F extends (...args: any) => any>(
   options: {
     cache?: MemoizeCache<any, ReturnType<F>>;
     getCacheKey?: (args: Parameters<F>[0]) => unknown;
-  } = {}
+  } = {},
 ): F & { cache: MemoizeCache<any, ReturnType<F>> } {
   const { cache = new Map<unknown, ReturnType<F>>(), getCacheKey } = options;
 
-  const memoizedFn = function (this: unknown, arg: Parameters<F>[0]): ReturnType<F> {
+  const memoizedFn = function (
+    this: unknown,
+    arg: Parameters<F>[0],
+  ): ReturnType<F> {
     const key = getCacheKey ? getCacheKey(arg) : arg;
 
     if (cache.has(key)) {
@@ -100,50 +98,45 @@ export function memoize<F extends (...args: any) => any>(
 
 /**
  * Represents a cache for memoization, allowing storage and retrieval of computed values.
- *
  * @template K - The type of keys used to store values in the cache.
  * @template V - The type of values stored in the cache.
  */
-export interface MemoizeCache<K, V> {
+export type MemoizeCache<K, V> = {
   /**
    * Stores a value in the cache with the specified key.
-   *
    * @param key - The key to associate with the value.
    * @param value - The value to store in the cache.
    */
-  set(key: K, value: V): void;
+  set: (key: K, value: V) => void;
 
   /**
    * Retrieves a value from the cache by its key.
-   *
    * @param key - The key of the value to retrieve.
    * @returns The value associated with the key, or undefined if the key does not exist.
    */
-  get(key: K): V | undefined;
+  get: (key: K) => V | undefined;
 
   /**
    * Checks if a value exists in the cache for the specified key.
-   *
    * @param key - The key to check for existence in the cache.
    * @returns True if the cache contains the key, false otherwise.
    */
-  has(key: K): boolean;
+  has: (key: K) => boolean;
 
   /**
    * Deletes a value from the cache by its key.
-   *
    * @param key - The key of the value to delete.
    * @returns True if the value was successfully deleted, false otherwise.
    */
-  delete(key: K): boolean | void;
+  delete: (key: K) => boolean | void;
 
   /**
    * Clears all values from the cache.
    */
-  clear(): void;
+  clear: () => void;
 
   /**
    * The number of entries in the cache.
    */
   size: number;
-}
+};

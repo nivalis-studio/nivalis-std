@@ -29,8 +29,8 @@ describe('sortedIndex', () => {
 
     const actual = values.map(array => [
       sortedIndex(array as any, 1),
-      sortedIndex(array as any, undefined),
-      sortedIndex(array as any, NaN),
+      sortedIndex(array as any),
+      sortedIndex(array as any, Number.NaN),
     ]);
 
     expect(actual).toEqual(expected);
@@ -41,16 +41,36 @@ describe('sortedIndex', () => {
     const symbol2 = Symbol ? Symbol('b') : null;
     const symbol3 = Symbol ? Symbol('c') : null;
 
-    const expected = [1, '2', {}, symbol1, symbol2, null, undefined, NaN, NaN];
+    const expected = [
+      1,
+      '2',
+      {},
+      symbol1,
+      symbol2,
+      null,
+      undefined,
+      Number.NaN,
+      Number.NaN,
+    ];
 
-    const array = [NaN, symbol1, null, 1, '2', {}, symbol2, NaN, undefined];
+    const array = [
+      Number.NaN,
+      symbol1,
+      null,
+      1,
+      '2',
+      {},
+      symbol2,
+      Number.NaN,
+      undefined,
+    ];
 
     expect(sortBy(array)).toEqual(expected);
     expect(sortedIndex(expected, 3)).toBe(2);
     expect(sortedIndex(expected, symbol3)).toBe(3);
     expect(sortedIndex(expected, null)).toBe(5);
-    expect(sortedIndex(expected, undefined)).toBe(6);
-    expect(sortedIndex(expected, NaN)).toBe(7);
+    expect(sortedIndex(expected)).toBe(6);
+    expect(sortedIndex(expected, Number.NaN)).toBe(7);
   });
 
   it(`should handle arrays with nulls`, () => {

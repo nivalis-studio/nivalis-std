@@ -19,14 +19,12 @@ import { isEqualWith as isEqualWithToolkit } from '../../predicate/isEqualWith.t
  * - `xParent`: The parent of the first value `x`.
  * - `yParent`: The parent of the second value `y`.
  * - `stack`: An internal stack (Map) to handle circular references.
- *
  * @param {unknown} a - The first value to compare.
  * @param {unknown} b - The second value to compare.
- * @param {(x: any, y: any, property?: PropertyKey, xParent?: any, yParent?: any, stack?: Map<any, any>) => boolean | void} [areValuesEqual=noop] - A function to customize the comparison.
+ * @param {(x: any, y: any, property?: PropertyKey, xParent?: any, yParent?: any, stack?: Map<any, any>) => boolean | void} [areValuesEqual] - A function to customize the comparison.
  *   If it returns a boolean, that result will be used. If it returns undefined,
  *   the default equality comparison will be used.
  * @returns {boolean} `true` if the values are equal according to the customizer, otherwise `false`.
- *
  * @example
  * const customizer = (a, b) => {
  *   if (typeof a === 'string' && typeof b === 'string') {
@@ -46,8 +44,8 @@ export function isEqualWith(
     property?: PropertyKey,
     aParent?: any,
     bParent?: any,
-    stack?: Map<any, any>
-  ) => boolean | void = noop
+    stack?: Map<any, any>,
+  ) => boolean | void = noop,
 ): boolean {
   if (typeof areValuesEqual !== 'function') {
     areValuesEqual = noop;
@@ -62,19 +60,19 @@ export function isEqualWith(
 
     if (a instanceof Map && b instanceof Map) {
       return isEqualWith(
-        Array.from(a),
-        Array.from(b),
+        [...a],
+        [...b],
         // areValuesEqual should not be called for converted values
-        after(2, areValuesEqual)
+        after(2, areValuesEqual),
       );
     }
 
     if (a instanceof Set && b instanceof Set) {
       return isEqualWith(
-        Array.from(a),
-        Array.from(b),
+        [...a],
+        [...b],
         // areValuesEqual should not be called for converted values
-        after(2, areValuesEqual)
+        after(2, areValuesEqual),
       );
     }
   });

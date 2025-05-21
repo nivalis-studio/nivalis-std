@@ -1,6 +1,7 @@
-import { debounce, type DebouncedFunction } from './debounce.ts';
+import { debounce } from './debounce.ts';
+import type { DebouncedFunction } from './debounce.ts';
 
-interface ThrottleOptions {
+type ThrottleOptions = {
   /**
    * An optional AbortSignal to cancel the function invocation on the trailing edge.
    */
@@ -17,13 +18,12 @@ interface ThrottleOptions {
    * @default true
    */
   trailing?: boolean;
-}
+};
 
 /**
  * Creates a throttled function that only invokes the provided function at most once
  * per every `throttleMs` milliseconds. Subsequent calls to the throttled function
  * within the wait time will not trigger the execution of the original function.
- *
  * @template F - The type of function.
  * @param {F} func - The function to throttle.
  * @param {number} throttleMs - The number of milliseconds to throttle executions to.
@@ -32,7 +32,6 @@ interface ThrottleOptions {
  * @param {boolean} options.leading - If `true`, the function will be invoked on the leading edge of the timeout.
  * @param {boolean} options.trailing - If `true`, the function will be invoked on the trailing edge of the timeout.
  * @returns {(...args: Parameters<F>) => void} A new throttled function that accepts the same parameters as the original function.
- *
  * @example
  * const throttledFunction = throttle(() => {
  *   console.log('Function executed');
@@ -52,7 +51,7 @@ interface ThrottleOptions {
 export function throttle<F extends (...args: any[]) => any>(
   func: F,
   throttleMs = 0,
-  options: ThrottleOptions = {}
+  options: ThrottleOptions = {},
 ): DebouncedFunction<F> {
   if (typeof options !== 'object') {
     options = {};

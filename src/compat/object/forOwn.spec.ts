@@ -18,7 +18,7 @@ describe('forOwn', () => {
 
   it('should return `object` itself', () => {
     expect(forOwn(null)).toBe(null);
-    expect(forOwn(undefined)).toBe(undefined);
+    expect(forOwn()).toBe(undefined);
     expect(forOwn([])).toEqual([]);
     expect(forOwn([1])).toEqual([1]);
     expect(forOwn({ 0: 1, length: 1 })).toEqual({ 0: 1, length: 1 });
@@ -49,6 +49,7 @@ describe('forOwn', () => {
 
     forOwn(object, (_, key) => {
       keys.push(key);
+
       if (keys.length === 1) {
         return false;
       }
@@ -78,6 +79,7 @@ describe('forOwn', () => {
       a: 1,
       b: 2,
     };
+
     Object.defineProperty(foo, 'c', {
       value: 3,
       enumerable: false,

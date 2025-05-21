@@ -1,16 +1,14 @@
-import { sortedLastIndex } from './sortedLastIndex.ts';
 import { eq } from '../util/eq.ts';
+import { sortedLastIndex } from './sortedLastIndex.ts';
 
 /**
  * Finds the index of the last occurrence of a value in a sorted array.
  * This function is similar to `Array#lastIndexOf` but is specifically designed for sorted arrays.
  *
  * Make sure to provide a sorted array to this function, as it uses a binary search to quickly find the index.
- *
  * @param {ArrayLike<T> | null | undefined} array The sorted array to inspect.
  * @param {T} value The value to search for.
  * @returns {number} Returns the index of the last matched value, else -1.
- *
  * @example
  * const numbers = [1, 2, 3, 4, 5];
  * sortedLastIndexOf(numbers, 3); // Return value: 2
@@ -33,14 +31,19 @@ import { eq } from '../util/eq.ts';
  * const arrayLike = { length: 3, 0: 10, 1: 20, 2: 20 };
  * sortedLastIndexOf(arrayLike, 20); // Return value: 2
  */
-export function sortedLastIndexOf<T>(array: ArrayLike<T> | null | undefined, value: T): number {
+export function sortedLastIndexOf<T>(
+  array: ArrayLike<T> | null | undefined,
+  value: T,
+): number {
   if (!array?.length) {
     return -1;
   }
 
   const index = sortedLastIndex(array, value) - 1;
+
   if (index >= 0 && eq(array[index], value)) {
     return index;
   }
+
   return -1;
 }

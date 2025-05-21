@@ -24,7 +24,7 @@ describe('inRange', () => {
 
   it('throws an error if the minimum is greater or equal than the maximum', () => {
     expect(() => inRange(1, 5, 2)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: The maximum value must be greater than the minimum value.]`
+      `[Error: The maximum value must be greater than the minimum value.]`,
     );
   });
 });

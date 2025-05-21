@@ -7,7 +7,7 @@ describe('isNull', () => {
   });
 
   it('returns false if the value is not null', () => {
-    expect(isNull(undefined)).toBe(false);
+    expect(isNull()).toBe(false);
     expect(isNull('')).toBe(false);
     expect(isNull(123)).toBe(false);
   });

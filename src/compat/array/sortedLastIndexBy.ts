@@ -3,13 +3,16 @@ import { sortedIndexBy } from './sortedIndexBy.ts';
 type PropertyName = string | number | symbol;
 
 // Lodash 스타일의 Iteratee 타입 정의
-type Iteratee<T, R> = ((value: T) => R) | PropertyName | [PropertyName, any] | Partial<T>;
+type Iteratee<T, R> =
+  | ((value: T) => R)
+  | PropertyName
+  | [PropertyName, any]
+  | Partial<T>;
 
 /**
  * This method is like `sortedLastIndex` except that it accepts `iteratee`
  * which is invoked for `value` and each element of `array` to compute their
  * sort ranking. The iteratee is invoked with one argument: (value).
- *
  * @param {ArrayLike<T> | null | undefined} array The sorted array to inspect.
  * @param {T} value The value to evaluate.
  * @param {(value: T) => R | PropertyName | [PropertyName, any] | Partial<T>} iteratee The iteratee invoked per element.
@@ -23,7 +26,7 @@ type Iteratee<T, R> = ((value: T) => R) | PropertyName | [PropertyName, any] | P
 export function sortedLastIndexBy<T, R>(
   array: ArrayLike<T> | null | undefined,
   value: T,
-  iteratee?: Iteratee<T, R>
+  iteratee?: Iteratee<T, R>,
 ): number {
   return sortedIndexBy(array, value, iteratee, true);
 }

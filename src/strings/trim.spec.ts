@@ -7,7 +7,9 @@ describe('trim', () => {
   });
 
   it('should return the string without special characters', () => {
-    expect(trim('!@#$%^&*wow%#$', ['!', '@', '#', '$', '%', '^', '&', '*'])).toEqual('wow');
+    expect(
+      trim('!@#$%^&*wow%#$', ['!', '@', '#', '$', '%', '^', '&', '*']),
+    ).toEqual('wow');
   });
 
   it('should return the string unchanged when no matching characters are found', () => {

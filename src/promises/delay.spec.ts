@@ -1,10 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
 import { performance } from 'node:perf_hooks';
+import { describe, expect, it, vi } from 'vitest';
 import { delay } from './delay';
 
 describe('delay', () => {
   it('pauses an async function for a given time', async () => {
     const start = performance.now();
+
     await delay(100);
     const end = performance.now();
 
@@ -15,9 +16,13 @@ describe('delay', () => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    setTimeout(() => controller.abort(), 50);
+    setTimeout(() => {
+      controller.abort();
+    }, 50);
 
-    await expect(delay(100, { signal })).rejects.toThrow('The operation was aborted');
+    await expect(delay(100, { signal })).rejects.toThrow(
+      'The operation was aborted',
+    );
   });
 
   it('should not call the delay if it is already aborted by AbortSignal', async () => {
@@ -27,7 +32,9 @@ describe('delay', () => {
 
     controller.abort();
 
-    await expect(delay(100, { signal })).rejects.toThrow('The operation was aborted');
+    await expect(delay(100, { signal })).rejects.toThrow(
+      'The operation was aborted',
+    );
 
     expect(spy).not.toHaveBeenCalled();
     spy.mockRestore();

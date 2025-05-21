@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { isArrayLike } from './isArrayLike';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
+import { isArrayLike } from './isArrayLike';
 
 describe('isArrayLike', () => {
   it('should return `true` for array-like values', () => {

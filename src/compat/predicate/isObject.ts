@@ -6,10 +6,8 @@
  * It returns `true` if the value is an object, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to an object value.
- *
  * @param {unknown} value - The value to check if it is an object.
  * @returns {value is object} `true` if the value is an object, `false` otherwise.
- *
  * @example
  * const value1 = {};
  * const value2 = [1, 2, 3];
@@ -23,5 +21,7 @@
  */
 
 export function isObject(value?: unknown): value is object {
-  return value !== null && (typeof value === 'object' || typeof value === 'function');
+  return (
+    value !== null && (typeof value === 'object' || typeof value === 'function')
+  );
 }

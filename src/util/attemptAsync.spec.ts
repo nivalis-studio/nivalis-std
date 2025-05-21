@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { attemptAsync } from './attemptAsync';
 import { delay } from '../promise';
+import { attemptAsync } from './attemptAsync';
 
 describe('attemptAsync', () => {
   it('should return the result of the async function', async () => {
     const [error, result] = await attemptAsync(async () => 1);
+
     expect(error).toBeNull();
     expect(result).toBe(1);
   });
@@ -13,6 +14,7 @@ describe('attemptAsync', () => {
     const [error, result] = await attemptAsync(async () => {
       throw new Error('test');
     });
+
     expect(error).toBeInstanceOf(Error);
     expect(error instanceof Error && error.message).toBe('test');
     expect(result).toBeNull();
@@ -23,6 +25,7 @@ describe('attemptAsync', () => {
       await delay(100);
       throw new Error('delayed error');
     });
+
     expect(error).toBeInstanceOf(Error);
     expect(error instanceof Error && error.message).toBe('delayed error');
     expect(result).toBeNull();
@@ -32,8 +35,10 @@ describe('attemptAsync', () => {
     const [error, result] = await attemptAsync(async () => {
       const value1 = await Promise.resolve(10);
       const value2 = await Promise.resolve(20);
+
       return value1 + value2;
     });
+
     expect(error).toBeNull();
     expect(result).toBe(30);
   });
@@ -42,6 +47,7 @@ describe('attemptAsync', () => {
     const [error, result] = await attemptAsync(async () => {
       throw 'string error'; // Not an Error instance
     });
+
     expect(error).toBe('string error');
     expect(result).toBeNull();
   });

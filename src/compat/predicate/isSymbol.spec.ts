@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { isSymbol } from './isSymbol';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { stubFalse } from '../util/stubFalse';
+import { isSymbol } from './isSymbol';
 
 describe('isSymbol', () => {
   it('should return `true` for symbols', () => {
     expect(isSymbol(Symbol('a'))).toBe(true);
-    expect(isSymbol(Object(Symbol('a')))).toBe(true);
+    expect(isSymbol(new Object(Symbol('a')))).toBe(true);
   });
 
   it('should return `false` for non-symbols', () => {

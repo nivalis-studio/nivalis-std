@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { identity, isObject, mergeWith } from '..';
-import _ from '..';
+import _, { identity, isObject, mergeWith } from '..';
 import { curry } from './curry';
 import { partialRight } from './partialRight';
 
@@ -9,6 +8,7 @@ describe('partialRight', () => {
 
   it('should partially apply arguments', () => {
     const par = partialRight(identity, 'a');
+
     expect(par()).toBe('a');
   });
 
@@ -17,6 +17,7 @@ describe('partialRight', () => {
       return [a, b];
     };
     const par = partialRight(fn, 'a');
+
     expect(par('b')).toEqual(['b', 'a']);
   });
 
@@ -25,32 +26,36 @@ describe('partialRight', () => {
       return arguments.length;
     };
     const par = partialRight(fn);
+
     expect(par()).toBe(0);
   });
 
   it('should work when there are no partially applied arguments and the created function is invoked with additional arguments', () => {
     const par = partialRight(identity);
+
     expect(par('a')).toBe('a');
   });
 
   it('should support placeholders', () => {
     const fn = function () {
       // eslint-disable-next-line prefer-rest-params
-      return Array.from(arguments);
+      return [...arguments];
     };
     const par = partialRight(fn, placeholder, 'b', placeholder) as any;
+
     expect(par('a', 'c')).toEqual(['a', 'b', 'c']);
     expect(par('a')).toEqual(['a', 'b', undefined]);
     expect(par()).toEqual([undefined, 'b', undefined]);
 
     const par2 = partialRight(fn, placeholder, 'c', placeholder) as any;
+
     expect(par2('a', 'b', 'd')).toEqual(['a', 'b', 'c', 'd']);
   });
 
   it('should create a function with a length of 0', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (_a: string, _b: string, _c: string) {};
     const par = partialRight(fn, 'a');
+
     expect(par.length).toBe(0);
   });
 
@@ -95,7 +100,7 @@ describe('partialRight', () => {
   it('should work with placeholders and curried functions', () => {
     const fn = function () {
       // eslint-disable-next-line prefer-rest-params
-      return Array.from(arguments);
+      return [...arguments];
     };
     const curried = curry(fn);
     const par = partialRight(curried, placeholder, 'b', placeholder, 'd');
@@ -108,9 +113,12 @@ describe('partialRight', () => {
     const source = { a: { b: 3, c: 3 } };
     const expected = { a: { b: 2, c: 3 } };
 
-    const defaultsDeep = partialRight(mergeWith, function deep(value: any, other: any) {
-      return isObject(value) ? mergeWith(value, other, deep) : value;
-    }) as any;
+    const defaultsDeep = partialRight(
+      mergeWith,
+      function deep(value: any, other: any) {
+        return isObject(value) ? mergeWith(value, other, deep) : value;
+      },
+    ) as any;
 
     expect(defaultsDeep(object, source)).toEqual(expected);
   });
@@ -120,6 +128,7 @@ describe('partialRight', () => {
       return a + b + c;
     };
     const par = partialRight(fn, _, 'b', _);
+
     expect(par('a', 'c')).toBe('abc');
   });
 });

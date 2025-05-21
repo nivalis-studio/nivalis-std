@@ -27,17 +27,28 @@ describe('camelCase', () => {
     expect(camelCase('Product XMLs')).toBe('productXmLs');
   });
 
-  const strings = ['foo bar', 'Foo bar', 'foo Bar', 'Foo Bar', 'FOO BAR', 'fooBar', '--foo-bar--', '__foo_bar__'];
+  const strings = [
+    'foo bar',
+    'Foo bar',
+    'foo Bar',
+    'Foo Bar',
+    'FOO BAR',
+    'fooBar',
+    '--foo-bar--',
+    '__foo_bar__',
+  ];
 
   it('should convert string to camel case', () => {
     const actual = strings.map(camelCase);
     const expected = strings.map(() => 'fooBar');
+
     expect(actual).toEqual(expected);
   });
 
   it('should handle double-converting strings', () => {
     const actual = strings.map(str => camelCase(camelCase(str)));
     const expected = strings.map(() => 'fooBar');
+
     expect(actual).toEqual(expected);
   });
 
@@ -45,19 +56,23 @@ describe('camelCase', () => {
     const apostrophes = ["'", '\u2019'];
     const postfixes = ['d', 'll', 'm', 're', 's', 't', 've'];
 
-    const actual = apostrophes.map(apostrophe => postfixes.map(postfix => camelCase(`a b${apostrophe}${postfix} c`)));
-    const expected = apostrophes.map(() => postfixes.map(postfixes => `aB${postfixes}C`));
+    const actual = apostrophes.map(apostrophe =>
+      postfixes.map(postfix => camelCase(`a b${apostrophe}${postfix} c`)),
+    );
+    const expected = apostrophes.map(() =>
+      postfixes.map(postfixes => `aB${postfixes}C`),
+    );
 
     expect(actual).toEqual(expected);
   });
 
   it('should remove remove Latin mathematical operators', () => {
-    expect(camelCase('\xd7')).toBe('');
-    expect(camelCase('\xf7')).toBe('');
+    expect(camelCase('\u00D7')).toBe('');
+    expect(camelCase('\u00F7')).toBe('');
   });
 
   it('should coerce string to a string', () => {
-    expect(camelCase(Object('foo bar'))).toBe('fooBar');
+    expect(camelCase(new Object('foo bar'))).toBe('fooBar');
     expect(camelCase({ toString: () => 'foo bar' })).toBe('fooBar');
   });
 });

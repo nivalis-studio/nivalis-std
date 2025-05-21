@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isArrayLikeObject } from './isArrayLikeObject';
 import { toArgs } from '../_internal/toArgs';
+import { isArrayLikeObject } from './isArrayLikeObject';
 
 describe('isArrayLikeObject', () => {
   it('should return `true` for non-primitive, array-like objects', () => {
@@ -14,7 +14,7 @@ describe('isArrayLikeObject', () => {
     expect(isArrayLikeObject('abc')).toBe(false);
     expect(isArrayLikeObject(1)).toBe(false);
     expect(isArrayLikeObject(true)).toBe(false);
-    expect(isArrayLikeObject(undefined)).toBe(false);
+    expect(isArrayLikeObject()).toBe(false);
     expect(isArrayLikeObject(null)).toBe(false);
     expect(isArrayLikeObject(Symbol())).toBe(false);
     expect(isArrayLikeObject(1n)).toBe(false);

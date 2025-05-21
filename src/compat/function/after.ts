@@ -6,7 +6,6 @@ import { toInteger } from '../util/toInteger.ts';
  *
  * This is particularly useful for scenarios involving events or asynchronous operations
  * where an action should occur only after a certain number of invocations.
- *
  * @template F - The type of the function to be invoked.
  * @param {number} n - The number of calls required for `func` to execute.
  * @param {F} func - The function to be invoked.
@@ -30,12 +29,14 @@ import { toInteger } from '../util/toInteger.ts';
  */
 export function after<F extends (...args: any[]) => any>(
   n: number,
-  func: F
+  func: F,
 ): (...args: Parameters<F>) => ReturnType<F> | undefined {
   if (typeof func !== 'function') {
     throw new TypeError('Expected a function');
   }
+
   n = toInteger(n);
+
   return function (this: any, ...args: Parameters<F>) {
     if (--n < 1) {
       return func.apply(this, args);

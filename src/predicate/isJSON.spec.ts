@@ -22,7 +22,7 @@ describe('isJSON', () => {
 
   it('returns false if the value is not a string', () => {
     expect(isJSON(null)).toBe(false);
-    expect(isJSON(undefined)).toBe(false);
+    expect(isJSON()).toBe(false);
     expect(isJSON(123)).toBe(false);
     expect(isJSON(true)).toBe(false);
     expect(isJSON({})).toBe(false);

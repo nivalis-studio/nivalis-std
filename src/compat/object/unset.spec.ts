@@ -1,25 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { unset } from './unset';
 import { numberProto } from '../_internal/numberProto';
 import { stringProto } from '../_internal/stringProto';
 import { symbol } from '../_internal/symbol';
 import { toString } from '../util/toString';
+import { unset } from './unset';
 
 describe('unset', () => {
   it('should unset property values', () => {
-    ['a', ['a']].forEach(path => {
+    for (const path of ['a', ['a']]) {
       const object = { a: 1, c: 2 };
+
       expect(unset(object, path)).toBe(true);
       expect(object).toEqual({ c: 2 });
-    });
+    }
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const expected = props.map(() => [true, false]);
 
     const actual = props.map(key => {
       const object = { '-0': 'a', 0: 'b' };
+
       return [unset(object, key), toString(key) in object];
     });
 
@@ -28,6 +30,7 @@ describe('unset', () => {
 
   it('should unset symbol keyed property values', () => {
     const object: any = {};
+
     object[symbol] = 1;
 
     expect(unset(object, symbol)).toBe(true);
@@ -35,11 +38,12 @@ describe('unset', () => {
   });
 
   it('should unset deep property values', () => {
-    ['a.b', ['a', 'b']].forEach(path => {
+    for (const path of ['a.b', ['a', 'b']]) {
       const object = { a: { b: null } };
+
       expect(unset(object, path)).toBe(true);
       expect(object).toEqual({ a: {} });
-    });
+    }
   });
 
   it('should handle complex paths', () => {
@@ -48,7 +52,7 @@ describe('unset', () => {
       ['a', '-1.23', '["b"]', 'c', "['d']", '\ne\n', 'f', 'g'],
     ];
 
-    paths.forEach(path => {
+    for (const path of paths) {
       const object = {
         a: {
           '-1.23': {
@@ -58,17 +62,18 @@ describe('unset', () => {
           },
         },
       };
+
       expect(unset(object, path)).toBe(true);
       expect('g' in object.a[-1.23]['["b"]'].c["['d']"]['\ne\n'].f).toBe(false);
-    });
+    }
   });
 
   it('should return `true` for nonexistent paths', () => {
     const object = { a: { b: { c: null } } };
 
-    ['z', 'a.z', 'a.b.z', 'a.b.c.z'].forEach(path => {
+    for (const path of ['z', 'a.z', 'a.b.z', 'a.b.c.z']) {
       expect(unset(object, path)).toBe(true);
-    });
+    }
 
     expect(object).toEqual({ a: { b: { c: null } } });
   });
@@ -83,8 +88,8 @@ describe('unset', () => {
     const actual = values.map(value => {
       try {
         return [unset(value, 'a.b'), unset(value, ['a', 'b'])];
-      } catch (e: any) {
-        return e.message;
+      } catch (error: any) {
+        return error.message;
       }
     });
 
@@ -93,27 +98,32 @@ describe('unset', () => {
 
   it('should follow `path` over non-plain objects', () => {
     const object = { a: '' };
-    const paths = ['constructor.prototype.a', ['constructor', 'prototype', 'a']];
+    const paths = [
+      'constructor.prototype.a',
+      ['constructor', 'prototype', 'a'],
+    ];
 
-    paths.forEach(path => {
+    for (const path of paths) {
       numberProto.a = 1;
 
       const actual = unset(0, path);
+
       expect(actual).toBe(true);
       expect('a' in numberProto).toBe(false);
 
       delete numberProto.a;
-    });
+    }
 
-    ['a.replace.b', ['a', 'replace', 'b']].forEach(path => {
+    for (const path of ['a.replace.b', ['a', 'replace', 'b']]) {
       stringProto.replace.b = 1;
 
       const actual = unset(object, path);
+
       expect(actual).toBe(true);
       expect('a' in stringProto.replace).toBe(false);
 
       delete stringProto.replace.b;
-    });
+    }
   });
 
   it('should return `false` for non-configurable properties', () => {

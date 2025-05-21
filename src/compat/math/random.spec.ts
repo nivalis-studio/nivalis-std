@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { random } from './random';
 import { uniq } from '../../array/uniq';
 import { stubTrue } from '../util/stubTrue';
+import { random } from './random';
 
 describe('random', () => {
   const array = Array.from({ length: 100 });
@@ -19,8 +19,9 @@ describe('random', () => {
     expect(
       array.some(() => {
         const result = random(min, max);
+
         return result >= min && result <= max;
-      })
+      }),
     ).toBeTruthy();
   });
 
@@ -31,8 +32,9 @@ describe('random', () => {
     expect(
       array.some(() => {
         const result = random(max);
+
         return result >= min && result <= max;
-      })
+      }),
     ).toBeTruthy();
   });
 
@@ -53,8 +55,9 @@ describe('random', () => {
     expect(
       array.every(() => {
         const result = random(min, max);
+
         return result >= min && result <= max;
-      })
+      }),
     ).toBeTruthy();
 
     expect(array.some(() => random(Number.MAX_SAFE_INTEGER)));
@@ -63,7 +66,11 @@ describe('random', () => {
   it('should coerce arguments to finite numbers', () => {
     // eslint-disable-next-line
     // @ts-ignore
-    const actual = [random(NaN, NaN), random('1', '1'), random(Infinity, Infinity)];
+    const actual = [
+      random(Number.NaN, Number.NaN),
+      random('1', '1'),
+      random(Infinity, Infinity),
+    ];
 
     expect(actual).toEqual([0, 1, Number.MAX_SAFE_INTEGER]);
   });
@@ -79,6 +86,7 @@ describe('random', () => {
 
   it('should support providing a `floating`', () => {
     let actual = random(true);
+
     expect(actual % 1 && actual >= 0 && actual <= 1);
 
     actual = random(2, true);
@@ -93,7 +101,10 @@ describe('random', () => {
     const expected = array.map(stubTrue);
     const randoms = array.map(random);
 
-    const actual = randoms.map((result, index) => result >= 0 && result <= array[index] && result % 1 === 0);
+    const actual = randoms.map(
+      (result, index) =>
+        result >= 0 && result <= array[index] && result % 1 === 0,
+    );
 
     expect(actual).toEqual(expected);
   });

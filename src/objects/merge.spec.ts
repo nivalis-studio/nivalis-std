@@ -40,6 +40,7 @@ describe('merge', () => {
 
     const target2 = { a: [1, 2], b: { x: 1 } };
     const source2 = { a: [3], b: { y: 2 } };
+
     expect(merge(target2, source2)).toEqual({ a: [3, 2], b: { x: 1, y: 2 } });
   });
 

@@ -1,7 +1,6 @@
 /**
  * Finds the element in an array that has the maximum value when applying
  * the `getValue` function to each element.
- *
  * @template T - The type of elements in the array.
  * @param {[T, ...T[]]} items The nonempty array of elements to search.
  * @param {(element: T) => number} getValue A function that selects a numeric value from each element.
@@ -18,11 +17,13 @@
  *   x => x.age
  * ); // Returns: { name: 'john', age: 30 }
  */
-export function maxBy<T>(items: readonly [T, ...T[]], getValue: (element: T) => number): T;
+export function maxBy<T>(
+  items: readonly [T, ...T[]],
+  getValue: (element: T) => number,
+): T;
 /**
  * Finds the element in an array that has the maximum value when applying
  * the `getValue` function to each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} items The array of elements to search.
  * @param {(element: T) => number} getValue A function that selects a numeric value from each element.
@@ -40,11 +41,14 @@ export function maxBy<T>(items: readonly [T, ...T[]], getValue: (element: T) => 
  *   x => x.age
  * ); // Returns: { name: 'john', age: 30 }
  */
-export function maxBy<T>(items: readonly T[], getValue: (element: T) => number): T | undefined;
+export function maxBy<T>(
+  items: readonly T[],
+  getValue: (element: T) => number,
+): T | undefined;
+
 /**
  * Finds the element in an array that has the maximum value when applying
  * the `getValue` function to each element.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} items The array of elements to search.
  * @param {(element: T) => number} getValue A function that selects a numeric value from each element.
@@ -62,7 +66,10 @@ export function maxBy<T>(items: readonly T[], getValue: (element: T) => number):
  *   x => x.age
  * ); // Returns: { name: 'john', age: 30 }
  */
-export function maxBy<T>(items: readonly T[], getValue: (element: T) => number): T | undefined {
+export function maxBy<T>(
+  items: readonly T[],
+  getValue: (element: T) => number,
+): T | undefined {
   if (items.length === 0) {
     return undefined;
   }
@@ -73,6 +80,7 @@ export function maxBy<T>(items: readonly T[], getValue: (element: T) => number):
   for (let i = 1; i < items.length; i++) {
     const element = items[i];
     const value = getValue(element);
+
     if (value > max) {
       max = value;
       maxElement = element;

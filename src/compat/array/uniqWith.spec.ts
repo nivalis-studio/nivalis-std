@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { uniqWith } from './uniqWith';
 import { isEven } from '../_internal/isEven';
 import { LARGE_ARRAY_SIZE } from '../_internal/LARGE_ARRAY_SIZE';
+import { uniqWith } from './uniqWith';
 
 describe('uniqWith', () => {
   const objects = [{ a: 2 }, { a: 3 }, { a: 1 }, { a: 2 }, { a: 3 }, { a: 1 }];
@@ -20,13 +20,15 @@ describe('uniqWith', () => {
   });
 
   it('should preserve the sign of `0`', () => {
-    const largeArray = lodashStable.times(LARGE_ARRAY_SIZE, index => (isEven(index) ? -0 : 0));
+    const largeArray = lodashStable.times(LARGE_ARRAY_SIZE, index =>
+      isEven(index) ? -0 : 0,
+    );
 
     const arrays = [[-0, 0], largeArray];
     const expected = lodashStable.map(arrays, lodashStable.constant(['-0']));
 
     const actual = lodashStable.map(arrays, array =>
-      lodashStable.map(uniqWith(array, lodashStable.eq), lodashStable.toString)
+      lodashStable.map(uniqWith(array, lodashStable.eq), lodashStable.toString),
     );
 
     expect(actual).toEqual(expected);
@@ -35,11 +37,13 @@ describe('uniqWith', () => {
   // test case #2
   it(`should return unique values of an unsorted array`, () => {
     const array = [2, 1, 2];
+
     expect(uniqWith(array)).toEqual([2, 1]);
   });
 
   it(`should return unique values of a sorted array`, () => {
     const array = [1, 2, 2];
+
     expect(uniqWith(array)).toEqual([1, 2]);
   });
 
@@ -49,11 +53,12 @@ describe('uniqWith', () => {
 
   it(`should treat \`-0\` as \`0\``, () => {
     const actual = lodashStable.map(uniqWith([-0, 0]), lodashStable.toString);
+
     expect(actual).toEqual(['0']);
   });
 
   it(`should match \`NaN\``, () => {
-    expect(uniqWith([NaN, NaN])).toEqual([NaN]);
+    expect(uniqWith([Number.NaN, Number.NaN])).toEqual([Number.NaN]);
   });
 
   it(`should work with large arrays`, () => {
@@ -71,15 +76,21 @@ describe('uniqWith', () => {
   });
 
   it(`should work with large arrays of \`-0\` as \`0\``, () => {
-    const largeArray = lodashStable.times(LARGE_ARRAY_SIZE, index => (isEven(index) ? -0 : 0));
+    const largeArray = lodashStable.times(LARGE_ARRAY_SIZE, index =>
+      isEven(index) ? -0 : 0,
+    );
 
-    const actual = lodashStable.map(uniqWith(largeArray), lodashStable.toString);
+    const actual = lodashStable.map(
+      uniqWith(largeArray),
+      lodashStable.toString,
+    );
+
     expect(actual).toEqual(['0']);
   });
 
   it(`should work with large arrays of boolean, \`NaN\`, and nullish values`, () => {
     const largeArray: any[] = [];
-    const expected = [null, undefined, false, true, NaN];
+    const expected = [null, undefined, false, true, Number.NaN];
     const count = Math.ceil(LARGE_ARRAY_SIZE / expected.length);
 
     lodashStable.each(expected, value => {
@@ -94,6 +105,7 @@ describe('uniqWith', () => {
   it(`should work with large arrays of symbols`, () => {
     if (Symbol) {
       const largeArray = lodashStable.times(LARGE_ARRAY_SIZE, Symbol);
+
       expect(uniqWith(largeArray)).toEqual(largeArray);
     }
   });
@@ -132,7 +144,7 @@ describe('uniqWith', () => {
 
   it(`should distinguish between numbers and numeric strings`, () => {
     const largeArray: any[] = [];
-    const expected = ['2', 2, Object('2'), Object(2)];
+    const expected = ['2', 2, new Object('2'), new Object(2)];
     const count = Math.ceil(LARGE_ARRAY_SIZE / expected.length);
 
     lodashStable.each(expected, value => {
@@ -162,7 +174,7 @@ describe('uniqWith', () => {
       length: 3,
     };
 
-    const result = uniqWith(Array.from(arrayLike), (a, b) => a.id === b.id);
+    const result = uniqWith([...arrayLike], (a, b) => a.id === b.id);
 
     expect(result).toEqual([{ id: 1 }, { id: 2 }]);
   });

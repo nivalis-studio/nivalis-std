@@ -1,4 +1,3 @@
-import { cloneDeep } from './cloneDeep.ts';
 import { clone } from '../../object/clone.ts';
 import { isPrimitive } from '../../predicate/isPrimitive.ts';
 import { getSymbols } from '../_internal/getSymbols.ts';
@@ -6,6 +5,7 @@ import { isArguments } from '../predicate/isArguments.ts';
 import { isObjectLike } from '../predicate/isObjectLike.ts';
 import { isPlainObject } from '../predicate/isPlainObject.ts';
 import { isTypedArray } from '../predicate/isTypedArray.ts';
+import { cloneDeep } from './cloneDeep.ts';
 
 declare let Buffer:
   | {
@@ -32,15 +32,12 @@ declare let Buffer:
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {T} target - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {S} source - The first source object whose properties will be merged into the target object.
  * @param {(targetValue: any, sourceValue: any, key: string, target: T, source: S, stack: Map<any, any>) => any} merge - The function to customize merging properties.
  * @returns {T & S} The updated target object with properties from the source object(s) merged in.
- *
  * @template T - Type of the target object.
  * @template S - Type of the first source object.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -66,7 +63,14 @@ declare let Buffer:
 export function mergeWith<T, S>(
   target: T,
   source: S,
-  merge: (targetValue: any, sourceValue: any, key: string, target: T, source: S, stack: Map<any, any>) => any
+  merge: (
+    targetValue: any,
+    sourceValue: any,
+    key: string,
+    target: T,
+    source: S,
+    stack: Map<any, any>,
+  ) => any,
 ): T & S;
 
 /**
@@ -88,17 +92,14 @@ export function mergeWith<T, S>(
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {O} object - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {S1} source1 - The first source object to be merged into the target object.
  * @param {S2} source2 - The second source object to be merged into the target object.
  * @param {(targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any} merge - The function to customize merging properties.
  * @returns {O & S1 & S2} The updated target object with properties from the source objects merged in.
- *
  * @template O - Type of the target object.
  * @template S1 - Type of the first source object.
  * @template S2 - Type of the second source object.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -125,7 +126,14 @@ export function mergeWith<O, S1, S2>(
   object: O,
   source1: S1,
   source2: S2,
-  merge: (targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any
+  merge: (
+    targetValue: any,
+    sourceValue: any,
+    key: string,
+    target: any,
+    source: any,
+    stack: Map<any, any>,
+  ) => any,
 ): O & S1 & S2;
 
 /**
@@ -147,19 +155,16 @@ export function mergeWith<O, S1, S2>(
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {O} object - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {S1} source1 - The first source object whose properties will be merged into the target object.
  * @param {S2} source2 - The second source object whose properties will be merged into the target object.
  * @param {S3} source3 - The third source object whose properties will be merged into the target object.
  * @param {(targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any} merge - The function to customize merging properties.
  * @returns {O & S1 & S2 & S3} The updated target object with properties from the source object(s) merged in.
- *
  * @template O - Type of the target object.
  * @template S1 - Type of the first source object.
  * @template S2 - Type of the second source object.
  * @template S3 - Type of the third source object.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -187,7 +192,14 @@ export function mergeWith<O, S1, S2, S3>(
   source1: S1,
   source2: S2,
   source3: S3,
-  merge: (targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any
+  merge: (
+    targetValue: any,
+    sourceValue: any,
+    key: string,
+    target: any,
+    source: any,
+    stack: Map<any, any>,
+  ) => any,
 ): O & S1 & S2 & S3;
 
 /**
@@ -209,7 +221,6 @@ export function mergeWith<O, S1, S2, S3>(
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {O} object - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {S1} source1 - The first source object whose properties will be merged into the target object.
  * @param {S2} source2 - The second source object whose properties will be merged into the target object.
@@ -217,13 +228,11 @@ export function mergeWith<O, S1, S2, S3>(
  * @param {S4} source4 - The fourth source object whose properties will be merged into the target object.
  * @param {(targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any} merge - The function to customize merging properties.
  * @returns {O & S1 & S2 & S3 & S4} The updated target object with properties from the source object(s) merged in.
- *
  * @template O - Type of the target object.
  * @template S1 - Type of the first source object.
  * @template S2 - Type of the second source object.
  * @template S3 - Type of the third source object.
  * @template S4 - Type of the fourth source object.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -252,7 +261,14 @@ export function mergeWith<O, S1, S2, S3, S4>(
   source2: S2,
   source3: S3,
   source4: S4,
-  merge: (targetValue: any, sourceValue: any, key: string, target: any, source: any, stack: Map<any, any>) => any
+  merge: (
+    targetValue: any,
+    sourceValue: any,
+    key: string,
+    target: any,
+    source: any,
+    stack: Map<any, any>,
+  ) => any,
 ): O & S1 & S2 & S3;
 
 /**
@@ -274,12 +290,10 @@ export function mergeWith<O, S1, S2, S3, S4>(
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {any} object - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {any[]} sources - The source objects whose properties will be merged into the target object.
  * @param {...any} otherArgs - Additional source objects to merge into the target object, including the custom `merge` function.
  * @returns {any} The updated target object with properties from the source object(s) merged in.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -323,12 +337,10 @@ export function mergeWith(object: any, ...otherArgs: any[]): any;
  * The `merge` function should return the value to be set in the target object. If it returns `undefined`, a default deep merge will be applied for arrays and objects.
  *
  * The function can handle multiple source objects and will merge them all into the target object.
- *
  * @param {any} object - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {any[]} sources - The source objects whose properties will be merged into the target object.
  * @param {...any} otherArgs - Additional source objects to merge into the target object, including the custom `merge` function.
  * @returns {any} The updated target object with properties from the source object(s) merged in.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -353,20 +365,18 @@ export function mergeWith(object: any, ...otherArgs: any[]): any;
  */
 export function mergeWith(object: any, ...otherArgs: any[]): any {
   const sources = otherArgs.slice(0, -1);
-  const merge = otherArgs[otherArgs.length - 1] as (
+  const merge = otherArgs.at(-1) as (
     targetValue: any,
     sourceValue: any,
     key: string | symbol,
     target: any,
     source: any,
-    stack: Map<any, any>
+    stack: Map<any, any>,
   ) => any;
 
   let result = object;
 
-  for (let i = 0; i < sources.length; i++) {
-    const source = sources[i];
-
+  for (const source of sources) {
     result = mergeWithDeep(result, source, merge, new Map());
   }
 
@@ -382,12 +392,12 @@ function mergeWithDeep(
     key: string | symbol,
     target: any,
     source: any,
-    stack: Map<any, any>
+    stack: Map<any, any>,
   ) => any,
-  stack: Map<any, any>
+  stack: Map<any, any>,
 ) {
   if (isPrimitive(target)) {
-    target = Object(target);
+    target = new Object(target);
   }
 
   if (source == null || typeof source !== 'object') {
@@ -401,7 +411,8 @@ function mergeWithDeep(
   stack.set(source, target);
 
   if (Array.isArray(source)) {
-    source = source.slice();
+    source = [...source];
+
     for (let i = 0; i < source.length; i++) {
       source[i] = source[i] ?? undefined;
     }
@@ -409,9 +420,7 @@ function mergeWithDeep(
 
   const sourceKeys = [...Object.keys(source), ...getSymbols(source)];
 
-  for (let i = 0; i < sourceKeys.length; i++) {
-    const key = sourceKeys[i];
-
+  for (const key of sourceKeys) {
     let sourceValue = source[key];
     let targetValue = target[key];
 
@@ -423,7 +432,7 @@ function mergeWithDeep(
       targetValue = { ...targetValue };
     }
 
-    if (typeof Buffer !== 'undefined' && Buffer.isBuffer(sourceValue)) {
+    if (Buffer !== undefined && Buffer.isBuffer(sourceValue)) {
       sourceValue = cloneDeep(sourceValue);
     }
 
@@ -432,8 +441,7 @@ function mergeWithDeep(
         const cloned: any = [];
         const targetKeys = Reflect.ownKeys(targetValue);
 
-        for (let i = 0; i < targetKeys.length; i++) {
-          const targetKey = targetKeys[i];
+        for (const targetKey of targetKeys) {
           cloned[targetKey] = targetValue[targetKey];
         }
 

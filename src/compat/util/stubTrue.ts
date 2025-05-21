@@ -1,6 +1,5 @@
 /**
  * Returns true.
- *
  * @returns {boolean} true.
  * @example
  * stubTrue() // Returns true

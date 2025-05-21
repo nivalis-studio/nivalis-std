@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { filter } from './filter';
 import { args } from '../_internal/args';
 import { isEven } from '../_internal/isEven';
+import { filter } from './filter';
 
 function isEven2(n: string) {
-  return parseInt(n) % 2 === 0;
+  return Number.parseInt(n) % 2 === 0;
 }
 
 describe('filter', () => {
@@ -25,6 +25,7 @@ describe('filter', () => {
       { id: 1, name: 'Alice' },
       { id: 2, name: 'Bob' },
     ];
+
     expect(filter(arr, { name: 'Bob' })).toEqual([{ id: 2, name: 'Bob' }]);
   });
 
@@ -33,6 +34,7 @@ describe('filter', () => {
       { id: 1, name: 'Alice', 0: 1, [Symbol.for('key')]: 1 },
       { id: 2, name: 'Bob', 0: 2, [Symbol.for('key')]: 2 },
     ];
+
     expect(filter(arr, ['name', 'Alice'])).toEqual(arr.slice(0, 1));
     expect(filter(arr, [0, 1])).toEqual(arr.slice(0, 1));
     expect(filter(arr, [Symbol.for('key'), 1])).toEqual(arr.slice(0, 1));
@@ -42,7 +44,9 @@ describe('filter', () => {
       { user: 'fred', age: 40, active: false },
     ];
 
-    expect(filter(users, ['active', false])).toEqual([{ user: 'fred', age: 40, active: false }]);
+    expect(filter(users, ['active', false])).toEqual([
+      { user: 'fred', age: 40, active: false },
+    ]);
   });
 
   it(`filter should work with \`property\` shorthands`, () => {
@@ -103,7 +107,7 @@ describe('filter', () => {
   });
 
   it(`filter should work when looking for values inside nested objects`, () => {
-    const obj: Record<string, unknown> = {
+    const obj: { [key: string]: unknown } = {
       item1: { a: 0, b: { c: 1 } },
       item2: { a: 1, b: { c: 2 } },
       item3: { a: 0, b: { c: 1 } },
@@ -156,6 +160,7 @@ describe('filter', () => {
     const actual = filter([0], (value, index, array) => {
       // @ts-expect-error - testing
       array[index] = 1;
+
       return true;
     });
 
@@ -167,6 +172,9 @@ describe('filter', () => {
     const sparseArray = [1, , 3, , 5] as any[];
 
     expect(filter(sparseArray, value => value > 0)).toEqual([1, 3, 5]);
-    expect(filter(sparseArray, value => value === undefined)).toEqual([undefined, undefined]);
+    expect(filter(sparseArray, value => value === undefined)).toEqual([
+      undefined,
+      undefined,
+    ]);
   });
 });

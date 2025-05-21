@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { flattenDeep } from './flattenDeep';
 import { args } from '../_internal/args';
+import { flattenDeep } from './flattenDeep';
 
 describe('flattenDeep', () => {
   it('should flattenDeep `arguments` objects', () => {
@@ -12,7 +12,7 @@ describe('flattenDeep', () => {
   });
 
   it('should treat sparse arrays as dense', () => {
-    const array = [[1, 2, 3], Array(3)];
+    const array = [[1, 2, 3], Array.from({ length: 3 })];
     const expected = [1, 2, 3, undefined, undefined, undefined];
     const actual = flattenDeep(array);
 
@@ -25,6 +25,7 @@ describe('flattenDeep', () => {
     const array = [object];
     const expected = ['a'];
     const actual = flattenDeep(array);
+
     expect(actual).toEqual(expected);
   });
 

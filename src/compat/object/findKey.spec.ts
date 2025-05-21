@@ -7,6 +7,7 @@ describe('findKey', () => {
     { a: 1, b: 1 },
     { a: 2, b: 2 },
   ];
+
   it('should return the found key', () => {
     // @ts-expect-error invalid argument
     expect(findKey(objects, object => object.a)).toBe('1');
@@ -31,10 +32,11 @@ describe('findKey', () => {
 
   it('should return undefined for empty collections', () => {
     const emptyValues = [[], {}, null, undefined, ''];
-    emptyValues.forEach(value => {
+
+    for (const value of emptyValues) {
       // @ts-expect-error invalid argument
       expect(findKey(value, { a: 3 })).toBeUndefined();
-    });
+    }
   });
 
   it('should work with an object for `collection`', () => {
@@ -47,7 +49,7 @@ describe('findKey', () => {
 
     findKey(object, function () {
       // eslint-disable-next-line prefer-rest-params
-      args = Array.from(arguments);
+      args = [...arguments];
     });
 
     expect(args).toEqual([1, 'a', object]);

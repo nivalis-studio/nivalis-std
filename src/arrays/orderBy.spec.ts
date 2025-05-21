@@ -53,11 +53,13 @@ describe('orderBy', () => {
   });
 
   it('should order objects by criteria functions', () => {
-    expect(orderBy(users2, [obj => obj.user, obj => obj.age], ['asc'])).toEqual([
-      { user: 'barney', age: 34 },
-      { user: 'barney', age: 36 },
-      { user: 'fred', age: 40 },
-      { user: 'fred', age: 48 },
-    ]);
+    expect(orderBy(users2, [obj => obj.user, obj => obj.age], ['asc'])).toEqual(
+      [
+        { user: 'barney', age: 34 },
+        { user: 'barney', age: 36 },
+        { user: 'fred', age: 40 },
+        { user: 'fred', age: 48 },
+      ],
+    );
   });
 });

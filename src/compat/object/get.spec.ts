@@ -1,29 +1,33 @@
 import { describe, expect, it } from 'vitest';
-import { get } from './get';
 import { empties } from '../_internal/empties';
+import { get } from './get';
 
 describe('get', () => {
   it('should return defaultVersion', () => {
     const obj = { a: { b: 3 } };
+
     expect(get(obj, 'a.c', null)).toBe(null);
     expect(get(obj, 'a.d', 4)).toBe(4);
-    expect(get(obj, 'a.e', undefined)).toBe(undefined);
+    expect(get(obj, 'a.e')).toBe(undefined);
     expect(get(obj, 0, 5)).toBe(5);
     expect(get(obj, Symbol('a'), 3)).toBe(3);
   });
 
   it('should return value', () => {
     const obj = { a: { b: 3 } };
+
     expect(get(obj, 'a.b')).toBe(3);
   });
 
   it('should return value with array', () => {
     const obj = { a: [{ b: 3 }] };
+
     expect(get(obj, 'a[0].b')).toBe(3);
   });
 
   it('should return undefined if array index number is not provided', () => {
     const obj = { a: [{ b: 1 }] };
+
     expect(get(obj, 'a[].b')).toBe(undefined);
   });
 
@@ -39,7 +43,7 @@ describe('get', () => {
 
   it(`should preserve the sign of \`0\``, () => {
     const object = { '-0': 'a', 0: 'b' };
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
 
     const actual = props.map(key => get(object, key));
 
@@ -49,6 +53,7 @@ describe('get', () => {
   it(`should get symbol keyed property values`, () => {
     const symbol = Symbol('a');
     const object: any = {};
+
     object[symbol] = 1;
 
     expect(get(object, symbol)).toBe(1);
@@ -70,11 +75,13 @@ describe('get', () => {
 
   it(`should not coerce array paths to strings`, () => {
     const object = { 'a,b,c': 3, a: { b: { c: 4 } } };
+
     expect(get(object, ['a', 'b', 'c'])).toBe(4);
   });
 
   it(`should not ignore empty brackets`, () => {
     const object = { a: { '': 1 } };
+
     expect(get(object, 'a[]')).toBe(1);
   });
 
@@ -88,11 +95,17 @@ describe('get', () => {
 
   it(`should handle complex paths`, () => {
     const object = {
-      a: { '-1.23': { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: 8 } } } } } } },
+      a: {
+        '-1.23': { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: 8 } } } } } },
+      },
     };
 
-    expect(get(object, 'a[-1.23]["[\\"b\\"]"].c[\'[\\\'d\\\']\'][\ne\n][f].g')).toBe(8);
-    expect(get(object, ['a', '-1.23', '["b"]', 'c', "['d']", '\ne\n', 'f', 'g'])).toBe(8);
+    expect(
+      get(object, 'a[-1.23]["[\\"b\\"]"].c[\'[\\\'d\\\']\'][\ne\n][f].g'),
+    ).toBe(8);
+    expect(
+      get(object, ['a', '-1.23', '["b"]', 'c', "['d']", '\ne\n', 'f', 'g']),
+    ).toBe(8);
   });
 
   it(`should return \`undefined\` when \`object\` is nullish`, () => {
@@ -102,7 +115,9 @@ describe('get', () => {
 
   it(`should return \`undefined\` for deep paths when \`object\` is nullish`, () => {
     expect(get(null, 'constructor.prototype.valueOf')).toEqual(undefined);
-    expect(get(null, ['constructor', 'prototype', 'valueOf'])).toEqual(undefined);
+    expect(get(null, ['constructor', 'prototype', 'valueOf'])).toEqual(
+      undefined,
+    );
   });
 
   it(`should return \`undefined\` if parts of \`path\` are missing`, () => {
@@ -135,14 +150,17 @@ describe('get', () => {
 
   it(`should return the default value for \`undefined\` values`, () => {
     const object = { a: {} };
-    const values = empties.concat(true, new Date(), 1, /x/, 'a');
+    const values = [...empties, true, new Date(), 1, /x/, 'a'];
     const expected = values.map(value => [value, value]);
 
-    ['a.b', ['a', 'b']].forEach(path => {
-      const actual = values.map(value => [get(object, path, value), get(null, path, value)]);
+    for (const path of ['a.b', ['a', 'b']]) {
+      const actual = values.map(value => [
+        get(object, path, value),
+        get(null, path, value),
+      ]);
 
       expect(actual).toEqual(expected);
-    });
+    }
   });
 
   it(`should return the default value when \`path\` is empty`, () => {

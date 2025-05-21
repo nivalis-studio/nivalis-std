@@ -12,39 +12,39 @@ describe('isEqual', () => {
   it('should compare primitives', () => {
     const pairs = [
       [1, 1, true],
-      [1, Object(1), true],
+      [1, new Object(1), true],
       [1, '1', false],
       [1, 2, false],
       [-0, -0, true],
       [0, 0, true],
-      [0, Object(0), true],
-      [Object(0), Object(0), true],
+      [0, new Object(0), true],
+      [new Object(0), new Object(0), true],
       [-0, 0, true],
       [0, '0', false],
       [0, null, false],
-      [NaN, NaN, true],
-      [NaN, Object(NaN), true],
-      [Object(NaN), Object(NaN), true],
-      [NaN, 'a', false],
-      [NaN, Infinity, false],
+      [Number.NaN, Number.NaN, true],
+      [Number.NaN, new Object(Number.NaN), true],
+      [new Object(Number.NaN), new Object(Number.NaN), true],
+      [Number.NaN, 'a', false],
+      [Number.NaN, Infinity, false],
       ['a', 'a', true],
-      ['a', Object('a'), true],
-      [Object('a'), Object('a'), true],
+      ['a', new Object('a'), true],
+      [new Object('a'), new Object('a'), true],
       ['a', 'b', false],
       ['a', ['a'], false],
       [true, true, true],
-      [true, Object(true), true],
-      [Object(true), Object(true), true],
+      [true, new Object(true), true],
+      [new Object(true), new Object(true), true],
       [true, 1, false],
       [true, 'a', false],
       [false, false, true],
-      [false, Object(false), true],
-      [Object(false), Object(false), true],
+      [false, new Object(false), true],
+      [new Object(false), new Object(false), true],
       [false, 0, false],
       [false, '', false],
       [symbol1, symbol1, true],
-      [symbol1, Object(symbol1), true],
-      [Object(symbol1), Object(symbol1), true],
+      [symbol1, new Object(symbol1), true],
+      [new Object(symbol1), new Object(symbol1), true],
       [symbol1, symbol2, false],
       [null, null, true],
       [null, undefined, false],
@@ -82,8 +82,24 @@ describe('isEqual', () => {
 
     expect(isEqual(array1, array2)).toBe(true);
 
-    array1 = [Object(1), false, Object('a'), /x/, new Date(2012, 4, 23), ['a', 'b', [Object('c')]], { a: 1 }];
-    array2 = [1, Object(false), 'a', /x/, new Date(2012, 4, 23), ['a', Object('b'), ['c']], { a: 1 }];
+    array1 = [
+      new Object(1),
+      false,
+      new Object('a'),
+      /x/,
+      new Date(2012, 4, 23),
+      ['a', 'b', [new Object('c')]],
+      { a: 1 },
+    ];
+    array2 = [
+      1,
+      new Object(false),
+      'a',
+      /x/,
+      new Date(2012, 4, 23),
+      ['a', new Object('b'), ['c']],
+      { a: 1 },
+    ];
 
     expect(isEqual(array1, array2)).toBe(true);
 
@@ -141,11 +157,11 @@ describe('isEqual', () => {
   });
 
   it('should compare sparse arrays', () => {
-    const array = Array(1);
+    const array = Array.from({ length: 1 });
 
-    expect(isEqual(array, Array(1))).toBe(true);
+    expect(isEqual(array, Array.from({ length: 1 }))).toBe(true);
     expect(isEqual(array, [undefined])).toBe(true);
-    expect(isEqual(array, Array(2))).toBe(false);
+    expect(isEqual(array, Array.from({ length: 2 }))).toBe(false);
   });
 
   it('should compare plain objects', () => {
@@ -186,11 +202,11 @@ describe('isEqual', () => {
     const object1 = {
       a: [1, 2, 3],
       b: true,
-      c: Object(1),
+      c: new Object(1),
       d: 'a',
       e: {
-        f: ['a', Object('b'), 'c'],
-        g: Object(false),
+        f: ['a', new Object('b'), 'c'],
+        g: new Object(false),
         h: new Date(2012, 4, 23),
         i: noop,
         j: 'a',
@@ -198,10 +214,10 @@ describe('isEqual', () => {
     };
 
     const object2 = {
-      a: [1, Object(2), 3],
-      b: Object(true),
+      a: [1, new Object(2), 3],
+      b: new Object(true),
       c: 1,
-      d: Object('a'),
+      d: new Object('a'),
       e: {
         f: ['a', 'b', 'c'],
         g: false,
@@ -220,6 +236,7 @@ describe('isEqual', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.a = 1;
 
     function Bar() {
@@ -227,6 +244,7 @@ describe('isEqual', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Bar.prototype.a = 2;
 
     // eslint-disable-next-line
@@ -299,12 +317,12 @@ describe('isEqual', () => {
     expect(isEqual(object1, object2)).toBe(true);
 
     object1.b = 0;
-    object2.b = Object(0);
+    object2.b = new Object(0);
 
     expect(isEqual(object1, object2)).toBe(true);
 
-    object1.c = Object(1);
-    object2.c = Object(2);
+    object1.c = new Object(1);
+    object2.c = new Object(2);
 
     expect(isEqual(object1, object2)).toBe(false);
 
@@ -337,12 +355,12 @@ describe('isEqual', () => {
     expect(isEqual(array1, array2)).toBe(true);
 
     array1[0].b = 0;
-    array2[0].b = Object(0);
+    array2[0].b = new Object(0);
 
     expect(isEqual(array1, array2)).toBe(true);
 
-    array1[0].c = Object(1);
-    array2[0].c = Object(2);
+    array1[0].c = new Object(1);
+    array2[0].c = new Object(2);
 
     expect(isEqual(array1, array2)).toBe(false);
   });
@@ -388,9 +406,11 @@ describe('isEqual', () => {
       // @ts-ignore
       this.a = 1;
     }
+
     Foo.prototype.constructor = null;
 
     const object1 = Object.create(null);
+
     object1.a = 1;
 
     const object2 = { a: 1 };
@@ -402,13 +422,13 @@ describe('isEqual', () => {
   });
 
   it('should avoid common type coercions', () => {
-    expect(isEqual(true, Object(false))).toBe(false);
-    expect(isEqual(Object(false), Object(0))).toBe(false);
-    expect(isEqual(false, Object(''))).toBe(false);
-    expect(isEqual(Object(36), Object('36'))).toBe(false);
+    expect(isEqual(true, new Object(false))).toBe(false);
+    expect(isEqual(new Object(false), new Object(0))).toBe(false);
+    expect(isEqual(false, new Object(''))).toBe(false);
+    expect(isEqual(new Object(36), new Object('36'))).toBe(false);
     expect(isEqual(0, '')).toBe(false);
     expect(isEqual(1, true)).toBe(false);
-    expect(isEqual(1337756400000, new Date(2012, 4, 23))).toBe(false);
+    expect(isEqual(1_337_756_400_000, new Date(2012, 4, 23))).toBe(false);
     expect(isEqual('36', 36)).toBe(false);
     expect(isEqual(36, '36')).toBe(false);
   });
@@ -436,6 +456,7 @@ describe('isEqual', () => {
     const object = { 0: 1, 1: 2, 2: 3 };
 
     function Foo() {}
+
     Foo.prototype = object;
 
     expect(isEqual(args, object)).toBe(true);
@@ -490,12 +511,21 @@ describe('isEqual', () => {
       // @ts-ignore
       const bufferC = globalThis[otherType] ? new ArrayBuffer(16) : 16;
 
-      return [new CtorA(bufferA), new CtorA(bufferA), new CtorB(bufferB), new CtorB(bufferC)];
+      return [
+        new CtorA(bufferA),
+        new CtorA(bufferA),
+        new CtorB(bufferB),
+        new CtorB(bufferC),
+      ];
     });
 
     const expected = pairs.map(() => [true, false, false]);
 
-    const actual = pairs.map(pair => [isEqual(pair[0], pair[1]), isEqual(pair[0], pair[2]), isEqual(pair[2], pair[3])]);
+    const actual = pairs.map(pair => [
+      isEqual(pair[0], pair[1]),
+      isEqual(pair[0], pair[2]),
+      isEqual(pair[2], pair[3]),
+    ]);
 
     expect(actual).toEqual(expected);
   });
@@ -518,23 +548,33 @@ describe('isEqual', () => {
   });
 
   it('should compare error objects', () => {
-    const pairs = ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError'].map(
-      (type, index, errorTypes) => {
-        const otherType = errorTypes[++index % errorTypes.length];
-        // eslint-disable-next-line
+    const pairs = [
+      'Error',
+      'EvalError',
+      'RangeError',
+      'ReferenceError',
+      'SyntaxError',
+      'TypeError',
+      'URIError',
+    ].map((type, index, errorTypes) => {
+      const otherType = errorTypes[++index % errorTypes.length];
+      // eslint-disable-next-line
         // @ts-ignore
-        const CtorA = globalThis[type];
-        // eslint-disable-next-line
+      const CtorA = globalThis[type];
+      // eslint-disable-next-line
         // @ts-ignore
-        const CtorB = globalThis[otherType];
+      const CtorB = globalThis[otherType];
 
-        return [new CtorA('a'), new CtorA('a'), new CtorB('a'), new CtorB('b')];
-      }
-    );
+      return [new CtorA('a'), new CtorA('a'), new CtorB('a'), new CtorB('b')];
+    });
 
     const expected = pairs.map(() => [true, false, false]);
 
-    const actual = pairs.map(pair => [isEqual(pair[0], pair[1]), isEqual(pair[0], pair[2]), isEqual(pair[2], pair[3])]);
+    const actual = pairs.map(pair => [
+      isEqual(pair[0], pair[1]),
+      isEqual(pair[0], pair[2]),
+      isEqual(pair[2], pair[3]),
+    ]);
 
     expect(actual).toEqual(expected);
   });
@@ -543,6 +583,7 @@ describe('isEqual', () => {
     function a() {
       return 1 + 2;
     }
+
     function b() {
       return 1 + 2;
     }
@@ -552,7 +593,7 @@ describe('isEqual', () => {
   });
 
   it('should compare maps', () => {
-    [[new Map(), new Map()]].forEach(maps => {
+    for (const maps of [[new Map(), new Map()]]) {
       const map1 = maps[0];
       const map2 = maps[1];
 
@@ -573,7 +614,7 @@ describe('isEqual', () => {
 
       map1.clear();
       map2.clear();
-    });
+    }
   });
 
   it('should compare maps with circular references', () => {
@@ -590,18 +631,18 @@ describe('isEqual', () => {
   });
 
   it('should compare promises by reference', () => {
-    [[Promise.resolve(1), Promise.resolve(1)]].forEach(promises => {
+    for (const promises of [[Promise.resolve(1), Promise.resolve(1)]]) {
       const promise1 = promises[0];
       const promise2 = promises[1];
 
       expect(isEqual(promise1, promise2)).toBe(false);
       expect(isEqual(promise1, promise1)).toBe(true);
-    });
+    }
   });
 
   it('should compare regexes', () => {
-    expect(isEqual(/x/gim, /x/gim)).toBe(true);
-    expect(isEqual(/x/gim, /x/gim)).toBe(true);
+    expect(isEqual(/x/gi, /x/gi)).toBe(true);
+    expect(isEqual(/x/gi, /x/gi)).toBe(true);
     expect(isEqual(/x/gi, /x/g)).toBe(false);
     expect(isEqual(/x/, /y/)).toBe(false);
 
@@ -611,12 +652,12 @@ describe('isEqual', () => {
         ignoreCase: false,
         multiline: false,
         source: 'x',
-      })
+      }),
     ).toBe(false);
   });
 
   it('should compare sets', () => {
-    [[new Set(), new Set()]].forEach(sets => {
+    for (const sets of [[new Set(), new Set()]]) {
       const set1 = sets[0];
       const set2 = sets[1];
 
@@ -637,7 +678,7 @@ describe('isEqual', () => {
 
       set1.clear();
       set2.clear();
-    });
+    }
   });
 
   it('should compare sets with circular references', () => {
@@ -684,7 +725,7 @@ describe('isEqual', () => {
   it('should return `false` for objects with custom `toString` methods', () => {
     let primitive: any;
     const object = {
-      toString: function () {
+      toString() {
         return primitive;
       },
     };
@@ -693,6 +734,7 @@ describe('isEqual', () => {
 
     const actual = values.map(value => {
       primitive = value;
+
       return isEqual(object, value);
     });
 

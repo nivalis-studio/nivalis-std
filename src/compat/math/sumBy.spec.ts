@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { sumBy } from './sumBy';
 import { empties } from '../_internal/empties';
 import { slice } from '../_internal/slice';
 import { stubZero } from '../_internal/stubZero';
+import { sumBy } from './sumBy';
 
 describe('sumBy', () => {
   const array = [6, 4, 2];
@@ -25,7 +25,7 @@ describe('sumBy', () => {
   });
 
   it(`should not skip \`NaN\` values`, () => {
-    expect(sumBy([1, NaN])).toEqual(NaN);
+    expect(sumBy([1, Number.NaN])).toEqual(Number.NaN);
   });
 
   it(`should not coerce values to numbers`, () => {
@@ -42,8 +42,8 @@ describe('sumBy', () => {
     let args: any;
 
     sumBy(array, function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-      args || (args = slice.call(arguments));
+      // eslint-disable-next-line prefer-rest-params
+      args ||= slice.call(arguments);
     } as any);
 
     expect(args).toEqual([6]);
@@ -51,6 +51,7 @@ describe('sumBy', () => {
 
   it('should work with `_.property` shorthands', () => {
     const arrays = [[2], [3], [1]];
+
     expect(sumBy(arrays, 0 as any)).toBe(6);
     expect(sumBy(objects, 'a' as any)).toBe(6);
   });

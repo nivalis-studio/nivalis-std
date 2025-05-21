@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { isRegExp } from './isRegExp';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { stubFalse } from '../util/stubFalse';
+import { isRegExp } from './isRegExp';
 
 /**
  * https://github.com/lodash/lodash/blob/main/test/isRegExp.spec.js
@@ -12,7 +12,7 @@ import { stubFalse } from '../util/stubFalse';
 describe('isRegExp', () => {
   it('returns `true` for RegExp', () => {
     expect(isRegExp(/x/)).toBe(true);
-    expect(isRegExp(RegExp('x'))).toBe(true);
+    expect(isRegExp(new RegExp('x'))).toBe(true);
   });
 
   it('returns `false` for non-RegExp values', () => {

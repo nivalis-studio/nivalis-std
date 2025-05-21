@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { isEqualWith } from './isEqualWith';
-import { isString } from './isString';
 import { without } from '../../array/without';
 import { noop } from '../../function/noop';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { stubC } from '../_internal/stubC';
 import { stubFalse } from '../util/stubFalse';
+import { isString } from './isString';
+import { isEqualWith } from './isEqualWith';
 
 describe('isEqualWith', () => {
   it('should provide correct `customizer` arguments', () => {
@@ -67,17 +67,19 @@ describe('isEqualWith', () => {
     // eslint-disable-next-line
     // @ts-ignore
     let actual: any = isEqualWith('a', 'b', stubC);
+
     expect(actual).toBe(true);
 
-    const values = without(falsey, undefined);
+    const values = without(falsey);
     const expected = values.map(stubFalse);
 
     actual = [];
-    values.forEach(value => {
+
+    for (const value of values) {
       // eslint-disable-next-line
       // @ts-ignore
       actual.push(isEqualWith('a', 'a', () => value));
-    });
+    }
 
     expect(actual).toEqual(expected);
   });
@@ -98,24 +100,28 @@ describe('isEqualWith', () => {
     const value = { a: { b: 2 } };
 
     const map1 = new Map();
+
     map1.set('a', value);
 
     const map2 = new Map();
+
     map2.set('a', value);
 
     const set1 = new Set();
+
     set1.add(value);
 
     const set2 = new Set();
+
     set2.add(value);
 
-    [
+    for (const [index, pair] of [
       [map1, map2],
       [set1, set2],
-    ].forEach((pair, index) => {
+    ].entries()) {
       if (pair[0]) {
         const argsList: any = [];
-        const array: any[] = Array.from(pair[0]);
+        const array: any[] = [...pair[0]];
 
         const expected: any = [
           [pair[0], pair[1], undefined, undefined, undefined],
@@ -127,6 +133,7 @@ describe('isEqualWith', () => {
         if (index) {
           expected.length = 2;
         }
+
         isEqualWith(pair[0], pair[1], function () {
           const length = arguments.length;
           // eslint-disable-next-line
@@ -137,6 +144,6 @@ describe('isEqualWith', () => {
 
         expect(argsList).toEqual(expected);
       }
-    });
+    }
   });
 });

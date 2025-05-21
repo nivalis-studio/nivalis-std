@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { cloneDeepWith } from './cloneDeepWith';
 import { noop } from '../function/noop';
+import { cloneDeepWith } from './cloneDeepWith';
 
 describe('cloneDeepWith', () => {
   it('should clone primitive values', () => {
@@ -13,7 +13,7 @@ describe('cloneDeepWith', () => {
 
   it('should deep clone arrays', () => {
     const original = [1, [2, 3], [4, [5, 6]]];
-    const cloned = cloneDeepWith(original, () => undefined);
+    const cloned = cloneDeepWith(original, () => {});
 
     expect(cloned).toEqual(original);
     expect(cloned).not.toBe(original);
@@ -41,9 +41,10 @@ describe('cloneDeepWith', () => {
     const original: any = {
       a: 1,
     };
+
     original.self = original;
 
-    const cloned = cloneDeepWith(original, () => undefined);
+    const cloned = cloneDeepWith(original, () => {});
 
     expect(cloned.a).toBe(1);
     expect(cloned.self).toBe(cloned);
@@ -55,7 +56,6 @@ describe('cloneDeepWith', () => {
 
     cloneDeepWith(obj, (value, key, object, stack) => {
       calls.push({ value, key, object, hasStack: stack instanceof Map });
-      return undefined;
     });
 
     expect(calls[0]).toEqual({

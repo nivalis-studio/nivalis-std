@@ -5,12 +5,12 @@ describe('shuffle', () => {
   it('randomizes the order of an array', () => {
     const arr = [1, 2, 3, 4, 5];
 
-    expect(shuffle(arr).slice().sort()).toEqual(arr.slice().sort());
+    expect([...shuffle(arr)].sort()).toEqual([...arr].sort());
   });
 
   it('does not modify the original array', () => {
     const arr = [1, 2, 3, 4, 5];
-    const copiedArr = arr.slice();
+    const copiedArr = [...arr];
 
     shuffle(arr);
     expect(arr).toEqual(copiedArr);

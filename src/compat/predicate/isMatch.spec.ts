@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { isArrayMatch, isMapMatch, isMatch, isSetMatch } from './isMatch';
 import { noop } from '../../function/noop';
 import { empties } from '../_internal/empties';
 import { stubTrue } from '../util/stubTrue';
+import { isArrayMatch, isMapMatch, isMatch, isSetMatch } from './isMatch';
 
 describe('isMatch', () => {
   it('should handle null correctly', () => {
@@ -21,7 +21,9 @@ describe('isMatch', () => {
     expect(isMatch(object, { b: 2 })).toBe(true);
     expect(isMatch(object, { a: 1, c: 3 })).toBe(true);
     expect(isMatch(object, { c: 3, d: 4 })).toBe(false);
-    expect(isMatch({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, { a: { b: { c: 1 } } })).toBe(true);
+    expect(
+      isMatch({ a: { b: { c: 1, d: 2 }, e: 3 }, f: 4 }, { a: { b: { c: 1 } } }),
+    ).toBe(true);
   });
 
   it(`should match boolean values`, () => {
@@ -32,14 +34,12 @@ describe('isMatch', () => {
   });
 
   it(`should match inherited string keyed \`object\` properties`, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (): Foo;
-    }
+    type FooConstructor = new () => Foo;
 
     const Foo = function Foo(this: Foo) {
       this.a = 1;
@@ -48,18 +48,17 @@ describe('isMatch', () => {
     Foo.prototype.b = 2;
 
     const object = { a: new Foo() };
+
     expect(isMatch(object, { a: { b: 2 } })).toBe(true);
   });
 
   it(`should not match by inherited \`source\` properties`, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (): Foo;
-    }
+    type FooConstructor = new () => Foo;
 
     const Foo = function Foo(this: Foo) {
       this.a = 1;
@@ -103,6 +102,7 @@ describe('isMatch', () => {
 
   it(`should work with a function for \`object\``, () => {
     function Foo() {}
+
     Foo.a = { b: 2, c: 3 };
 
     expect(isMatch(Foo, { a: { b: 2 } })).toBe(true);
@@ -110,8 +110,11 @@ describe('isMatch', () => {
 
   it(`should work with a function for \`source\``, () => {
     function Foo() {}
+
     Foo.a = 1;
+
     Foo.b = function () {};
+
     Foo.c = 3;
 
     const objects = [{ a: 1 }, { a: 1, b: Foo.b, c: 3 }];
@@ -121,15 +124,13 @@ describe('isMatch', () => {
   });
 
   it(`should work with a non-plain \`object\``, () => {
-    interface Foo {
+    type Foo = {
       a: number;
       b: number;
       c: number;
-    }
+    };
 
-    interface FooConstructor {
-      new (arg: Partial<Foo>): Foo;
-    }
+    type FooConstructor = new (arg: Partial<Foo>) => Foo;
 
     const Foo = function Foo(this: Foo, object: Partial<Foo>) {
       Object.assign(this, object);
@@ -178,17 +179,22 @@ describe('isMatch', () => {
       },
     ];
 
-    const actual = objects.filter(x => isMatch(x, { a: [{ b: 1 }, { b: 4, c: 5 }] }));
+    const actual = objects.filter(x =>
+      isMatch(x, { a: [{ b: 1 }, { b: 4, c: 5 }] }),
+    );
+
     expect(actual).toEqual([objects[0]]);
   });
 
   it(`should partial match maps`, () => {
     const objects = [{ a: new Map() }, { a: new Map() }];
+
     objects[0].a.set('a', 1);
     objects[1].a.set('a', 1);
     objects[1].a.set('b', 2);
 
     const map = new Map();
+
     map.set('b', 2);
     let actual = objects.filter(x => isMatch(x, { a: map }));
 
@@ -207,11 +213,13 @@ describe('isMatch', () => {
 
   it(`should partial match sets`, () => {
     const objects = [{ a: new Set() }, { a: new Set() }];
+
     objects[0].a.add(1);
     objects[1].a.add(1);
     objects[1].a.add(2);
 
     const set = new Set();
+
     set.add(2);
     let actual = objects.filter(x => isMatch(x, { a: set }));
 
@@ -266,23 +274,24 @@ describe('isMatch', () => {
 
     try {
       expect(isMatch(1, { b: undefined })).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     try {
       expect(isMatch(1, { a: 1, b: undefined })).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     // eslint-disable-next-line
     // @ts-ignore
     numberProto.a = { b: 1, c: undefined };
+
     try {
       expect(isMatch(1, { a: { c: undefined } })).toBe(true);
-    } catch (e: any) {
-      expect(false, e.message);
+    } catch (error: any) {
+      expect(false, error.message);
     }
 
     // eslint-disable-next-line
@@ -301,7 +310,7 @@ describe('isMatch', () => {
     const actual = values.map((value, index) => {
       try {
         return index ? isMatch(value, { a: 1 }) : isMatch(undefined, { a: 1 });
-      } catch (e: unknown) {
+      } catch {
         /* empty */
       }
     });
@@ -328,7 +337,7 @@ describe('isMatch', () => {
     const actual = values.map((value, index) => {
       try {
         return index ? isMatch(value, {}) : isMatch(undefined, {});
-      } catch (e: unknown) {
+      } catch {
         /* empty */
       }
     });
@@ -358,8 +367,8 @@ describe('isMapMatch', () => {
         new Map([
           ['a', 1],
           ['b', 2],
-        ])
-      )
+        ]),
+      ),
     ).toBe(true);
 
     expect(
@@ -372,8 +381,8 @@ describe('isMapMatch', () => {
         new Map([
           ['a', 1],
           ['b', 2],
-        ])
-      )
+        ]),
+      ),
     ).toBe(true);
 
     expect(
@@ -382,8 +391,8 @@ describe('isMapMatch', () => {
         new Map([
           ['a', 1],
           ['b', 2],
-        ])
-      )
+        ]),
+      ),
     ).toBe(false);
 
     expect(
@@ -395,8 +404,8 @@ describe('isMapMatch', () => {
         new Map([
           ['a', 1],
           ['b', 2],
-        ])
-      )
+        ]),
+      ),
     ).toBe(false);
   });
 
@@ -409,8 +418,8 @@ describe('isMapMatch', () => {
           ['a', 2],
           ['b', 2],
         ]),
-        map
-      )
+        map,
+      ),
     ).toBe(true);
     expect(isMapMatch(1, map)).toBe(true);
     expect(isMapMatch('a', map)).toBe(true);

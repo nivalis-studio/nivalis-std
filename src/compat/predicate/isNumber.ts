@@ -2,10 +2,8 @@
  * Checks if a given value is a number.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `number`.
- *
  * @param {unknown} value The value to check if it is a number.
  * @returns {value is number} Returns `true` if `value` is a number, else `false`.
- *
  * @example
  * const value1 = 123;
  * const value2 = 'abc';

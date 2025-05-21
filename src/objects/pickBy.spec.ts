@@ -6,6 +6,7 @@ describe('pickBy', () => {
     const obj = { a: 1, b: 'pick', c: 3 };
     const shouldPick = (value: string | number) => typeof value === 'string';
     const result = pickBy(obj, shouldPick);
+
     expect(result).toEqual({ b: 'pick' });
   });
 
@@ -13,6 +14,7 @@ describe('pickBy', () => {
     const obj = { a: 1, b: 2, c: 3 };
     const shouldPick = (value: number) => typeof value === 'string';
     const result = pickBy(obj, shouldPick);
+
     expect(result).toEqual({});
   });
 
@@ -20,6 +22,7 @@ describe('pickBy', () => {
     const obj = { a: 'pick', b: 'pick', c: 'pick' };
     const shouldPick = (value: string) => typeof value === 'string';
     const result = pickBy(obj, shouldPick);
+
     expect(result).toEqual(obj);
   });
 
@@ -27,13 +30,16 @@ describe('pickBy', () => {
     const obj = {};
     const shouldPick = (value: never) => value;
     const result = pickBy(obj, shouldPick);
+
     expect(result).toEqual({});
   });
 
   it('should work with nested objects', () => {
     const obj = { a: 1, b: { nested: 'pick' }, c: 3 };
-    const shouldPick = (value: number | { nested: string }, key: string) => key === 'b';
+    const shouldPick = (value: number | { nested: string }, key: string) =>
+      key === 'b';
     const result = pickBy(obj, shouldPick);
+
     expect(result).toEqual({ b: { nested: 'pick' } });
   });
 });

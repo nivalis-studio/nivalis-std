@@ -4,7 +4,7 @@ import { getTag } from './getTag';
 describe('getTag function', () => {
   it('should return the tag of the value', () => {
     expect(getTag(null)).toBe('[object Null]');
-    expect(getTag(undefined)).toBe('[object Undefined]');
+    expect(getTag()).toBe('[object Undefined]');
     expect(getTag(1)).toBe('[object Number]');
     expect(getTag('')).toBe('[object String]');
     expect(getTag(true)).toBe('[object Boolean]');

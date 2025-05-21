@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { throttle } from './throttle';
 import { identity } from '../../function/identity';
 import { noop } from '../../function/noop';
 import { delay } from '../../promise/delay';
+import { throttle } from './throttle';
 
 describe('throttle', () => {
   it('should throttle a function', async () => {
@@ -16,6 +16,7 @@ describe('throttle', () => {
     throttled();
 
     const lastCount = callCount;
+
     expect(callCount).toBeGreaterThan(0);
 
     await delay(64);
@@ -32,11 +33,12 @@ describe('throttle', () => {
     await delay(64);
 
     const results2 = [throttled('c'), throttled('d')];
+
     expect(results2[0]).not.toStrictEqual('a');
-    expect(results2[0]).not.toStrictEqual(undefined);
+    expect(results2[0]).not.toStrictEqual();
 
     expect(results2[0]).not.toStrictEqual('d');
-    expect(results2[0]).not.toStrictEqual(undefined);
+    expect(results2[0]).not.toStrictEqual();
   });
 
   it('should clear timeout when `func` is called', async () => {
@@ -67,7 +69,7 @@ describe('throttle', () => {
     expect(callCount).toBe(1);
   });
 
-  [0, 1].forEach(index => {
+  for (const index of [0, 1]) {
     it(`should trigger a call when invoked repeatedly${index ? ' and `leading` is `false`' : ''}`, async () => {
       let callCount = 0;
       const limit = 1000;
@@ -77,13 +79,15 @@ describe('throttle', () => {
           callCount++;
         },
         32,
-        options
+        options,
       );
 
-      const start = Number(new Date());
+      const start = Date.now();
+
       while (Date.now() - start < limit) {
         throttled();
       }
+
       const actual = callCount > 1;
 
       await delay(1);
@@ -99,7 +103,7 @@ describe('throttle', () => {
           callCount++;
         },
         128,
-        { leading: false }
+        { leading: false },
       );
 
       throttled();
@@ -125,7 +129,7 @@ describe('throttle', () => {
           callCount++;
         },
         32,
-        {}
+        {},
       );
 
       throttled();
@@ -139,9 +143,11 @@ describe('throttle', () => {
 
     it('should support a `leading` option', () => {
       const withLeading = throttle(identity, 32, { leading: true });
+
       expect(withLeading('a')).toBe('a');
 
       const withoutLeading = throttle(identity, 32, { leading: false });
+
       expect(withoutLeading('a')).toBe(undefined);
     });
 
@@ -152,19 +158,21 @@ describe('throttle', () => {
       const withTrailing = throttle(
         value => {
           withCount++;
+
           return value;
         },
         64,
-        { trailing: true }
+        { trailing: true },
       );
 
       const withoutTrailing = throttle(
         value => {
           withoutCount++;
+
           return value;
         },
         64,
-        { trailing: false }
+        { trailing: false },
       );
 
       expect(withTrailing('a')).toBe('a');
@@ -187,7 +195,7 @@ describe('throttle', () => {
           callCount++;
         },
         64,
-        { trailing: false }
+        { trailing: false },
       );
 
       throttled();
@@ -202,7 +210,7 @@ describe('throttle', () => {
 
       expect(callCount).toBeGreaterThan(1);
     });
-  });
+  }
 
   /** @see https://github.com/lodash/lodash/blob/4.17.15/test/test.js#L22973 */
   const func = throttle;
@@ -246,23 +254,25 @@ describe('throttle', () => {
   it(`\`_.${methodName}\` supports recursive calls`, async () => {
     const actual: any[] = [];
     const args = ['a', 'b', 'c'].map(chr => [{}, chr]);
-    const expected = args.slice();
-    const queue: any[] = args.slice();
+    const expected = [...args];
+    const queue: any[] = [...args];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const funced = func(function (this: any, _: unknown) {
       const current = [this];
+
       // eslint-disable-next-line prefer-rest-params
       Array.prototype.push.apply(current, arguments as any);
       actual.push(current);
 
       const next = queue.shift();
+
       if (next) {
         funced.call(next[0], next[1]);
       }
     }, 32);
 
     const next = queue.shift();
+
     funced.call(next[0], next[1]);
     expect(actual).toEqual(expected.slice(0, isDebounce ? 0 : 1));
 
@@ -279,7 +289,7 @@ describe('throttle', () => {
         callCount++;
       },
       32,
-      { leading: false }
+      { leading: false },
     );
 
     funced();

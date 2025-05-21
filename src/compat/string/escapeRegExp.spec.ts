@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { escapeRegExp } from './escapeRegExp';
 import { map } from '../array/map';
 import { stubString } from '../util/stubString';
+import { escapeRegExp } from './escapeRegExp';
 
 describe('escapeRegExp', () => {
   const escaped = '\\^\\$\\.\\*\\+\\?\\(\\)\\[\\]\\{\\}\\|\\\\';
@@ -20,7 +20,9 @@ describe('escapeRegExp', () => {
     const values = [, null, undefined, ''];
     const expected = map(values, stubString);
 
-    const actual = map(values, (value, index) => (index ? escapeRegExp(value as any) : escapeRegExp()));
+    const actual = map(values, (value, index) =>
+      index ? escapeRegExp(value as any) : escapeRegExp(),
+    );
 
     expect(actual).toEqual(expected);
   });

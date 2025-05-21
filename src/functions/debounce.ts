@@ -1,4 +1,4 @@
-interface DebounceOptions {
+type DebounceOptions = {
   /**
    * An optional AbortSignal to cancel the debounced function.
    */
@@ -12,9 +12,9 @@ interface DebounceOptions {
    * @default ["trailing"]
    */
   edges?: Array<'leading' | 'trailing'>;
-}
+};
 
-export interface DebouncedFunction<F extends (...args: any[]) => void> {
+export type DebouncedFunction<F extends (...args: any[]) => void> = {
   (...args: Parameters<F>): void;
 
   /**
@@ -22,7 +22,6 @@ export interface DebouncedFunction<F extends (...args: any[]) => void> {
    * This method resets any existing timer, ensuring that the function is only invoked
    * after the delay has elapsed since the last call to the debounced function.
    * It is typically called internally whenever the debounced function is invoked.
-   *
    * @returns {void}
    */
   schedule: () => void;
@@ -38,20 +37,18 @@ export interface DebouncedFunction<F extends (...args: any[]) => void> {
    * This method also cancels the current timer, ensuring that the function executes right away.
    */
   flush: () => void;
-}
+};
 
 /**
  * Creates a debounced function that delays invoking the provided function until after `debounceMs` milliseconds
  * have elapsed since the last time the debounced function was invoked. The debounced function also has a `cancel`
  * method to cancel any pending execution.
- *
  * @template F - The type of function.
  * @param {F} func - The function to debounce.
  * @param {number} debounceMs - The number of milliseconds to delay.
  * @param {DebounceOptions} options - The options object
  * @param {AbortSignal} options.signal - An optional AbortSignal to cancel the debounced function.
  * @returns A new debounced function with a `cancel` method.
- *
  * @example
  * const debouncedFunction = debounce(() => {
  *   console.log('Function executed');
@@ -78,9 +75,9 @@ export interface DebouncedFunction<F extends (...args: any[]) => void> {
 export function debounce<F extends (...args: any[]) => void>(
   func: F,
   debounceMs: number,
-  { signal, edges }: DebounceOptions = {}
+  { signal, edges }: DebounceOptions = {},
 ): DebouncedFunction<F> {
-  let pendingThis: any = undefined;
+  let pendingThis: any;
   let pendingArgs: Parameters<F> | null = null;
 
   const leading = edges != null && edges.includes('leading');

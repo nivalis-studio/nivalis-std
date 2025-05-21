@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { omit } from './omit';
 import { objectProto } from '../_internal/objectProto';
 import { stringProto } from '../_internal/stringProto';
 import { toArgs } from '../_internal/toArgs';
+import { omit } from './omit';
 
 describe('omit', () => {
   it('should omit deep properties', () => {
     const obj = { a: { b: { c: 1 } }, d: { e: 2 }, f: { g: 3 }, 'f.g': 4 };
     const result = omit(obj, ['a.b.c', 'f.g']);
+
     expect(result).toEqual({ a: { b: {} }, d: { e: 2 }, f: { g: 3 } });
   });
 
@@ -34,9 +35,9 @@ describe('omit', () => {
   it('should omit a key over a path', () => {
     const object = { 'a.b': 1, a: { b: 2 } };
 
-    ['a.b', ['a.b']].forEach(path => {
+    for (const path of ['a.b', ['a.b']]) {
       expect(omit(object, path)).toEqual({ a: { b: 2 } });
-    });
+    }
   });
 
   it('should coerce `paths` to strings', () => {
@@ -44,12 +45,13 @@ describe('omit', () => {
   });
 
   it('should return an empty object when `object` is nullish', () => {
-    [null, undefined].forEach(value => {
+    for (const value of [null, undefined]) {
       objectProto.a = 1;
       const actual = omit(value, 'valueOf');
+
       delete objectProto.a;
       expect(actual).toEqual({});
-    });
+    }
   });
 
   // Manipulating prototypes is an anti-pattern
@@ -75,10 +77,11 @@ describe('omit', () => {
   });
 
   it('should not mutate `object`', () => {
-    ['a', ['a'], 'a.b', ['a.b']].forEach(path => {
+    for (const path of ['a', ['a'], 'a.b', ['a.b']]) {
       const object = { a: { b: 2 } };
+
       omit(object, path);
       expect(object).toEqual({ a: { b: 2 } });
-    });
+    }
   });
 });

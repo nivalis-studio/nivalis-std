@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { ary } from './ary';
-import { flow } from './flow';
 import { head } from '../../array/head';
 import { uniq } from '../../array/uniq';
 import { map } from '../array/map';
 import { curry } from '../function/curry';
+import { flow } from './flow';
+import { ary } from './ary';
 
 const add = function (x: number, y: number) {
   return x + y;
@@ -27,6 +27,7 @@ describe('flow', () => {
   it(`\`flow\` should return a new function`, () => {
     const noop = () => {};
     const combined = flow(noop);
+
     expect(combined).not.toBe(noop);
   });
 
@@ -40,7 +41,10 @@ describe('flow', () => {
 
   it(`\`flow\` should work with curried functions with placeholders`, () => {
     const curried = curry(ary(map, 2), 2);
-    const getProp = curried(curried.placeholder, (value: { a: any }) => value.a);
+    const getProp = curried(
+      curried.placeholder,
+      (value: { a: any }) => value.a,
+    );
     const objects = [{ a: 1 }, { a: 2 }, { a: 1 }];
 
     const combined = flow(getProp, uniq);

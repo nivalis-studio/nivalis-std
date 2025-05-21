@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { identity } from '../compat';
+import { constant } from '../util/constant';
 import { map } from './map';
 import { zip } from './zip';
 import { zipWith } from './zipWith';
-import { identity } from '../compat';
-import { constant } from '../util/constant';
 
 describe('zipWith', () => {
   it('should zip arrays combining grouped elements with `iteratee`', () => {
@@ -12,6 +12,7 @@ describe('zipWith', () => {
     const array3 = [7, 8, 9];
 
     let actual = zipWith(array1, array2, array3, (a, b, c) => a + b + c);
+
     expect(actual).toEqual([12, 15, 18]);
 
     actual = zipWith(array1, [], (a, b) => a + (b || 0));
@@ -22,8 +23,8 @@ describe('zipWith', () => {
     let args: any;
 
     zipWith([1, 2], [3, 4], [5, 6], function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, prefer-rest-params
-      args || (args = [...arguments]);
+      // eslint-disable-next-line prefer-rest-params
+      args ||= [...arguments];
     });
 
     expect(args).toEqual([1, 3, 5]);
@@ -36,14 +37,16 @@ describe('zipWith', () => {
     const values = [, null, undefined];
     const expected = map(values, constant(zip(array1, array2)));
 
-    const actual = map(values, (value, index) => (index ? zipWith(array1, array2, value) : zipWith(array1, array2)));
+    const actual = map(values, (value, index) =>
+      index ? zipWith(array1, array2, value) : zipWith(array1, array2),
+    );
 
     expect(actual).toEqual(expected);
   });
 
   it('should handle null and undefined values', () => {
     expect(zipWith(null)).toEqual([]);
-    expect(zipWith(undefined)).toEqual([]);
+    expect(zipWith()).toEqual([]);
     expect(zipWith()).toEqual([]);
   });
 

@@ -1,35 +1,37 @@
 import { describe, expect, it } from 'vitest';
-import { bind } from './bind';
 import { isEqual } from '../../predicate/isEqual';
+import { bind } from './bind';
 
 // eslint-disable-next-line
 function fn(this: any, ..._: any[]) {
   const result = [this];
+
   // eslint-disable-next-line prefer-rest-params
-  return result.concat(Array.from(arguments));
+  return [...result, ...arguments];
 }
 
 describe('bind', () => {
   it('should bind a function to an object', () => {
-    const object = {},
-      bound = bind(fn, object);
+    const object = {};
+    const bound = bind(fn, object);
 
     expect(bound('a')).toEqual([object, 'a']);
   });
 
   it('should accept a falsey `thisArg`', () => {
-    const values = [false, 0, '', NaN, null, undefined];
+    const values = [false, 0, '', Number.NaN, null, undefined];
     const expected = values.map(value => [value]);
 
     const actual = values.map(value => {
       const bound = bind(fn, value);
+
       return bound();
     });
 
     expect(
       actual.every((value, index) => {
         return isEqual(value, expected[index]);
-      })
+      }),
     ).toBe(true);
   });
 
@@ -40,7 +42,7 @@ describe('bind', () => {
     expect(actual[0] === null);
     expect(actual[1]).toBe('a');
 
-    const bound2 = bind(fn, undefined);
+    const bound2 = bind(fn);
     const actual2 = bound2('b');
 
     expect(actual2[0] === undefined);
@@ -79,7 +81,6 @@ describe('bind', () => {
   });
 
   it('should create a function with a `length` of `0`', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const fn = function (_a: unknown, _b: unknown, _c: unknown) {};
     let bound = bind(fn, {});
 
@@ -113,18 +114,43 @@ describe('bind', () => {
     const thisArg = { a: 1 };
     const boundFoo = bind(Foo, thisArg) as any;
     const boundBar = bind(Bar, thisArg) as any;
-    expect([new boundFoo().a, new boundBar().a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1).a, new boundBar(1).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2).a, new boundBar(1, 2).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3).a, new boundBar(1, 2, 3).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3, 4).a, new boundBar(1, 2, 3, 4).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3, 4, 5).a, new boundBar(1, 2, 3, 4, 5).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3, 4, 5, 6).a, new boundBar(1, 2, 3, 4, 5, 6).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3, 4, 5, 6, 7).a, new boundBar(1, 2, 3, 4, 5, 6, 7).a]).toEqual([undefined, undefined]);
-    expect([new boundFoo(1, 2, 3, 4, 5, 6, 7, 8).a, new boundBar(1, 2, 3, 4, 5, 6, 7, 8).a]).toEqual([
+
+    expect([new boundFoo().a, new boundBar().a]).toEqual([
       undefined,
       undefined,
     ]);
+    expect([new boundFoo(1).a, new boundBar(1).a]).toEqual([
+      undefined,
+      undefined,
+    ]);
+    expect([new boundFoo(1, 2).a, new boundBar(1, 2).a]).toEqual([
+      undefined,
+      undefined,
+    ]);
+    expect([new boundFoo(1, 2, 3).a, new boundBar(1, 2, 3).a]).toEqual([
+      undefined,
+      undefined,
+    ]);
+    expect([new boundFoo(1, 2, 3, 4).a, new boundBar(1, 2, 3, 4).a]).toEqual([
+      undefined,
+      undefined,
+    ]);
+    expect([
+      new boundFoo(1, 2, 3, 4, 5).a,
+      new boundBar(1, 2, 3, 4, 5).a,
+    ]).toEqual([undefined, undefined]);
+    expect([
+      new boundFoo(1, 2, 3, 4, 5, 6).a,
+      new boundBar(1, 2, 3, 4, 5, 6).a,
+    ]).toEqual([undefined, undefined]);
+    expect([
+      new boundFoo(1, 2, 3, 4, 5, 6, 7).a,
+      new boundBar(1, 2, 3, 4, 5, 6, 7).a,
+    ]).toEqual([undefined, undefined]);
+    expect([
+      new boundFoo(1, 2, 3, 4, 5, 6, 7, 8).a,
+      new boundBar(1, 2, 3, 4, 5, 6, 7, 8).a,
+    ]).toEqual([undefined, undefined]);
   });
 
   it('should ensure `new bound` is an instance of `func`', () => {
@@ -140,20 +166,20 @@ describe('bind', () => {
   });
 
   it('should append array arguments to partially applied arguments', () => {
-    const object = {},
-      bound = bind(fn, object, 'a');
+    const object = {};
+    const bound = bind(fn, object, 'a');
 
     expect(bound(['b'], 'c')).toEqual([object, 'a', ['b'], 'c']);
   });
 
   it('should not rebind functions', () => {
-    const object1 = {},
-      object2 = {},
-      object3 = {};
+    const object1 = {};
+    const object2 = {};
+    const object3 = {};
 
-    const bound1 = bind(fn, object1),
-      bound2 = bind(bound1, object2, 'a'),
-      bound3 = bind(bound1, object3, 'b');
+    const bound1 = bind(fn, object1);
+    const bound2 = bind(bound1, object2, 'a');
+    const bound3 = bind(bound1, object3, 'b');
 
     expect(bound1()).toEqual([object1]);
     expect(bound2()).toEqual([object1, 'a']);
@@ -165,6 +191,7 @@ describe('bind', () => {
 
     const expected = new Date(2012, 4, 23, 0, 0, 0, 0);
     let actual = new Ctor(2012, 4, 23, 0, 0, 0, 0);
+
     expect(actual).toEqual(expected);
 
     Ctor = bind(Date, null, 2012, 4, 23);
@@ -177,7 +204,8 @@ describe('bind', () => {
       return class A {};
     };
 
-    const bound = bind(createCtor()) as any;
+    const bound = bind(createCtor());
+
     expect(Boolean(new bound())).toBe(true);
     expect(Boolean(new bound(1))).toBe(true);
     expect(Boolean(new bound(1, 2))).toBe(true);

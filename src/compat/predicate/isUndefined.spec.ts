@@ -4,19 +4,22 @@ import { falsey } from '../_internal/falsey';
 
 describe('isUndefined', () => {
   it('should return `true` for `undefined` values', () => {
-    expect(isUndefined(undefined)).toBe(true);
+    expect(isUndefined()).toBe(true);
   });
 
   it('should return `false` for non `undefined` values', () => {
     const expected = falsey.map(value => value === undefined);
-    const actual = falsey.map((value, index) => (index ? isUndefined(value) : isUndefined(undefined)));
+    const actual = falsey.map((value, index) =>
+      index ? isUndefined(value) : isUndefined(),
+    );
+
     expect(actual).toEqual(expected);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (function (..._: any[]) {
       // eslint-disable-next-line prefer-rest-params
       expect(isUndefined(arguments)).toBe(false);
     })(1, 2, 3);
+
     expect(isUndefined([1, 2, 3])).toBe(false);
     expect(isUndefined(true)).toBe(false);
     expect(isUndefined(new Date())).toBe(false);

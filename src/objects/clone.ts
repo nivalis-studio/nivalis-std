@@ -3,25 +3,21 @@ import { isTypedArray } from '../predicate/isTypedArray.ts';
 
 /**
  * Creates a shallow clone of the given object.
- *
  * @template T - The type of the object.
  * @param {T} obj - The object to clone.
  * @returns {T} - A shallow clone of the given object.
- *
  * @example
  * // Clone a primitive values
  * const num = 29;
  * const clonedNum = clone(num);
  * console.log(clonedNum); // 29
  * console.log(clonedNum === num) ; // true
- *
  * @example
  * // Clone an array
  * const arr = [1, 2, 3];
  * const clonedArr = clone(arr);
  * console.log(clonedArr); // [1, 2, 3]
  * console.log(clonedArr === arr); // false
- *
  * @example
  * // Clone an object
  * const obj = { a: 1, b: 'es-toolkit', c: [1, 2, 3] };
@@ -38,9 +34,10 @@ export function clone<T>(obj: T): T {
     Array.isArray(obj) ||
     isTypedArray(obj) ||
     obj instanceof ArrayBuffer ||
-    (typeof SharedArrayBuffer !== 'undefined' && obj instanceof SharedArrayBuffer)
+    (typeof SharedArrayBuffer !== 'undefined' &&
+      obj instanceof SharedArrayBuffer)
   ) {
-    return obj.slice(0) as T;
+    return [...obj] as T;
   }
 
   const prototype = Object.getPrototypeOf(obj);
@@ -52,13 +49,14 @@ export function clone<T>(obj: T): T {
 
   if (obj instanceof RegExp) {
     const newRegExp = new Constructor(obj);
+
     newRegExp.lastIndex = obj.lastIndex;
 
     return newRegExp;
   }
 
   if (obj instanceof DataView) {
-    return new Constructor(obj.buffer.slice(0));
+    return new Constructor([...obj.buffer]);
   }
 
   if (obj instanceof Error) {
@@ -72,12 +70,17 @@ export function clone<T>(obj: T): T {
   }
 
   if (typeof File !== 'undefined' && obj instanceof File) {
-    const newFile = new Constructor([obj], obj.name, { type: obj.type, lastModified: obj.lastModified });
+    const newFile = new Constructor([obj], obj.name, {
+      type: obj.type,
+      lastModified: obj.lastModified,
+    });
+
     return newFile;
   }
 
   if (typeof obj === 'object') {
     const newObject = Object.create(prototype);
+
     return Object.assign(newObject, obj);
   }
 

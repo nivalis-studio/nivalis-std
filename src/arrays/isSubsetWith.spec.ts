@@ -5,7 +5,8 @@ describe('isSubsetWith', () => {
   it('should return true if the subset is entirely contained within the superset using the `areItemsEqual` function', () => {
     const superset = [{ id: 1 }, { id: 2 }, { id: 3 }];
     const subset = [{ id: 2 }, { id: 1 }];
-    const areItemsEqual = (x: { id: number }, y: { id: number }) => x.id === y.id;
+    const areItemsEqual = (x: { id: number }, y: { id: number }) =>
+      x.id === y.id;
 
     expect(isSubsetWith(superset, subset, areItemsEqual)).toBeTruthy();
   });
@@ -13,7 +14,8 @@ describe('isSubsetWith', () => {
   it('should return false if the subset is not entirely contained within the superset', () => {
     const superset = [{ id: 1 }, { id: 2 }, { id: 3 }];
     const subset = [{ id: 4 }];
-    const areItemsEqual = (x: { id: number }, y: { id: number }) => x.id === y.id;
+    const areItemsEqual = (x: { id: number }, y: { id: number }) =>
+      x.id === y.id;
 
     expect(isSubsetWith(superset, subset, areItemsEqual)).toBeFalsy();
   });
@@ -27,6 +29,7 @@ describe('isSubsetWith', () => {
 
     const emptySuperset: number[] = [];
     const subset = [1];
+
     expect(isSubsetWith(emptySuperset, subset, areItemsEqual)).toBeFalsy();
   });
 
@@ -38,6 +41,7 @@ describe('isSubsetWith', () => {
     expect(isSubsetWith(superset, subset, areItemsEqual)).toBeTruthy();
 
     const subsetWithExtra = [2, 2, 4];
+
     expect(isSubsetWith(superset, subsetWithExtra, areItemsEqual)).toBeFalsy();
   });
 });

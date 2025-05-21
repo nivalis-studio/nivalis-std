@@ -19,12 +19,14 @@ describe('update', () => {
   });
 
   it('should preserve the sign of `0`', () => {
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
     const expected = map(props, constant(value));
 
     const actual = map(props, key => {
       const object = { '-0': 'a', 0: 'b' };
+
       update(object, key, updater);
+
       return object[toString(key) as keyof typeof object];
     });
 
@@ -32,7 +34,8 @@ describe('update', () => {
   });
 
   it('should unset symbol keyed property values', () => {
-    const object: Record<symbol, unknown> = {};
+    const object: { [key: symbol]: unknown } = {};
+
     object[symbol] = 1;
 
     expect(unset(object, symbol)).toBe(true);
@@ -87,13 +90,17 @@ describe('update', () => {
 
         update(object, pair[1], updater);
         expect(object).toEqual({ '': value });
-      }
+      },
     );
   });
 
   it('should handle complex paths', () => {
     const object: any = {
-      a: { 1.23: { '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } } } },
+      a: {
+        1.23: {
+          '["b"]': { c: { "['d']": { '\ne\n': { f: { g: oldValue } } } } },
+        },
+      },
     };
 
     const paths = [
@@ -131,9 +138,12 @@ describe('update', () => {
 
     const actual = map(values, value => {
       try {
-        return [update(value, 'a.b', updater), update(value, ['a', 'b'], updater)];
-      } catch (e: unknown) {
-        return e instanceof Error ? e.message : 'unknown error';
+        return [
+          update(value, 'a.b', updater),
+          update(value, ['a', 'b'], updater),
+        ];
+      } catch (error: unknown) {
+        return error instanceof Error ? error.message : 'unknown error';
       }
     });
 
@@ -157,7 +167,7 @@ describe('update', () => {
   });
 
   it('should not assign values that are the same as their destinations', () => {
-    each(['a', ['a'], { a: 1 }, NaN], value => {
+    each(['a', ['a'], { a: 1 }, Number.NaN], value => {
       const object = {};
       let pass = true;
       const updater = constant(value);
@@ -166,7 +176,7 @@ describe('update', () => {
         configurable: true,
         enumerable: true,
         get: constant(value),
-        set: function () {
+        set() {
           pass = false;
         },
       });
@@ -183,6 +193,7 @@ describe('update', () => {
     each(['a[0].b.c', ['a', '0', 'b', 'c']], path => {
       update(object, path, (n: any) => {
         expect(n).toBe(oldValue);
+
         return ++n;
       });
 

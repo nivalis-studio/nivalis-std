@@ -13,7 +13,7 @@ describe('escape', () => {
   });
 
   it('should handle undefined', () => {
-    expect(escape(undefined)).toBe('');
+    expect(escape()).toBe('');
   });
 
   it('should handle strings with nothing to escape', () => {
@@ -24,9 +24,9 @@ describe('escape', () => {
     expect(escape(unescape(escaped))).toBe(escaped);
   });
 
-  ['`', '/'].forEach(chr => {
+  for (const chr of ['`', '/']) {
     it(`should not escape the "${chr}" character`, () => {
       expect(escape(chr)).toBe(chr);
     });
-  });
+  }
 });

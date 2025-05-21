@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { indexOf } from './indexOf';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { stubZero } from '../_internal/stubZero';
+import { indexOf } from './indexOf';
 
 /**
  * @see https://github.com/lodash/lodash/blob/6a2cc1dfcf7634fea70d1bc5bd22db453df67b42/test/indexOf.spec.js
@@ -38,11 +38,11 @@ describe('indexOf', () => {
   });
 
   it('should work with a NaN `searchElement`', () => {
-    expect(indexOf([1, 2, 3, 4], NaN)).toBe(-1);
-    expect(indexOf([1, NaN, 3, NaN], NaN)).toBe(1);
-    expect(indexOf([1, NaN, 3, NaN], 3, 1)).toBe(2);
-    expect(indexOf([1, NaN, 3, NaN], 3, -2)).toBe(2);
-    expect(indexOf([1, NaN, 3, NaN], NaN, -32)).toBe(1);
+    expect(indexOf([1, 2, 3, 4], Number.NaN)).toBe(-1);
+    expect(indexOf([1, Number.NaN, 3, Number.NaN], Number.NaN)).toBe(1);
+    expect(indexOf([1, Number.NaN, 3, Number.NaN], 3, 1)).toBe(2);
+    expect(indexOf([1, Number.NaN, 3, Number.NaN], 3, -2)).toBe(2);
+    expect(indexOf([1, Number.NaN, 3, Number.NaN], Number.NaN, -32)).toBe(1);
   });
 
   it('should work with a negative `fromIndex` <= `-length`', () => {
@@ -57,7 +57,9 @@ describe('indexOf', () => {
   it('should treat falsey `fromIndex` values as `0`', () => {
     const expected = falsey.map(stubZero);
 
-    const actual = falsey.map(fromIndex => indexOf(array, 1, fromIndex as number));
+    const actual = falsey.map(fromIndex =>
+      indexOf(array, 1, fromIndex as number),
+    );
 
     expect(actual).toEqual(expected);
   });

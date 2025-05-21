@@ -7,7 +7,6 @@ describe('toArgs', () => {
 
     expect(result.toString()).toBe('[object Arguments]');
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (function (..._args) {
       // eslint-disable-next-line prefer-rest-params
       expect(arguments).toEqual(result);

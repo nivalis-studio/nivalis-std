@@ -1,29 +1,24 @@
-import { isObject } from './isObject.ts';
 import { isPrimitive } from '../../predicate/isPrimitive.ts';
 import { eq } from '../util/eq.ts';
+import { isObject } from './isObject.ts';
 
 /**
  * Checks if the target matches the source by comparing their structures and values.
  * This function supports deep comparison for objects, arrays, maps, and sets.
- *
  * @param {unknown} target - The target value to match against.
  * @param {unknown} source - The source value to match with.
  * @returns {boolean} - Returns `true` if the target matches the source, otherwise `false`.
- *
  * @example
  * // Basic usage
  * isMatch({ a: 1, b: 2 }, { a: 1 }); // true
- *
  * @example
  * // Matching arrays
  * isMatch([1, 2, 3], [1, 2, 3]); // true
- *
  * @example
  * // Matching maps
  * const targetMap = new Map([['key1', 'value1'], ['key2', 'value2']]);
  * const sourceMap = new Map([['key1', 'value1']]);
  * isMatch(targetMap, sourceMap); // true
- *
  * @example
  * // Matching sets
  * const targetSet = new Set([1, 2, 3]);
@@ -31,28 +26,24 @@ import { eq } from '../util/eq.ts';
  * isMatch(targetSet, sourceSet); // true
  */
 export function isMatch(target: unknown, source: unknown): boolean;
+
 /**
  * Checks if the target matches the source by comparing their structures and values.
  * This function supports deep comparison for objects, arrays, maps, and sets.
- *
  * @param {unknown} target - The target value to match against.
  * @param {unknown} source - The source value to match with.
  * @returns {boolean} - Returns `true` if the target matches the source, otherwise `false`.
- *
  * @example
  * // Basic usage
  * isMatch({ a: 1, b: 2 }, { a: 1 }); // true
- *
  * @example
  * // Matching arrays
  * isMatch([1, 2, 3], [1, 2, 3]); // true
- *
  * @example
  * // Matching maps
  * const targetMap = new Map([['key1', 'value1'], ['key2', 'value2']]);
  * const sourceMap = new Map([['key1', 'value1']]);
  * isMatch(targetMap, sourceMap); // true
- *
  * @example
  * // Matching sets
  * const targetSet = new Set([1, 2, 3]);
@@ -70,7 +61,7 @@ export function isMatch(target: any, source: any): boolean {
         return true;
       }
 
-      const keys = Object.keys(source as any);
+      const keys = Object.keys(source);
 
       if (target == null) {
         return keys.length === 0;
@@ -88,9 +79,7 @@ export function isMatch(target: any, source: any): boolean {
         return isSetMatch(target, source);
       }
 
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-
+      for (const key of keys) {
         if (!isPrimitive(target) && !(key in target)) {
           return false;
         }
@@ -110,6 +99,7 @@ export function isMatch(target: any, source: any): boolean {
 
       return true;
     }
+
     case 'function': {
       if (Object.keys(source).length > 0) {
         return isMatch(target, { ...source });
@@ -117,6 +107,7 @@ export function isMatch(target: any, source: any): boolean {
 
       return false;
     }
+
     default: {
       if (!isObject(target)) {
         return eq(target, source);
@@ -156,8 +147,7 @@ export function isArrayMatch(target: unknown, source: readonly unknown[]) {
 
   const countedIndex = new Set<number>();
 
-  for (let i = 0; i < source.length; i++) {
-    const sourceItem = source[i];
+  for (const sourceItem of source) {
     const index = target.findIndex((targetItem, index) => {
       return isMatch(targetItem, sourceItem) && !countedIndex.has(index);
     });

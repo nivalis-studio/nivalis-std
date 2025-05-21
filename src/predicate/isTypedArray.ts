@@ -13,7 +13,6 @@
  *   | BigInt64Array
  *   | Float32Array
  *   | Float64Array} Returns true if `x` is a TypedArray, false otherwise.
- *
  * @example
  * const arr = new Uint8Array([1, 2, 3]);
  * isTypedArray(arr); // true
@@ -25,7 +24,7 @@
  * isTypedArray(buffer); // false
  */
 export function isTypedArray(
-  x: unknown
+  x: unknown,
 ): x is
   | Uint8Array
   | Uint8ClampedArray

@@ -9,9 +9,9 @@ import {
   dateTag,
   float32ArrayTag,
   float64ArrayTag,
-  int8ArrayTag,
   int16ArrayTag,
   int32ArrayTag,
+  int8ArrayTag,
   mapTag,
   numberTag,
   objectTag,
@@ -19,35 +19,31 @@ import {
   setTag,
   stringTag,
   symbolTag,
-  uint8ArrayTag,
-  uint8ClampedArrayTag,
   uint16ArrayTag,
   uint32ArrayTag,
+  uint8ArrayTag,
+  uint8ClampedArrayTag,
 } from '../_internal/tags.ts';
 import { isArray } from '../predicate/isArray.ts';
 import { isTypedArray } from '../predicate/isTypedArray.ts';
 
 /**
  * Creates a shallow clone of the given object.
- *
  * @template T - The type of the object.
  * @param {T} obj - The object to clone.
  * @returns {T} - A shallow clone of the given object.
- *
  * @example
  * // Clone a primitive objs
  * const num = 29;
  * const clonedNum = clone(num);
  * console.log(clonedNum); // 29
  * console.log(clonedNum === num) ; // true
- *
  * @example
  * // Clone an array
  * const arr = [1, 2, 3];
  * const clonedArr = clone(arr);
  * console.log(clonedArr); // [1, 2, 3]
  * console.log(clonedArr === arr); // false
- *
  * @example
  * // Clone an object
  * const obj = { a: 1, b: 'es-toolkit', c: [1, 2, 3] };
@@ -67,9 +63,13 @@ export function clone<T>(obj: T): T {
   }
 
   if (isArray(obj)) {
-    const result = Array.from(obj as any) as any;
+    const result = [...(obj as any)] as any;
 
-    if (obj.length > 0 && typeof obj[0] === 'string' && Object.hasOwn(obj, 'index')) {
+    if (
+      obj.length > 0 &&
+      typeof obj[0] === 'string' &&
+      Object.hasOwn(obj, 'index')
+    ) {
       result.index = (obj as any).index;
       result.input = (obj as any).input;
     }
@@ -80,7 +80,12 @@ export function clone<T>(obj: T): T {
   if (isTypedArray(obj)) {
     const typedArray = obj as unknown as ArrayBufferView;
     const Ctor = typedArray.constructor as any;
-    return new Ctor(typedArray.buffer, typedArray.byteOffset, (typedArray as any).length) as any;
+
+    return new Ctor(
+      typedArray.buffer,
+      typedArray.byteOffset,
+      (typedArray as any).length,
+    );
   }
 
   if (tag === arrayBufferTag) {
@@ -96,6 +101,7 @@ export function clone<T>(obj: T): T {
     const clonedBuffer = new ArrayBuffer(byteLength);
     const srcView = new Uint8Array(buffer, byteOffset, byteLength);
     const destView = new Uint8Array(clonedBuffer);
+
     destView.set(srcView);
 
     return new DataView(clonedBuffer) as any;
@@ -103,7 +109,7 @@ export function clone<T>(obj: T): T {
 
   if (tag === booleanTag || tag === numberTag || tag === stringTag) {
     const Ctor = (obj as any).constructor;
-    const clone = new Ctor((obj as any).valueOf()) as any;
+    const clone = new Ctor((obj as any).valueOf());
 
     if (tag === stringTag) {
       cloneStringObjectProperties(clone, obj as any);
@@ -121,21 +127,23 @@ export function clone<T>(obj: T): T {
   if (tag === regexpTag) {
     const regExp = obj as unknown as RegExp;
     const clone = new RegExp(regExp.source, regExp.flags) as any;
+
     clone.lastIndex = regExp.lastIndex;
+
     return clone;
   }
 
   if (tag === symbolTag) {
-    return Object(Symbol.prototype.valueOf.call(obj)) as any;
+    return new Object(Symbol.prototype.valueOf.call(obj));
   }
 
   if (tag === mapTag) {
     const map = obj as unknown as Map<any, any>;
     const result = new Map();
 
-    map.forEach((obj, key) => {
+    for (const [key, obj] of map.entries()) {
       result.set(key, obj);
-    });
+    }
 
     return result as unknown as T;
   }
@@ -144,9 +152,9 @@ export function clone<T>(obj: T): T {
     const set = obj as unknown as Set<any>;
     const result = new Set();
 
-    set.forEach(obj => {
+    for (const obj of set) {
       result.add(obj);
-    });
+    }
 
     return result as unknown as T;
   }
@@ -195,9 +203,11 @@ function isCloneableObject(object: any): boolean {
     case uint8ArrayTag:
     case uint8ClampedArrayTag:
     case uint16ArrayTag:
+
     case uint32ArrayTag: {
       return true;
     }
+
     default: {
       return false;
     }
@@ -214,8 +224,8 @@ function copyOwnProperties(target: any, source: any): void {
 
 function copySymbolProperties(target: any, source: any): void {
   const symbols = Object.getOwnPropertySymbols(source);
-  for (let i = 0; i < symbols.length; i++) {
-    const symbol = symbols[i];
+
+  for (const symbol of symbols) {
     if (Object.prototype.propertyIsEnumerable.call(source, symbol)) {
       target[symbol] = source[symbol];
     }
@@ -226,7 +236,10 @@ function cloneStringObjectProperties(target: any, source: any): void {
   const stringLength = source.valueOf().length;
 
   for (const key in source) {
-    if (Object.hasOwn(source, key) && (Number.isNaN(Number(key)) || Number(key) >= stringLength)) {
+    if (
+      Object.hasOwn(source, key) &&
+      (Number.isNaN(Number(key)) || Number(key) >= stringLength)
+    ) {
       target[key] = source[key];
     }
   }
@@ -234,8 +247,10 @@ function cloneStringObjectProperties(target: any, source: any): void {
 
 function copyPrototype(target: any, source: any): void {
   const proto = Object.getPrototypeOf(source);
+
   if (proto !== null) {
     const Ctor = source.constructor;
+
     if (typeof Ctor === 'function') {
       Object.setPrototypeOf(target, proto);
     }

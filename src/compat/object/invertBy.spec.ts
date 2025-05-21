@@ -20,7 +20,9 @@ describe('invertBy', () => {
     const values = [undefined, null];
     const expected = values.map(() => ({ '1': ['a', 'c'], '2': ['b'] }));
 
-    const actual = values.map((value, index) => (index ? invertBy(object, value as any) : invertBy(object)));
+    const actual = values.map((value, index) =>
+      index ? invertBy(object, value as any) : invertBy(object),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -38,6 +40,6 @@ describe('invertBy', () => {
     // @ts-expect-error - nullish value
     expect(invertBy(null)).toEqual({});
     // @ts-expect-error - nullish value
-    expect(invertBy(undefined)).toEqual({});
+    expect(invertBy()).toEqual({});
   });
 });

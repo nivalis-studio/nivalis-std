@@ -1,7 +1,7 @@
-import { escape } from './escape.ts';
 import { attempt } from '../function/attempt.ts';
 import { defaults } from '../object/defaults.ts';
 import { toString } from '../util/toString.ts';
+import { escape } from './escape.ts';
 
 // A regular expression for matching literal string in ES template string.
 const esTemplateRegExp = /\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g;
@@ -39,14 +39,14 @@ export const templateSettings = {
   },
 };
 
-interface TemplateOptions {
+type TemplateOptions = {
   escape?: RegExp;
   evaluate?: RegExp;
   interpolate?: RegExp;
   variable?: string;
-  imports?: Record<string, unknown>;
+  imports?: { [key: string]: unknown };
   sourceURL?: string;
-}
+};
 
 /**
  * Compiles a template string into a function that can interpolate data properties.
@@ -54,7 +54,6 @@ interface TemplateOptions {
  * This function allows you to create a template with custom delimiters for escaping,
  * evaluating, and interpolating values. It can also handle custom variable names and
  * imported functions.
- *
  * @param {string} string - The template string.
  * @param {TemplateOptions} [options] - The options object.
  * @param {RegExp} [options.escape] - The regular expression for "escape" delimiter.
@@ -65,47 +64,38 @@ interface TemplateOptions {
  * @param {string} [options.sourceURL] - The source URL of the template.
  * @param {unknown} [guard] - The guard to detect if the function is called with `options`.
  * @returns {(data?: object) => string} Returns the compiled template function.
- *
  * @example
  * // Use the "escape" delimiter to escape data properties.
  * const compiled = template('<%- value %>');
  * compiled({ value: '<div>' }); // returns '&lt;div&gt;'
- *
  * @example
  * // Use the "interpolate" delimiter to interpolate data properties.
  * const compiled = template('<%= value %>');
  * compiled({ value: 'Hello, World!' }); // returns 'Hello, World!'
- *
  * @example
  * // Use the "evaluate" delimiter to evaluate JavaScript code.
  * const compiled = template('<% if (value) { %>Yes<% } else { %>No<% } %>');
  * compiled({ value: true }); // returns 'Yes'
- *
  * @example
  * // Use the "variable" option to specify the data object variable name.
  * const compiled = template('<%= data.value %>', { variable: 'data' });
  * compiled({ value: 'Hello, World!' }); // returns 'Hello, World!'
- *
  * @example
  * // Use the "imports" option to import functions.
  * const compiled = template('<%= _.toUpper(value) %>', { imports: { _: { toUpper } } });
  * compiled({ value: 'hello, world!' }); // returns 'HELLO, WORLD!'
- *
  * @example
  * // Use the custom "escape" delimiter.
  * const compiled = template('<@ value @>', { escape: /<@([\s\S]+?)@>/g });
  * compiled({ value: '<div>' }); // returns '&lt;div&gt;'
- *
  * @example
  * // Use the custom "evaluate" delimiter.
  * const compiled = template('<# if (value) { #>Yes<# } else { #>No<# } #>', { evaluate: /<#([\s\S]+?)#>/g });
  * compiled({ value: true }); // returns 'Yes'
- *
  * @example
  * // Use the custom "interpolate" delimiter.
  * const compiled = template('<$ value $>', { interpolate: /<\$([\s\S]+?)\$>/g });
  * compiled({ value: 'Hello, World!' }); // returns 'Hello, World!'
- *
  * @example
  * // Use the "sourceURL" option to specify the source URL of the template.
  * const compiled = template('hello <%= user %>!', { sourceURL: 'template.js' });
@@ -113,7 +103,7 @@ interface TemplateOptions {
 export function template(
   string: string,
   options?: TemplateOptions,
-  guard?: unknown
+  guard?: unknown,
 ): ((data?: object) => string) & { source: string } {
   string = toString(string);
 
@@ -131,7 +121,7 @@ export function template(
       options.evaluate?.source ?? noMatchExp.source,
       '$',
     ].join('|'),
-    'g'
+    'g',
   );
 
   let lastIndex = 0;
@@ -139,10 +129,16 @@ export function template(
   let source = `__p += ''`;
 
   for (const match of string.matchAll(delimitersRegExp)) {
-    const [fullMatch, escapeValue, interpolateValue, esTemplateValue, evaluateValue] = match;
+    const [
+      fullMatch,
+      escapeValue,
+      interpolateValue,
+      esTemplateValue,
+      evaluateValue,
+    ] = match;
     const { index } = match;
 
-    source += ` + '${string.slice(lastIndex, index).replace(unEscapedRegExp, escapeString)}'`;
+    source += ` + '${string.slice(lastIndex, index).replaceAll(unEscapedRegExp, escapeString)}'`;
 
     if (escapeValue) {
       source += ` + _.escape(${escapeValue})`;
@@ -167,7 +163,9 @@ export function template(
   const importValues = Object.values(imports);
 
   const sourceURL = `//# sourceURL=${
-    options.sourceURL ? String(options.sourceURL).replace(/[\r\n]/g, ' ') : `es-toolkit.templateSource[${Date.now()}]`
+    options.sourceURL
+      ? String(options.sourceURL).replaceAll(/[\r\n]/g, ' ')
+      : `es-toolkit.templateSource[${Date.now()}]`
   }\n`;
 
   const compiledFunction = `function(${options.variable || 'obj'}) {
@@ -178,7 +176,11 @@ export function template(
     return __p;
   }`;
 
-  const result = attempt(() => new Function(...importsKeys, `${sourceURL}return ${compiledFunction}`)(...importValues));
+  const result = attempt(() =>
+    new Function(...importsKeys, `${sourceURL}return ${compiledFunction}`)(
+      ...importValues,
+    ),
+  );
 
   result.source = compiledFunction;
 

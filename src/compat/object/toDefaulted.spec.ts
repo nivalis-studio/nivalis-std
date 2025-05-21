@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { toDefaulted } from './toDefaulted';
 import { objectProto } from '../_internal/objectProto';
 import * as esToolkit from '../index';
+import { toDefaulted } from './toDefaulted';
 
 describe('toDefaulted', () => {
   it('should assign source properties if missing on `object`', () => {
     const actual = toDefaulted({ a: 1 }, { a: 2, b: 2 });
+
     expect(actual).toEqual({ a: 1, b: 2 });
   });
 
@@ -30,11 +31,13 @@ describe('toDefaulted', () => {
 
   it('should not overwrite `null` values', () => {
     const actual = toDefaulted({ a: null }, { a: 1 });
+
     expect((actual as any).a).toBe(null);
   });
 
   it('should overwrite `undefined` values', () => {
     const actual = toDefaulted({ a: undefined }, { a: 1 });
+
     expect((actual as any).a).toBe(1);
   });
 
@@ -67,6 +70,7 @@ describe('toDefaulted', () => {
     };
 
     let expected = esToolkit.clone(source);
+
     expect(toDefaulted({}, source)).toEqual(expected);
 
     expected = esToolkit.clone(object);

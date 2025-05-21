@@ -7,7 +7,6 @@ import { normalizeForCase } from '../_internal/normalizeForCase.ts';
  * Start case is the naming convention in which each word is written with an initial capital letter.
  * @param {string | object} str - The string to convert.
  * @returns {string} The converted string.
- *
  * @example
  * const result1 = startCase('hello world');  // result will be 'Hello World'
  * const result2 = startCase('HELLO WORLD');  // result will be 'HELLO WORLD'
@@ -19,9 +18,7 @@ export function startCase(str?: string | object): string {
 
   let result = '';
 
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
-
+  for (const word of words) {
     if (result) {
       result += ' ';
     }

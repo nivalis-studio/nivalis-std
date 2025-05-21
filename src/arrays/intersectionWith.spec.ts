@@ -3,9 +3,19 @@ import { intersectionWith } from './intersectionWith';
 
 describe('intersectionWith', () => {
   it('should return the intersection of two arrays with `mapper`', () => {
-    expect(intersectionWith([1.2, 2.1], [1.4, 3.1], (x, y) => Math.floor(x) === Math.floor(y))).toStrictEqual([1.2]);
     expect(
-      intersectionWith([{ foo: 1 }, { foo: 2 }], [{ foo: 1 }, { foo: 3 }], (x, y) => x.foo === y.foo)
+      intersectionWith(
+        [1.2, 2.1],
+        [1.4, 3.1],
+        (x, y) => Math.floor(x) === Math.floor(y),
+      ),
+    ).toStrictEqual([1.2]);
+    expect(
+      intersectionWith(
+        [{ foo: 1 }, { foo: 2 }],
+        [{ foo: 1 }, { foo: 3 }],
+        (x, y) => x.foo === y.foo,
+      ),
     ).toStrictEqual([{ foo: 1 }]);
   });
 
@@ -24,6 +34,7 @@ describe('intersectionWith', () => {
     ];
 
     const result = intersectionWith(array1, array2, (a, b) => a.id === b.id);
+
     expect(result).toEqual([{ id: 2, csv: 1 }]);
   });
 });

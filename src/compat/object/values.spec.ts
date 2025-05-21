@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { values } from './values';
 import { args } from '../_internal/args';
 import { strictArgs } from '../_internal/strictArgs';
+import { values } from './values';
 
 describe('values', () => {
   it(`should get string keyed values of \`object\``, () => {
@@ -23,6 +23,7 @@ describe('values', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const expected = [1];

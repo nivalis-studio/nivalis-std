@@ -10,7 +10,7 @@ type SnakeCase<S extends string> = S extends `${infer P1}${infer P2}`
 
 export type ToSnakeCaseKeys<T> = T extends any[]
   ? Array<ToSnakeCaseKeys<T[number]>>
-  : T extends Record<string, any>
+  : T extends { [key: string]: any }
     ? { [K in keyof T as SnakeCase<string & K>]: ToSnakeCaseKeys<T[K]> }
     : T;
 
@@ -19,11 +19,9 @@ export type ToSnakeCaseKeys<T> = T extends any[]
  *
  * This function takes an object and returns a new object that includes the same properties,
  * but with all keys converted to snake_case format.
- *
  * @template T - The type of object.
  * @param {T} obj - The object to convert keys from.
  * @returns {ToSnakeCaseKeys<T>} A new object with all keys converted to snake_case.
- *
  * @example
  * // Example with objects
  * const obj = { userId: 1, firstName: 'John' };
@@ -62,19 +60,21 @@ export type ToSnakeCaseKeys<T> = T extends any[]
  */
 export function toSnakeCaseKeys<T>(obj: T): ToSnakeCaseKeys<T> {
   if (isArray(obj)) {
-    return obj.map(item => toSnakeCaseKeys(item)) as unknown as ToSnakeCaseKeys<T>;
+    return obj.map(item =>
+      toSnakeCaseKeys(item),
+    ) as unknown as ToSnakeCaseKeys<T>;
   }
 
   if (isPlainObject(obj)) {
     const result = {} as ToSnakeCaseKeys<T>;
     const keys = Object.keys(obj);
 
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-
+    for (const key of keys) {
       const snakeKey = snakeCase(key) as keyof typeof result;
       const snakeCaseKeys = toSnakeCaseKeys(obj[key]);
-      result[snakeKey] = snakeCaseKeys as ToSnakeCaseKeys<T>[keyof ToSnakeCaseKeys<T>];
+
+      result[snakeKey] =
+        snakeCaseKeys as ToSnakeCaseKeys<T>[keyof ToSnakeCaseKeys<T>];
     }
 
     return result;

@@ -4,12 +4,10 @@ import { at } from './at.ts';
  * Removes elements from an array at specified indices and returns the removed elements.
  *
  * This function supports negative indices, which count from the end of the array.
- *
  * @template T
  * @param {T[]} arr - The array from which elements will be removed.
  * @param {number[]} indicesToRemove - An array of indices specifying the positions of elements to remove.
  * @returns {Array<T | undefined>} An array containing the elements that were removed from the original array.
- *
  * @example
  * const numbers = [10, 20, 30, 40, 50];
  * const removed = pullAt(numbers, [1, 3, 4]);
@@ -18,7 +16,7 @@ import { at } from './at.ts';
  */
 export function pullAt<T>(arr: T[], indicesToRemove: number[]): T[] {
   const removed = at(arr, indicesToRemove);
-  const indices = new Set(indicesToRemove.slice().sort((x, y) => y - x));
+  const indices = new Set([...indicesToRemove].sort((x, y) => y - x));
 
   for (const index of indices) {
     arr.splice(index, 1);

@@ -3,12 +3,37 @@ import { compact } from './compact';
 
 describe('compact', () => {
   it('removes falsey values from array', () => {
-    expect(compact([0, -0, 0n, 1, false, 2, '', 3, null, undefined, 4, NaN, 5])).toEqual([1, 2, 3, 4, 5]);
-    expect(compact([false, 0, -0, 0n, '', null, undefined, NaN])).toEqual([]);
-    expect(compact([0, { name: 'John' }, false, 'hello', null, { age: 30 }, undefined, NaN])).toEqual([
-      { name: 'John' },
-      'hello',
-      { age: 30 },
-    ]);
+    expect(
+      compact([
+        0,
+        -0,
+        0n,
+        1,
+        false,
+        2,
+        '',
+        3,
+        null,
+        undefined,
+        4,
+        Number.NaN,
+        5,
+      ]),
+    ).toEqual([1, 2, 3, 4, 5]);
+    expect(
+      compact([false, 0, -0, 0n, '', null, undefined, Number.NaN]),
+    ).toEqual([]);
+    expect(
+      compact([
+        0,
+        { name: 'John' },
+        false,
+        'hello',
+        null,
+        { age: 30 },
+        undefined,
+        Number.NaN,
+      ]),
+    ).toEqual([{ name: 'John' }, 'hello', { age: 30 }]);
   });
 });

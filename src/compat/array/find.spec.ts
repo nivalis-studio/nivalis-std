@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { find } from './find';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { slice } from '../_internal/slice';
+import { find } from './find';
 
 describe('find', () => {
   const objects = [
@@ -37,7 +37,7 @@ describe('find', () => {
 
   it(`find should return undefined for empty collections`, () => {
     const emptyValues = empties;
-    const expecting = emptyValues.map(() => undefined);
+    const expecting = emptyValues.map(() => {});
 
     const actual = emptyValues.map(value => {
       try {

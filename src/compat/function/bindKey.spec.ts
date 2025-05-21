@@ -5,12 +5,13 @@ describe('bindKey', () => {
   it('should work when the target function is overwritten', () => {
     const object = {
       user: 'fred',
-      greet: function (greeting: string) {
+      greet(greeting: string) {
         return `${this.user} says: ${greeting}`;
       },
     };
 
     const bound = bindKey(object, 'greet', 'hi');
+
     expect(bound()).toBe('fred says: hi');
 
     object.greet = function (greeting) {
@@ -22,14 +23,14 @@ describe('bindKey', () => {
 
   it('should support placeholders', () => {
     const object = {
-      fn: function () {
+      fn() {
         // eslint-disable-next-line prefer-rest-params
-        return Array.from(arguments);
+        return [...arguments];
       },
     };
 
-    const ph = bindKey.placeholder,
-      bound = bindKey(object, 'fn', ph, 'b', ph);
+    const ph = bindKey.placeholder;
+    const bound = bindKey(object, 'fn', ph, 'b', ph);
 
     expect(bound('a', 'c')).toEqual(['a', 'b', 'c']);
     expect(bound('a')).toEqual(['a', 'b', undefined]);
@@ -42,7 +43,7 @@ describe('bindKey', () => {
       return value && object;
     }
 
-    const object = { Foo: Foo };
+    const object = { Foo };
     const bound = bindKey(object, 'Foo');
 
     // @ts-expect-error - bound is a constructor

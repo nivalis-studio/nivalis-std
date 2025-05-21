@@ -5,13 +5,11 @@
  * It returns a new object where the property names from the first array are keys, and the corresponding elements
  * from the second array are values. If the `keys` array is longer than the `values` array, the remaining keys will
  * have `undefined` as their values.
- *
  * @template P - The type of elements in the array.
  * @template V - The type of elements in the array.
  * @param {P[]} keys - An array of property names.
  * @param {V[]} values - An array of values corresponding to the property names.
  * @returns {Record<P, V>} - A new object composed of the given property names and values.
- *
  * @example
  * const keys = ['a', 'b', 'c'];
  * const values = [1, 2, 3];
@@ -28,11 +26,14 @@
  * const result2 = zipObject(keys2, values2);
  * // result2 will be { a: 1, b: 2 }
  */
-export function zipObject<P extends PropertyKey, V>(keys: readonly P[], values: readonly V[]): Record<P, V> {
+export function zipObject<P extends PropertyKey, V>(
+  keys: readonly P[],
+  values: readonly V[],
+): Record<P, V> {
   const result = {} as Record<P, V>;
 
-  for (let i = 0; i < keys.length; i++) {
-    result[keys[i]] = values[i];
+  for (const [i, key] of keys.entries()) {
+    result[key] = values[i];
   }
 
   return result;

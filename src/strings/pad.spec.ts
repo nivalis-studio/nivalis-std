@@ -20,7 +20,7 @@ describe('pad', () => {
   });
 
   it('should not pad a string if the length is not a number', () => {
-    expect(pad('abc', NaN)).toBe('abc');
+    expect(pad('abc', Number.NaN)).toBe('abc');
   });
 
   it('should not pad a string if the length is not an integer', () => {

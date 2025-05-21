@@ -4,7 +4,6 @@ import { toInteger } from '../util/toInteger.ts';
  * Creates a function that invokes `func`, with the `this` binding and arguments
  * of the created function, while it's called less than `n` times. Subsequent
  * calls to the created function return the result of the last `func` invocation.
- *
  * @template F - The type of the function to be invoked.
  * @param {number} n - The number of times the returned function is allowed to call `func` before stopping.
  * - If `n` is 0, `func` will never be called.
@@ -25,13 +24,14 @@ import { toInteger } from '../util/toInteger.ts';
  */
 export function before<F extends (...args: any[]) => any>(
   n: number,
-  func: F
+  func: F,
 ): (...args: Parameters<F>) => ReturnType<F> {
   if (typeof func !== 'function') {
     throw new TypeError('Expected a function');
   }
 
   let result: ReturnType<F>;
+
   n = toInteger(n);
 
   return function (this: unknown, ...args: Parameters<F>) {

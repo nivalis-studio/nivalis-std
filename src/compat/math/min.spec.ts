@@ -24,17 +24,19 @@ describe('min', () => {
 
   it('should work with extremely large arrays', () => {
     const array = Array.from({ length: 5e5 }, (_, i) => i);
+
     expect(min(array)).toBe(0);
   });
 
   it('should work when chaining on an array with only one value', () => {
     const array = [40];
+
     expect(min(array)).toBe(40);
   });
 
   it('should skip NaN values', () => {
-    expect(min([1, NaN, 2])).toBe(1);
-    expect(min([NaN, 1, 2])).toBe(1);
+    expect(min([1, Number.NaN, 2])).toBe(1);
+    expect(min([Number.NaN, 1, 2])).toBe(1);
   });
 
   it('should skip symbol values', () => {
@@ -49,6 +51,6 @@ describe('min', () => {
   });
 
   it('should return undefined when skipping all values', () => {
-    expect(min([Symbol('a'), null, NaN])).toBe(undefined);
+    expect(min([Symbol('a'), null, Number.NaN])).toBe(undefined);
   });
 });

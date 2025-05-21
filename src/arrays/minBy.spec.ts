@@ -9,6 +9,7 @@ describe('minBy', () => {
       { name: 'Overmars', age: 35 },
     ];
     const result = minBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Nunu', age: 20 });
   });
 
@@ -19,12 +20,14 @@ describe('minBy', () => {
       { name: 'Overmars', age: 20 },
     ];
     const result = minBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Nunu', age: 20 });
   });
 
   it('if array is single-element, return unique element of array', () => {
     const people = [{ name: 'Mark', age: 25 }];
     const result = minBy(people, person => person.age);
+
     expect(result).toEqual({ name: 'Mark', age: 25 });
   });
 
@@ -32,12 +35,14 @@ describe('minBy', () => {
     type Person = { name: string; age: number };
     const people: Person[] = [];
     const result = minBy(people, person => person.age);
+
     expect(result).toBeUndefined();
   });
 
   it('should handle arrays with NaN values correctly', () => {
     const numbers = [1, Number.NaN, 3, 2];
     const result = minBy(numbers, x => x);
+
     expect(result).toBe(1);
   });
 });

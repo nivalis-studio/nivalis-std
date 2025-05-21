@@ -19,7 +19,6 @@
  * it will deliberately omit unsafe features, such as:
  *
  * - Implicit type casting from an empty string `''` to 0 or false, and similar cases.
- *
  * @module
  */
 export * from './compat.ts';

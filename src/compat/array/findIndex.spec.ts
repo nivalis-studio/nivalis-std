@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { findIndex } from './findIndex';
 import { args } from '../_internal/args';
 import { slice } from '../_internal/slice';
+import { findIndex } from './findIndex';
 
 describe('findIndex', () => {
   const objects = [

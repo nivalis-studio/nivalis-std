@@ -12,11 +12,13 @@ describe('identity', () => {
 
   it('should return the input value unchanged for an object', () => {
     const obj = { key: 'value' };
+
     expect(identity(obj)).toBe(obj);
   });
 
   it('should return the input value unchanged for an array', () => {
     const arr = [1, 2, 3];
+
     expect(identity(arr)).toBe(arr);
   });
 

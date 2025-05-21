@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { each, map } from '..';
-import { range } from './range';
 import { falsey } from '../_internal/falsey';
+import { range } from './range';
 
 describe('range', () => {
   it(`\`_.range\` should infer the sign of \`step\` when only \`end\` is given`, () => {
@@ -35,6 +35,7 @@ describe('range', () => {
 
   it(`\`_.range\` should support \`start\` of \`-0\``, () => {
     const actual = range(-0, 1);
+
     expect(1 / actual[0]).toBe(-Infinity);
   });
 
@@ -54,7 +55,13 @@ describe('range', () => {
 
   it(`\`_.range\` should coerce arguments to finite numbers`, () => {
     // @ts-expect-error - invalid arguments
-    const actual = [range('1'), range('0', 1), range(0, 1, '1'), range(NaN), range(NaN, NaN)];
+    const actual = [
+      range('1'),
+      range('0', 1),
+      range(0, 1, '1'),
+      range(Number.NaN),
+      range(Number.NaN, Number.NaN),
+    ];
 
     expect(actual).toEqual([[0], [0], [0], [], []]);
   });
@@ -66,6 +73,7 @@ describe('range', () => {
 
     each([array, object], collection => {
       const actual = map(collection, range);
+
       expect(actual).toEqual(expected);
     });
   });

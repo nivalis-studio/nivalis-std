@@ -1,16 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import * as lodashStable from 'es-toolkit/compat';
-import { head } from './head';
-import { reduce } from './reduce';
 import { empties } from '../_internal/empties';
 import { MAX_SAFE_INTEGER } from '../_internal/MAX_SAFE_INTEGER';
 import { keys } from '../object/keys';
+import { reduce } from './reduce';
+import { head } from './head';
 
 describe('reduce', () => {
   const array = [1, 2, 3];
 
   it(`should reduce a collection to a single value`, () => {
-    const actual = reduce(['a', 'b', 'c'], (accumulator, value) => accumulator + value, '');
+    const actual = reduce(
+      ['a', 'b', 'c'],
+      (accumulator, value) => accumulator + value,
+      '',
+    );
 
     expect(actual).toBe('abc');
   });
@@ -24,7 +28,7 @@ describe('reduce', () => {
         // eslint-disable-next-line
         // @ts-ignore
         actual.push(reduce(value, lodashStable.noop));
-      } catch (e) {
+      } catch {
         //
       }
     });
@@ -39,8 +43,8 @@ describe('reduce', () => {
       try {
         // eslint-disable-next-line
         // @ts-ignore
-        return reduce(value, lodashStable.noop, 'x');
-      } catch (e) {
+        reduce(value, lodashStable.noop, 'x');
+      } catch {
         //
       }
     });
@@ -49,7 +53,8 @@ describe('reduce', () => {
   });
 
   it(`should handle an initial \`accumulator\` value of \`undefined\``, () => {
-    const actual = reduce([], lodashStable.noop, undefined);
+    const actual = reduce([], lodashStable.noop);
+
     expect(actual).toBe(undefined);
   });
 
@@ -61,6 +66,7 @@ describe('reduce', () => {
       array.__proto__ = object;
       expect(reduce(array, lodashStable.noop)).toBe(undefined);
     }
+
     // eslint-disable-next-line
     // @ts-ignore
     expect(reduce(object, lodashStable.noop)).toBe(undefined);
@@ -83,7 +89,7 @@ describe('reduce', () => {
       },
       // eslint-disable-next-line
       // @ts-ignore
-      0
+      0,
     );
 
     expect(args).toEqual([0, 1, 0, array]);
@@ -114,7 +120,7 @@ describe('reduce', () => {
         // eslint-disable-next-line
         args || (args = Array.prototype.slice.call(arguments));
       },
-      0
+      0,
     );
 
     expect(args).toEqual(expected);
@@ -141,18 +147,22 @@ describe('reduce', () => {
         () => {
           result = true;
         },
-        0 as any
+        0 as any,
       );
+
       return result;
     };
 
-    const values = [-1, '1', 1.1, Object(1), MAX_SAFE_INTEGER + 1];
+    const values = [-1, '1', 1.1, new Object(1), MAX_SAFE_INTEGER + 1];
     const expected = lodashStable.map(values, lodashStable.stubTrue);
 
-    const actual = lodashStable.map(values, length => isIteratedAsObject({ length: length }));
+    const actual = lodashStable.map(values, length =>
+      isIteratedAsObject({ length }),
+    );
 
     // eslint-disable-next-line
     const Foo = function (a: any) {};
+
     Foo.a = 1;
 
     expect(actual).toEqual(expected);
@@ -170,9 +180,10 @@ describe('reduce', () => {
         if (++count === 1) {
           object.b = 2;
         }
+
         return true;
       },
-      object
+      object,
     );
 
     expect(count).toBe(1);

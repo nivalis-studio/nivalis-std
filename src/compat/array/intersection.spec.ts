@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { intersection } from './intersection';
 import { range } from '../../math';
 import { args } from '../_internal/args';
 import { LARGE_ARRAY_SIZE } from '../_internal/LARGE_ARRAY_SIZE';
@@ -7,6 +6,7 @@ import { stubNaN } from '../_internal/stubNaN';
 import { constant } from '../util/constant';
 import { times } from '../util/times';
 import { toString } from '../util/toString';
+import { intersection } from './intersection';
 
 /**
  * @see https://github.com/lodash/lodash/blob/afcd5bc1e8801867c31a17566e0e0edebb083d0e/test/intersection-methods.spec.js#L1
@@ -14,21 +14,25 @@ import { toString } from '../util/toString';
 describe('intersection', () => {
   it('should return the intersection of two arrays', () => {
     const actual = intersection([2, 1], [2, 3]);
+
     expect(actual).toEqual([2]);
   });
 
   it('should return the intersection of multiple arrays', () => {
     const actual = intersection([2, 1, 2, 3], [3, 4], [3, 2]);
+
     expect(actual).toEqual([3]);
   });
 
   it('should return an array of unique values', () => {
     const actual = intersection([1, 1, 3, 2, 2], [5, 2, 2, 1, 4], [2, 1, 1]);
+
     expect(actual).toEqual([1, 2]);
   });
 
   it('should work with a single array', () => {
     const actual = intersection([1, 1, 3, 2, 2]);
+
     expect(actual).toEqual([1, 3, 2]);
   });
 
@@ -44,14 +48,20 @@ describe('intersection', () => {
     const values = [-0, 0];
     const expected = values.map(constant(['0']));
 
-    const actual = values.map(value => intersection(values, [value]).map(toString));
+    const actual = values.map(value =>
+      intersection(values, [value]).map(toString),
+    );
 
     expect(actual).toEqual(expected);
   });
 
   it('should match `NaN`', () => {
-    const actual = intersection([1, NaN, 3], [NaN, 5, NaN]);
-    expect(actual).toEqual([NaN]);
+    const actual = intersection(
+      [1, Number.NaN, 3],
+      [Number.NaN, 5, Number.NaN],
+    );
+
+    expect(actual).toEqual([Number.NaN]);
   });
 
   it('should work with large arrays of `-0` as `0`', () => {
@@ -60,6 +70,7 @@ describe('intersection', () => {
 
     const actual = values.map(value => {
       const largeArray = times(LARGE_ARRAY_SIZE, constant(value));
+
       return intersection(values, largeArray).map(toString);
     });
 
@@ -68,7 +79,8 @@ describe('intersection', () => {
 
   it('should work with large arrays of `NaN`', () => {
     const largeArray = times(LARGE_ARRAY_SIZE, stubNaN);
-    expect(intersection([1, NaN, 3], largeArray)).toEqual([NaN]);
+
+    expect(intersection([1, Number.NaN, 3], largeArray)).toEqual([Number.NaN]);
   });
 
   it('should work with large arrays of objects', () => {
@@ -81,6 +93,7 @@ describe('intersection', () => {
 
   it('should treat values that are not arrays or `arguments` objects as empty', () => {
     const array = [0, 1, null, 3];
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     expect(intersection(array, 3, { 0: 1 }, null)).toEqual([]);

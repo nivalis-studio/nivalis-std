@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { isNumber } from './isNumber';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
+import { isNumber } from './isNumber';
 
 describe('isNumber', () => {
   it('should return true for number values', () => {
@@ -20,26 +20,28 @@ describe('isNumber', () => {
     expect(isNumber(true)).toBe(false);
     expect(isNumber(false)).toBe(false);
     expect(isNumber(null)).toBe(false);
-    expect(isNumber(undefined)).toBe(false);
+    expect(isNumber()).toBe(false);
     expect(isNumber({})).toBe(false);
     expect(isNumber([])).toBe(false);
     expect(isNumber(() => {})).toBe(false);
   });
 
   it('should return true for NaN', () => {
-    expect(isNumber(NaN)).toBe(true);
+    expect(isNumber(Number.NaN)).toBe(true);
   });
 
   it('should return `true` for numbers', () => {
     expect(isNumber(0)).toBe(true);
-    expect(isNumber(Object(0))).toBe(true);
-    expect(isNumber(NaN)).toBe(true);
+    expect(isNumber(new Object(0))).toBe(true);
+    expect(isNumber(Number.NaN)).toBe(true);
   });
 
   it('should return `false` for non-numbers', () => {
     const expected = falsey.map(value => typeof value === 'number');
 
-    const actual = falsey.map((value, index) => (index ? isNumber(value) : isNumber()));
+    const actual = falsey.map((value, index) =>
+      index ? isNumber(value) : isNumber(),
+    );
 
     expect(actual).toEqual(expected);
 

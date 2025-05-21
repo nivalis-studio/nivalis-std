@@ -2,11 +2,9 @@
  * Checks if `object` conforms to `source` by invoking the predicate properties of `source` with the corresponding property values of `object`.
  *
  * Note: This method is equivalent to `conforms` when source is partially applied.
- *
  * @param {Record<PropertyKey, any>} target The object to inspect.
  * @param {Record<PropertyKey, (value: any) => boolean>} source The object of property predicates to conform to.
  * @returns {boolean} Returns `true` if `object` conforms, else `false`.
- *
  * @example
  *
  * const object = { 'a': 1, 'b': 2 };
@@ -26,7 +24,7 @@
  */
 export function conformsTo(
   target: Record<PropertyKey, any>,
-  source: Record<PropertyKey, (value: any) => boolean>
+  source: Record<PropertyKey, (value: any) => boolean>,
 ): boolean {
   if (source == null) {
     return true;
@@ -37,13 +35,15 @@ export function conformsTo(
   }
 
   const keys = Object.keys(source);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+
+  for (const key of keys) {
     const predicate = source[key];
     const value = target[key];
+
     if ((value === undefined && !(key in target)) || !predicate(value)) {
       return false;
     }
   }
+
   return true;
 }

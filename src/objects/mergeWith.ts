@@ -11,7 +11,6 @@ import { isObjectLike } from '../compat/predicate/isObjectLike.ts';
  * - If a property in the source object is undefined, it will not overwrite a defined property in the target object.
  *
  * Note that this function mutates the target object.
- *
  * @param {T} target - The target object into which the source object properties will be merged. This object is modified in place.
  * @param {S} source - The source object whose properties will be merged into the target object.
  * @param {(targetValue: any, sourceValue: any, key: string, target: T, source: S) => any} merge - A custom merge function that defines how properties should be combined. It receives the following arguments:
@@ -20,12 +19,9 @@ import { isObjectLike } from '../compat/predicate/isObjectLike.ts';
  *   - `key`: The key of the property being merged.
  *   - `target`: The target object.
  *   - `source`: The source object.
- *
  * @returns {T & S} The updated target object with properties from the source object merged in.
- *
  * @template T - Type of the target object.
  * @template S - Type of the source object.
- *
  * @example
  * const target = { a: 1, b: 2 };
  * const source = { b: 3, c: 4 };
@@ -48,27 +44,48 @@ import { isObjectLike } from '../compat/predicate/isObjectLike.ts';
  *
  * expect(result).toEqual({ a: [1, 3], b: [2, 4] });
  */
-export function mergeWith<T extends Record<PropertyKey, any>, S extends Record<PropertyKey, any>>(
+export function mergeWith<
+  T extends Record<PropertyKey, any>,
+  S extends Record<PropertyKey, any>,
+>(
   target: T,
   source: S,
-  merge: (targetValue: any, sourceValue: any, key: string, target: T, source: S) => any
+  merge: (
+    targetValue: any,
+    sourceValue: any,
+    key: string,
+    target: T,
+    source: S,
+  ) => any,
 ): T & S {
   const sourceKeys = Object.keys(source) as Array<keyof T>;
 
-  for (let i = 0; i < sourceKeys.length; i++) {
-    const key = sourceKeys[i];
-
+  for (const key of sourceKeys) {
     const sourceValue = source[key];
     const targetValue = target[key];
 
-    const merged = merge(targetValue, sourceValue, key as string, target, source);
+    const merged = merge(
+      targetValue,
+      sourceValue,
+      key as string,
+      target,
+      source,
+    );
 
     if (merged != null) {
       target[key] = merged;
     } else if (Array.isArray(sourceValue)) {
-      target[key] = mergeWith<any, S[keyof T]>(targetValue ?? [], sourceValue, merge);
+      target[key] = mergeWith<any, S[keyof T]>(
+        targetValue ?? [],
+        sourceValue,
+        merge,
+      );
     } else if (isObjectLike(targetValue) && isObjectLike(sourceValue)) {
-      target[key] = mergeWith<any, S[keyof T]>(targetValue ?? {}, sourceValue, merge);
+      target[key] = mergeWith<any, S[keyof T]>(
+        targetValue ?? {},
+        sourceValue,
+        merge,
+      );
     } else if (targetValue === undefined || sourceValue !== undefined) {
       target[key] = sourceValue;
     }

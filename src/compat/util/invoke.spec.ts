@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { constant } from './constant';
-import { invoke } from './invoke';
 import { noop } from '../../function/noop';
 import { stubA } from '../_internal/stubA';
 import { stubB } from '../_internal/stubB';
 import { forEach } from '../array/forEach';
 import { map } from '../array/map';
+import { invoke } from './invoke';
+import { constant } from './constant';
 
 describe('invoke', () => {
   it('should invoke a method on `object`', () => {
@@ -17,7 +17,7 @@ describe('invoke', () => {
 
   it('should support invoking with arguments', () => {
     const object = {
-      a: function (a: any, b: any) {
+      a(a: any, b: any) {
         return [a, b];
       },
     };
@@ -39,7 +39,7 @@ describe('invoke', () => {
 
   it('should preserve the sign of `0`', () => {
     const object = { '-0': stubA, 0: stubB };
-    const props = [-0, Object(-0), 0, Object(0)];
+    const props = [-0, new Object(-0), 0, new Object(0)];
 
     const actual = map(props, key => invoke(object, key));
 
@@ -49,7 +49,7 @@ describe('invoke', () => {
   it('should support deep paths', () => {
     const object = {
       a: {
-        b: function (a: any, b: any) {
+        b(a: any, b: any) {
           return [a, b];
         },
       },
@@ -57,6 +57,7 @@ describe('invoke', () => {
 
     forEach(['a.b', ['a', 'b']], path => {
       const actual = invoke(object, path, [1, 2]);
+
       expect(actual).toEqual([1, 2]);
     });
   });
@@ -64,7 +65,7 @@ describe('invoke', () => {
   it('should invoke deep property methods with the correct `this` binding', () => {
     const object = {
       a: {
-        b: function () {
+        b() {
           return this.c;
         },
         c: 1,
@@ -78,6 +79,7 @@ describe('invoke', () => {
 
   it('should return `undefined` when resolving deep paths on nullish values', () => {
     const object = { a: null };
+
     expect(invoke(object, 'a.b')).toBeUndefined();
   });
 });

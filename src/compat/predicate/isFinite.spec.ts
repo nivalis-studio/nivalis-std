@@ -11,12 +11,12 @@ describe('isFinite', () => {
   it("should return 'false' for not-finite values", () => {
     expect(isFinite(Infinity)).toBe(false);
     expect(isFinite(-Infinity)).toBe(false);
-    expect(isFinite(NaN)).toBe(false);
-    expect(isFinite(Object(1))).toBe(false);
+    expect(isFinite(Number.NaN)).toBe(false);
+    expect(isFinite(new Object(1))).toBe(false);
   });
 
   it("should return 'false' for non-numeric values", () => {
-    expect(isFinite(undefined)).toBe(false);
+    expect(isFinite()).toBe(false);
     expect(isFinite([])).toBe(false);
     expect(isFinite(true)).toBe(false);
     expect(isFinite('')).toBe(false);

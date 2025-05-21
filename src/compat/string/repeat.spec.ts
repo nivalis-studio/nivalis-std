@@ -13,6 +13,7 @@ describe('padStart', () => {
   it('should be used as a iteratee', () => {
     const array = ['a', 'b', 'c'];
     const actual = array.map(repeat);
+
     expect(actual).toEqual(['a', 'b', 'c']);
   });
 });

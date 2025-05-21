@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { slice } from './slice';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
+import { slice } from './slice';
 
 describe('slice', () => {
   const array = [1, 2, 3];
 
   it('should use a default `start` of `0` and a default `end` of `length`', () => {
     const actual = slice(array);
+
     expect(actual).toEqual(array);
     expect(actual).not.toBe(array);
   });
@@ -18,9 +19,9 @@ describe('slice', () => {
   });
 
   it('should work with a `start` >= `length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach(start => {
+    for (const start of [3, 4, 2 ** 32, Infinity]) {
       expect(slice(array, start)).toEqual([]);
-    });
+    }
   });
 
   it('should treat falsey `start` values as `0`', () => {
@@ -36,15 +37,15 @@ describe('slice', () => {
   });
 
   it('should work with a negative `start` <= negative `length`', () => {
-    [-3, -4, -Infinity].forEach(start => {
+    for (const start of [-3, -4, -Infinity]) {
       expect(slice(array, start)).toEqual(array);
-    });
+    }
   });
 
   it('should work with `start` >= `end`', () => {
-    [2, 3].forEach(start => {
+    for (const start of [2, 3]) {
       expect(slice(array, start, 2)).toEqual([]);
-    });
+    }
   });
 
   it('should work with a positive `end`', () => {
@@ -52,15 +53,17 @@ describe('slice', () => {
   });
 
   it('should work with a `end` >= `length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach(end => {
+    for (const end of [3, 4, 2 ** 32, Infinity]) {
       expect(slice(array, 0, end)).toEqual(array);
-    });
+    }
   });
 
   it('should treat falsey `end` values, except `undefined`, as `0`', () => {
     const expected = falsey.map(value => (value === undefined ? array : []));
 
-    const actual = falsey.map((end, index) => (index ? slice(array, 0, end as any) : slice(array, 0)));
+    const actual = falsey.map((end, index) =>
+      index ? slice(array, 0, end as any) : slice(array, 0),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -70,13 +73,20 @@ describe('slice', () => {
   });
 
   it('should work with a negative `end` <= negative `length`', () => {
-    [-3, -4, -Infinity].forEach(end => {
+    for (const end of [-3, -4, -Infinity]) {
       expect(slice(array, 0, end)).toEqual([]);
-    });
+    }
   });
 
   it('should coerce `start` and `end` to integers', () => {
-    const positions = [[0.1, 1.6], ['0', 1], [0, '1'], ['1'], [NaN, 1], [1, NaN]];
+    const positions = [
+      [0.1, 1.6],
+      ['0', 1],
+      [0, '1'],
+      ['1'],
+      [Number.NaN, 1],
+      [1, Number.NaN],
+    ];
 
     const actual = positions.map(pos => slice(array, ...(pos as any)));
 
@@ -92,9 +102,11 @@ describe('slice', () => {
   });
 
   it('should not return dense arrays', () => {
-    const emptyArray = new Array(3);
+    const emptyArray = Array.from({ length: 3 });
+
     emptyArray[1] = 2;
     const actual = slice(emptyArray);
+
     expect('2' in actual).toBe(true);
   });
 

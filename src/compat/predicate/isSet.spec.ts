@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { isSet } from './isSet';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { weakSet } from '../_internal/weakSet';
 import { stubFalse } from '../util/stubFalse';
+import { isSet } from './isSet';
 
 describe('isSet', () => {
   it('should return `true` for sets', () => {
@@ -15,7 +15,9 @@ describe('isSet', () => {
   it('should return `false` for non-sets', () => {
     const expected = falsey.map(() => stubFalse());
 
-    const actual = falsey.map((value, index) => (index ? isSet(value) : isSet()));
+    const actual = falsey.map((value, index) =>
+      index ? isSet(value) : isSet(),
+    );
 
     expect(actual).toEqual(expected);
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { mapValues } from './mapValues';
 import { isEqual } from '../../predicate/isEqual';
+import { mapValues } from './mapValues';
 
 describe('mapValues', () => {
   const array = [1, 2];
@@ -8,15 +8,18 @@ describe('mapValues', () => {
 
   it('should map values in `object` to a new object', () => {
     const actual = mapValues(object, String);
+
     expect(actual).toEqual({ a: '1', b: '2' });
   });
   it('should treat arrays like objects', () => {
     const actual = mapValues(array, String);
+
     expect(actual).toEqual({ 0: '1', 1: '2' });
   });
 
   it('should work with `_.property` shorthands', () => {
     const actual = mapValues({ a: { b: 2 } }, 'b');
+
     expect(actual).toEqual({ a: 2 });
   });
 
@@ -28,6 +31,7 @@ describe('mapValues', () => {
 
     const actual = values.map((value, index) => {
       const result = index ? mapValues(object, value) : mapValues(object);
+
       return [isEqual(result, object), result === object];
     });
 

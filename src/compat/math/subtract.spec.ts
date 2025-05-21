@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { subtract } from './subtract';
 import { symbol } from '../_internal/symbol';
 import { map } from '../array/map';
 import { times } from '../util/times';
+import { subtract } from './subtract';
 
 describe('subtract', () => {
   it('should subtract two numbers', () => {
@@ -34,15 +34,15 @@ describe('subtract', () => {
   });
 
   it('should return NaN if the first value is NaN', () => {
-    expect(subtract(NaN, 10)).toBe(NaN);
+    expect(subtract(Number.NaN, 10)).toBe(Number.NaN);
   });
 
   it('should return NaN if the second value is NaN', () => {
-    expect(subtract(10, NaN)).toBe(NaN);
+    expect(subtract(10, Number.NaN)).toBe(Number.NaN);
   });
 
   it('should return NaN if both values are NaN', () => {
-    expect(subtract(NaN, NaN)).toBe(NaN);
+    expect(subtract(Number.NaN, Number.NaN)).toBe(Number.NaN);
   });
 
   it(`\`subtract\` should return \`0\` when no arguments are given`, () => {
@@ -54,7 +54,7 @@ describe('subtract', () => {
     // @ts-expect-error - invalid arguments
     expect(subtract(6)).toBe(6);
     // @ts-expect-error - invalid arguments
-    expect(subtract(6, undefined)).toBe(6);
+    expect(subtract(6)).toBe(6);
     // @ts-expect-error - invalid arguments
     expect(subtract(undefined, 4)).toBe(4);
   });
@@ -72,6 +72,7 @@ describe('subtract', () => {
       const actual = map(values, value => {
         // @ts-expect-error - invalid arguments
         const result = index ? subtract(undefined, value) : subtract(value);
+
         return [result, 1 / result];
       });
 
@@ -81,15 +82,15 @@ describe('subtract', () => {
 
   it(`\`subtract\` should convert objects to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(subtract(0, {})).toEqual(NaN);
+    expect(subtract(0, {})).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(subtract({}, 0)).toEqual(NaN);
+    expect(subtract({}, 0)).toEqual(Number.NaN);
   });
 
   it(`\`subtract\` should convert symbols to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(subtract(0, symbol)).toEqual(NaN);
+    expect(subtract(0, symbol)).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(subtract(symbol, 0)).toEqual(NaN);
+    expect(subtract(symbol, 0)).toEqual(Number.NaN);
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { partition } from './partition';
 import { args } from '../_internal/args';
+import { partition } from './partition';
 
 describe('partition', () => {
   it('should split elements into two groups by `predicate`', () => {
@@ -115,7 +115,10 @@ describe('partition', () => {
       bob: { id: 2, name: 'Bob' },
     };
 
-    expect(partition(obj, ['name', 'Alice'])).toEqual([[{ id: 1, name: 'Alice' }], [{ id: 2, name: 'Bob' }]]);
+    expect(partition(obj, ['name', 'Alice'])).toEqual([
+      [{ id: 1, name: 'Alice' }],
+      [{ id: 2, name: 'Bob' }],
+    ]);
   });
 
   it('should return objects that have the specified key', () => {
@@ -136,14 +139,19 @@ describe('partition', () => {
 
   it('should return [[], []] when provided `null` or `undefined`', () => {
     const isEven = (n: number) => n % 2 === 0;
+
     expect(partition(null, isEven)).toEqual([[], []]);
     expect(partition(undefined, isEven)).toEqual([[], []]);
   });
 
   it('should support array-like objects', () => {
     const isEven = (n: number) => n % 2 === 0;
-    const isEven2 = (n: string) => parseInt(n) % 2 === 0;
-    expect(partition({ 0: 1, 1: 2, 2: 3, length: 3 }, isEven)).toEqual([[2], [1, 3]]);
+    const isEven2 = (n: string) => Number.parseInt(n) % 2 === 0;
+
+    expect(partition({ 0: 1, 1: 2, 2: 3, length: 3 }, isEven)).toEqual([
+      [2],
+      [1, 3],
+    ]);
     expect(partition('123', isEven2)).toEqual([['2'], ['1', '3']]);
     expect(partition(args, isEven)).toEqual([[2], [1, 3]]);
   });

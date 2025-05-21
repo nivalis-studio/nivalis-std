@@ -2,10 +2,9 @@
  * Creates a function that transforms the arguments of the provided function `func`.
  * The transformed arguments are passed to `func` such that the arguments starting from a specified index
  * are grouped into an array, while the previous arguments are passed as individual elements.
- *
  * @template F - The type of the function being transformed.
  * @param {F} func - The function whose arguments are to be transformed.
- * @param {number} [startIndex=func.length - 1] - The index from which to start grouping the remaining arguments into an array.
+ * @param {number} [startIndex] - The index from which to start grouping the remaining arguments into an array.
  *                                            Defaults to `func.length - 1`, grouping all arguments after the last parameter.
  * @returns {(...args: any[]) => ReturnType<F>} A new function that, when called, returns the result of calling `func` with the transformed arguments.
  *
@@ -30,14 +29,16 @@
  */
 export function rest<F extends (...args: any[]) => any>(
   func: F,
-  startIndex = func.length - 1
+  startIndex = func.length - 1,
 ): (...args: any[]) => ReturnType<F> {
   return function (this: any, ...args: any[]) {
     const rest = args.slice(startIndex);
     const params = args.slice(0, startIndex);
+
     while (params.length < startIndex) {
       params.push(undefined);
     }
-    return func.apply(this, [...params, rest]);
+
+    return Reflect.apply(func, this, [...params, rest]);
   };
 }

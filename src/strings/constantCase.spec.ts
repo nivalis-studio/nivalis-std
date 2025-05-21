@@ -19,7 +19,9 @@ describe('constantCase', () => {
   });
 
   it('should handle leading and trailing whitespace', async () => {
-    expect(constantCase('    leading and trailing whitespace')).toEqual('LEADING_AND_TRAILING_WHITESPACE');
+    expect(constantCase('    leading and trailing whitespace')).toEqual(
+      'LEADING_AND_TRAILING_WHITESPACE',
+    );
   });
 
   it('should handle special characters correctly', async () => {

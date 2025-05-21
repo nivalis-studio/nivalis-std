@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { deburr } from './deburr';
 import { burredLetters } from '../_internal/burredLetters';
 import { comboMarks } from '../_internal/comboMarks';
 import { deburredLetters } from '../_internal/deburredLetters';
+import { deburr } from './deburr';
 
 describe('deburr', () => {
   it('should convert examples correctly', () => {
@@ -13,11 +13,12 @@ describe('deburr', () => {
 
   it('should convert Latin Unicode letters to basic Latin', () => {
     const actual = burredLetters.map(deburr);
+
     expect(actual).toEqual(deburredLetters);
   });
 
   it('should not deburr Latin mathematical operators', () => {
-    const operators = ['\xd7', '\xf7'];
+    const operators = ['\u00D7', '\u00F7'];
     const actual = operators.map(deburr);
 
     expect(actual).toEqual(operators);

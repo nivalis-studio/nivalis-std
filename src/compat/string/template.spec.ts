@@ -1,15 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { template, templateSettings } from './template';
 import { numberTag } from '../_internal/numberTag';
 import * as esToolkit from '../index';
 import { stubFalse } from '../util/stubFalse';
 import { stubString } from '../util/stubString';
 import { stubTrue } from '../util/stubTrue';
+import { template, templateSettings } from './template';
 
 describe('template', () => {
   it('should escape values in "escape" delimiters', () => {
-    const strings = ['<p><%- value %></p>', '<p><%-value%></p>', '<p><%-\nvalue\n%></p>'];
-    const expected = strings.map(esToolkit.constant('<p>&amp;&lt;&gt;&quot;&#39;/</p>'));
+    const strings = [
+      '<p><%- value %></p>',
+      '<p><%-value%></p>',
+      '<p><%-\nvalue\n%></p>',
+    ];
+    const expected = strings.map(
+      esToolkit.constant('<p>&amp;&lt;&gt;&quot;&#39;/</p>'),
+    );
     const data = { value: '&<>"\'/' };
 
     const actual = strings.map(string => template(string)(data));
@@ -19,6 +25,7 @@ describe('template', () => {
 
   it('should not reference `_.escape` when "escape" delimiters are not used', () => {
     const compiled = template('<%= typeof __e %>');
+
     expect(compiled({})).toBe('undefined');
   });
 
@@ -27,7 +34,7 @@ describe('template', () => {
       '<ul><%\
       for (var key in collection) {\
         %><li><%= collection[key] %></li><%\
-      } %></ul>'
+      } %></ul>',
     );
 
     const data = { collection: { a: 'A', b: 'B' } };
@@ -37,7 +44,9 @@ describe('template', () => {
   });
 
   it('should support "evaluate" delimiters with single line comments (test production builds)', () => {
-    const compiled = template('<% // A code comment. %><% if (value) { %>yap<% } else { %>nope<% } %>');
+    const compiled = template(
+      '<% // A code comment. %><% if (value) { %>yap<% } else { %>nope<% } %>',
+    );
     const data = { value: true };
 
     expect(compiled(data)).toBe('yap');
@@ -83,7 +92,7 @@ describe('template', () => {
   });
 
   it('should support complex "interpolate" delimiters', () => {
-    Object.entries({
+    for (const [key, value] of Object.entries({
       '<%= a + b %>': '3',
       '<%= b - a %>': '1',
       '<%= a = b %>': '2',
@@ -106,22 +115,24 @@ describe('template', () => {
       '<%= new Boolean %>': 'false',
       '<%= typeof a %>': 'number',
       '<%= void a %>': '',
-    }).forEach(([key, value]) => {
+    })) {
       const compiled = template(key);
       const data = { a: 1, b: 2 };
 
       expect(compiled(data)).toBe(value);
-    });
+    }
   });
 
   it('should support ES6 template delimiters', () => {
     const data = { value: 2 };
+
     expect(template('1${value}3')(data)).toBe('123');
     expect(template('${"{" + value + "\\}"}')(data)).toBe('{2}');
   });
 
   it('should support the "imports" option', () => {
     const compiled = template('<%= a %>', { imports: { a: 1 } });
+
     expect(compiled({})).toBe('1');
   });
 
@@ -135,6 +146,7 @@ describe('template', () => {
 
     const compiled = template('<%= data.a %>', { variable: 'data' });
     const data = { a: [1, 2, 3] };
+
     expect(compiled(data)).toBe('1,2,3');
   });
 
@@ -156,7 +168,7 @@ describe('template', () => {
       // );
       const compiled = template(
         '<ul>{{ collection.forEach((value, index) => {}}<li>{{= index }}: {{- value }}</li>{{}); }}</ul>',
-        index ? (null as any) : settings
+        index ? (null as any) : settings,
       );
       const data = { collection: ['a & A', 'b & B'] };
 
@@ -183,7 +195,7 @@ describe('template', () => {
       // );
       const compiled = template(
         '<ul><? collection.forEach((value, index) => { ?><li><?= index ?>: <?- value ?></li><? }); ?></ul>',
-        index ? (null as any) : settings
+        index ? (null as any) : settings,
       );
       const data = { collection: ['a & A', 'b & B'] };
 
@@ -198,9 +210,10 @@ describe('template', () => {
     //   '<%= index %><%= collection[index] %><% _.each(collection, function(value, index) { %><%= index %><% }); %>'
     // );
     const compiled = template(
-      '<%= index %><%= collection[index] %><% collection.forEach((value, index) => { %><%= index %><% }); %>'
+      '<%= index %><%= collection[index] %><% collection.forEach((value, index) => { %><%= index %><% }); %>',
     );
     const actual = compiled({ index: 1, collection: ['a', 'b', 'c'] });
+
     expect(actual).toBe('1b012');
   });
 
@@ -228,6 +241,7 @@ describe('template', () => {
     templateSettings.interpolate = /\{\{=([\s\S]+?)\}\}/g;
 
     const compiled = template('{{= a }}');
+
     expect(compiled({ a: 1 })).toBe('1');
 
     templateSettings.imports._ = esToolkit;
@@ -241,38 +255,43 @@ describe('template', () => {
       interpolate: /\{\{=([\s\S]+?)\}\}/g,
     };
 
-    (
-      [
-        ['escape', '{{- a }}'],
-        ['evaluate', '{{ print(a) }}'],
-        ['interpolate', '{{= a }}'],
-      ] as const
-    ).forEach(([key, value]) => {
+    for (const [key, value] of [
+      ['escape', '{{- a }}'],
+      ['evaluate', '{{ print(a) }}'],
+      ['interpolate', '{{= a }}'],
+    ] as const) {
       const settings: any = { escape: null, evaluate: null, interpolate: null };
+
       settings[key] = delimiter[key];
 
       try {
         const expected = '1 <%- a %> <% print(a) %> <%= a %>';
-        const compiled = template(`${value} <%- a %> <% print(a) %> <%= a %>`, settings);
+        const compiled = template(
+          `${value} <%- a %> <% print(a) %> <%= a %>`,
+          settings,
+        );
         const data = { a: 1 };
 
         expect(compiled(data)).toBe(expected);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
-    });
+    }
   });
 
   it('should work without delimiters', () => {
     const expected = 'abc';
+
     expect(template(expected)({})).toBe(expected);
   });
 
   it('should work with `this` references', () => {
     const compiled = template('a<%= this.String("b") %>c');
+
     expect(compiled()).toBe('abc');
 
     const object: any = { b: 'B' };
+
     object.compiled = template('A<%= this.b %>C', { variable: 'obj' });
     expect(object.compiled()).toBe('ABC');
   });
@@ -286,15 +305,18 @@ describe('template', () => {
 
   it('should work with escaped characters in string literals', () => {
     let compiled = template('<% print("\'\\n\\r\\t\\u2028\\u2029\\\\") %>');
+
     expect(compiled()).toBe("'\n\r\t\u2028\u2029\\");
 
     const data = { a: 'A' };
+
     compiled = template('\'\n\r\t<%= a %>\u2028\u2029\\"');
     expect(compiled(data)).toBe('\'\n\r\tA\u2028\u2029\\"');
   });
 
   it('should handle \\u2028 & \\u2029 characters', () => {
     const compiled = template('\u2028<%= "\\u2028\\u2029" %>\u2029');
+
     expect(compiled()).toBe('\u2028\u2028\u2029\u2029');
   });
 
@@ -303,10 +325,11 @@ describe('template', () => {
       '<%\
       if (a === \'A\' || a === "a") {\
         %>\'a\',"A"<%\
-      } %>'
+      } %>',
     );
 
     const data = { a: 'A' };
+
     expect(compiled(data), '\'a\').toBe("A"');
   });
 
@@ -315,7 +338,7 @@ describe('template', () => {
       '<%\n\
       // A code comment.\n\
       if (value) { value += 3; }\n\
-      %><p><%= value %></p>'
+      %><p><%= value %></p>',
     );
 
     expect(compiled({ value: 3 })).toBe('<p>6</p>');
@@ -330,9 +353,11 @@ describe('template', () => {
 
   it('should evaluate delimiters once', () => {
     const actual: any[] = [];
-    const compiled = template('<%= func("a") %><%- func("b") %><% func("c") %>');
+    const compiled = template(
+      '<%= func("a") %><%- func("b") %><% func("c") %>',
+    );
     const data = {
-      func: function (value: any) {
+      func(value: any) {
         actual.push(value);
       },
     };
@@ -343,6 +368,7 @@ describe('template', () => {
 
   it('should match delimiters before escaping text', () => {
     const compiled = template('<<\n a \n>>', { evaluate: /<<(.*?)>>/g });
+
     expect(compiled()).toBe('<<\n a \n>>');
   });
 
@@ -370,6 +396,7 @@ describe('template', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       const compiled = index ? template(value) : template();
+
       return compiled(data);
     });
 
@@ -400,6 +427,7 @@ describe('template', () => {
 
   it('should not modify the `options` object', () => {
     const options = {};
+
     template('', options);
     expect(options).toEqual({});
   });
@@ -433,9 +461,9 @@ describe('template', () => {
   it('should expose the source on SyntaxErrors', () => {
     try {
       template('<% if x %>');
-    } catch (e: any) {
-      if (e instanceof SyntaxError) {
-        expect(esToolkit.includes((e as any).source, '__p')).toBe(true);
+    } catch (error: any) {
+      if (error instanceof SyntaxError) {
+        expect(esToolkit.includes((error as any).source, '__p')).toBe(true);
       }
     }
   });
@@ -447,12 +475,15 @@ describe('template', () => {
 
     try {
       template('<% if x %>', options);
-    } catch (e: any) {
-      values[1] = e.source;
+    } catch (error: any) {
+      values[1] = error.source;
     }
+
     const expected = values.map(stubFalse);
 
-    const actual = values.map(value => esToolkit.includes(value as any, 'sourceURL'));
+    const actual = values.map(value =>
+      esToolkit.includes(value as any, 'sourceURL'),
+    );
 
     expect(actual).toEqual(expected);
   });

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { multiply } from './multiply';
 import { symbol } from '../_internal/symbol';
 import { map } from '../array/map';
 import { times } from '../util/times';
+import { multiply } from './multiply';
 
 describe('multiply', () => {
   it('should return the product of two positive numbers', () => {
@@ -21,15 +21,15 @@ describe('multiply', () => {
   });
 
   it('should return NaN if the first value is NaN', () => {
-    expect(multiply(NaN, 3)).toBe(NaN);
+    expect(multiply(Number.NaN, 3)).toBe(Number.NaN);
   });
 
   it('should return NaN if the second value is NaN', () => {
-    expect(multiply(3, NaN)).toBe(NaN);
+    expect(multiply(3, Number.NaN)).toBe(Number.NaN);
   });
 
   it('should return NaN if both values are NaN', () => {
-    expect(multiply(NaN, NaN)).toBe(NaN);
+    expect(multiply(Number.NaN, Number.NaN)).toBe(Number.NaN);
   });
 
   it('should multiply two numbers', () => {
@@ -45,7 +45,7 @@ describe('multiply', () => {
     expect(multiply('6', '4')).toBe(24);
     // eslint-disable-next-line
     // @ts-ignore
-    expect(multiply('x', 'y')).toEqual(NaN);
+    expect(multiply('x', 'y')).toEqual(Number.NaN);
   });
 
   it(`\`multiply\` should return \`1\` when no arguments are given`, () => {
@@ -57,7 +57,7 @@ describe('multiply', () => {
     // @ts-expect-error - invalid arguments
     expect(multiply(6)).toBe(6);
     // @ts-expect-error - invalid arguments
-    expect(multiply(6, undefined)).toBe(6);
+    expect(multiply(6)).toBe(6);
     // @ts-expect-error - invalid arguments
     expect(multiply(undefined, 4)).toBe(4);
   });
@@ -75,6 +75,7 @@ describe('multiply', () => {
       const actual = map(values, value => {
         // @ts-expect-error - invalid arguments
         const result = index ? multiply(undefined, value) : multiply(value);
+
         return [result, 1 / result];
       });
 
@@ -84,15 +85,15 @@ describe('multiply', () => {
 
   it(`\`multiply\` should convert objects to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(multiply(0, {})).toEqual(NaN);
+    expect(multiply(0, {})).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(multiply({}, 0)).toEqual(NaN);
+    expect(multiply({}, 0)).toEqual(Number.NaN);
   });
 
   it(`\`multiply\` should convert symbols to \`NaN\``, () => {
     // @ts-expect-error - invalid arguments
-    expect(multiply(0, symbol)).toEqual(NaN);
+    expect(multiply(0, symbol)).toEqual(Number.NaN);
     // @ts-expect-error - invalid arguments
-    expect(multiply(symbol, 0)).toEqual(NaN);
+    expect(multiply(symbol, 0)).toEqual(Number.NaN);
   });
 });

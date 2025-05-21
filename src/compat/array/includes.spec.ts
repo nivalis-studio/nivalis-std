@@ -1,23 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import { includes } from './includes';
 import { args } from '../_internal/args';
 import { empties } from '../_internal/empties';
 import { falsey } from '../_internal/falsey';
 import { toArgs } from '../_internal/toArgs';
 import { stubFalse } from '../util/stubFalse';
+import { includes } from './includes';
 
 describe('includes', () => {
   it('should ignore inherited value', () => {
     const obj = Object.create({ inherited: 'value' });
+
     expect(includes(obj, 'value')).toBe(false);
   });
 
-  Object.entries({
+  for (const [key, collection] of Object.entries({
     'an `arguments` object': toArgs([1, 2, 3, 4]),
     'an array': [1, 2, 3, 4],
     'an object': { a: 1, b: 2, c: 3, d: 4 },
     'a string': '1234',
-  }).forEach(([key, collection]) => {
+  })) {
     it(`should work with ${key} and  return \`true\` for  matched values`, () => {
       expect(includes(collection, 3)).toBe(true);
     });
@@ -37,17 +38,17 @@ describe('includes', () => {
     // it(`should work with ${key} and return a wrapped value when explicitly chaining`, () => {
     //   expect(_(collection).chain().includes(3) instanceof _);
     // });
-  });
+  }
 
-  Object.entries({
+  for (const [key, collection] of Object.entries({
     literal: 'abc',
-    object: Object('abc'),
-  }).forEach(([key, collection]) => {
+    object: new Object('abc'),
+  })) {
     it(`should work with a string ${key} for \`collection\``, () => {
       expect(includes(collection, 'bc')).toBe(true);
       expect(includes(collection, 'd')).toBe(false);
     });
-  });
+  }
 
   it('should return `false` for empty collections', () => {
     const expected = empties.map(stubFalse);
@@ -55,7 +56,7 @@ describe('includes', () => {
     const actual = empties.map(value => {
       try {
         return includes(value);
-      } catch (e) {
+      } catch {
         /* empty */
       }
     });
@@ -80,8 +81,8 @@ describe('includes', () => {
   });
 
   it('should match `NaN`', () => {
-    expect(includes([1, NaN, 3], NaN)).toBe(true);
-    expect(includes({ a: 1, b: NaN, c: 3 }, NaN)).toBe(true);
+    expect(includes([1, Number.NaN, 3], Number.NaN)).toBe(true);
+    expect(includes({ a: 1, b: Number.NaN, c: 3 }, Number.NaN)).toBe(true);
   });
 
   it('should match `-0` as `0`', () => {
@@ -98,16 +99,19 @@ describe('includes', () => {
 
   const resolve = (x: unknown) => x;
 
-  Object.entries({
+  for (const [key, collection] of Object.entries({
     'an `arguments` object': args,
     'an array': [1, 2, 3],
     'a string': '123',
-  }).forEach(([key, collection]) => {
-    const values = Array.from(collection);
+  })) {
+    const values = [...collection];
 
     it(`should work with ${key} and a positive \`fromIndex\``, () => {
       const expected = [true, false];
-      const actual = [includes(collection, resolve(values[2]), 2), includes(collection, resolve(values[1]), 2)];
+      const actual = [
+        includes(collection, resolve(values[2]), 2),
+        includes(collection, resolve(values[1]), 2),
+      ];
 
       expect(actual).toEqual(expected);
     });
@@ -117,12 +121,13 @@ describe('includes', () => {
 
       const expected = indexes.map(() => {
         const result = false;
+
         return [result, result, result];
       });
 
       const actual = indexes.map(fromIndex => [
         includes(collection, resolve(1), fromIndex),
-        includes(collection, resolve(undefined), fromIndex),
+        includes(collection, resolve(), fromIndex),
         includes(collection, resolve(''), fromIndex),
       ]);
 
@@ -134,7 +139,9 @@ describe('includes', () => {
 
       // eslint-disable-next-line
       // @ts-ignore
-      const actual = falsey.map(fromIndex => includes(collection, resolve(values[0]), fromIndex));
+      const actual = falsey.map(fromIndex =>
+        includes(collection, resolve(values[0]), fromIndex),
+      );
 
       expect(actual).toEqual(expected);
     });
@@ -144,7 +151,7 @@ describe('includes', () => {
 
       const actual = [
         includes(collection, resolve(values[0]), 0.1),
-        includes(collection, resolve(values[0]), NaN),
+        includes(collection, resolve(values[0]), Number.NaN),
         // eslint-disable-next-line
         // @ts-ignore
         includes(collection, resolve(values[0]), '1'),
@@ -156,7 +163,10 @@ describe('includes', () => {
     it(`should work with ${key} and a negative \`fromIndex\``, () => {
       const expected = [true, false];
 
-      const actual = [includes(collection, resolve(values[2]), -1), includes(collection, resolve(values[1]), -1)];
+      const actual = [
+        includes(collection, resolve(values[2]), -1),
+        includes(collection, resolve(values[1]), -1),
+      ];
 
       expect(actual).toEqual(expected);
     });
@@ -165,9 +175,11 @@ describe('includes', () => {
       const indexes = [-4, -6, -Infinity];
       const expected = indexes.map(() => true);
 
-      const actual = indexes.map(fromIndex => includes(collection, resolve(values[0]), fromIndex));
+      const actual = indexes.map(fromIndex =>
+        includes(collection, resolve(values[0]), fromIndex),
+      );
 
       expect(actual).toEqual(expected);
     });
-  });
+  }
 });

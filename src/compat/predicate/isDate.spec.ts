@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { isDate } from './isDate';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { slice } from '../_internal/slice';
 import { symbol } from '../_internal/symbol';
 import { stubFalse } from '../util/stubFalse';
+import { isDate } from './isDate';
 
 describe('isDate', () => {
   it('should return `true` for dates', () => {
@@ -14,7 +14,10 @@ describe('isDate', () => {
   it('should return `false` for non-dates', () => {
     const expected = falsey.map(() => stubFalse());
 
-    const actual = falsey.map((value, index) => (index ? isDate(value) : isDate()));
+    const actual = falsey.map((value, index) =>
+      index ? isDate(value) : isDate(),
+    );
+
     expect(actual).toEqual(expected);
 
     expect(isDate(args)).toBe(false);

@@ -19,7 +19,9 @@ describe('camelCase', () => {
   });
 
   it('should handle leading and trailing whitespace', () => {
-    expect(camelCase('    leading and trailing whitespace    ')).toEqual('leadingAndTrailingWhitespace');
+    expect(camelCase('    leading and trailing whitespace    ')).toEqual(
+      'leadingAndTrailingWhitespace',
+    );
   });
 
   it('should handle special characters correctly', () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { isNil } from './isNil.ts';
 import { args } from '../_internal/args.ts';
 import { falsey } from '../_internal/falsey.ts';
+import { isNil } from './isNil.ts';
 
 /**
  * @see https://github.com/lodash/lodash/blob/main/test/isNil.spec.js
@@ -11,7 +11,7 @@ describe('isNil', () => {
   it('should return `true` for nullish values', () => {
     expect(isNil(null)).toBe(true);
     expect(isNil()).toBe(true);
-    expect(isNil(undefined)).toBe(true);
+    expect(isNil()).toBe(true);
   });
 
   it('should return `false` for non-nullish values', () => {
@@ -20,7 +20,9 @@ describe('isNil', () => {
 
     const expected = falsey.map(value => value == null);
 
-    const actual = falsey.map((value, index) => (index ? isNil(value) : isNil()));
+    const actual = falsey.map((value, index) =>
+      index ? isNil(value) : isNil(),
+    );
 
     expect(actual).toEqual(expected);
 

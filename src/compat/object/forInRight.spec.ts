@@ -6,6 +6,7 @@ describe('forInRight', () => {
     function Foo(this: any) {
       this.a = 1;
     }
+
     Foo.prototype.b = 2;
 
     const keys: string[] = [];
@@ -21,7 +22,7 @@ describe('forInRight', () => {
   });
 
   it('returns `undefined` if `object` is `undefined`', () => {
-    expect(forInRight(undefined)).toBeUndefined();
+    expect(forInRight()).toBeUndefined();
   });
 
   it('early returns if `iteratee` returns `false`', () => {

@@ -20,11 +20,15 @@ describe('concat', () => {
 
   it('should cast non-array `array` values to arrays', () => {
     // eslint-disable-next-line no-sparse-arrays
-    const values = [, null, undefined, false, true, 1, NaN, 'a'];
+    const values = [, null, undefined, false, true, 1, Number.NaN, 'a'];
 
-    let expected: unknown[] = values.map((value, index) => (index ? [value] : []));
+    let expected: unknown[] = values.map((value, index) =>
+      index ? [value] : [],
+    );
 
-    let actual: unknown[] = values.map((value, index) => (index ? concat(value) : concat()));
+    let actual: unknown[] = values.map((value, index) =>
+      index ? concat(value) : concat(),
+    );
 
     expect(actual).toEqual(expected);
 
@@ -37,7 +41,7 @@ describe('concat', () => {
 
   it('should treat sparse arrays as dense', () => {
     const expected = [];
-    const actual = concat(Array(1), Array(1));
+    const actual = concat(Array.from({ length: 1 }), Array.from({ length: 1 }));
 
     expected.push(undefined, undefined);
 

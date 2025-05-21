@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { defaults } from './defaults';
 import { objectProto } from '../_internal/objectProto';
 import * as esToolkit from '../index';
+import { defaults } from './defaults';
 
 describe('defaults', () => {
   it('should assign source properties if missing on `object`', () => {
     const actual = defaults({ a: 1 }, { a: 2, b: 2 });
+
     expect(actual).toEqual({ a: 1, b: 2 });
   });
 
@@ -21,11 +22,13 @@ describe('defaults', () => {
 
   it('should not overwrite `null` values', () => {
     const actual = defaults({ a: null }, { a: 1 });
+
     expect((actual as any).a).toBe(null);
   });
 
   it('should overwrite `undefined` values', () => {
     const actual = defaults({ a: undefined }, { a: 1 });
+
     expect((actual as any).a).toBe(1);
   });
 
@@ -58,6 +61,7 @@ describe('defaults', () => {
     };
 
     let expected = esToolkit.clone(source);
+
     expect(defaults({}, source)).toEqual(expected);
 
     expected = esToolkit.clone(object);
@@ -67,6 +71,7 @@ describe('defaults', () => {
   it('should be used as a iteratee', () => {
     const array = [{ b: 1 }, { c: 2 }, { d: 3 }];
     const source = { a: 4 };
+
     array.forEach((...args: any[]) => defaults(source, ...args));
     expect(source).toEqual({ a: 4, b: 1, c: 2, d: 3 });
   });

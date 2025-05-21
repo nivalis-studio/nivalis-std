@@ -2,10 +2,8 @@ import { iteratee } from '../util/iteratee.ts';
 
 /**
  * Creates a function that invokes given functions and returns their results as an array.
- *
  * @param {Array<Iteratee | Iteratee[]>} iteratees - The iteratees to invoke.
  * @returns {(...args: any[]) => unknown[]} Returns the new function.
- *
  * @example
  * const func = over([Math.max, Math.min]);
  * const func2 = over(Math.max, Math.min); // same as above
@@ -26,7 +24,9 @@ import { iteratee } from '../util/iteratee.ts';
  * func({ a: 1, b: 2 });
  * // => [true, true]
  */
-export function over(...iteratees: Array<Iteratee | Iteratee[]>): (...args: any[]) => unknown[] {
+export function over(
+  ...iteratees: Array<Iteratee | Iteratee[]>
+): (...args: any[]) => unknown[] {
   if (iteratees.length === 1 && Array.isArray(iteratees[0])) {
     iteratees = iteratees[0] as Iteratee[];
   }

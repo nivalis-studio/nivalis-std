@@ -5,10 +5,8 @@
  * It returns `true` if the value is `boolean`, and `false` otherwise.
  *
  * This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `boolean`.
- *
  * @param {unknown} x - The Value to test if it is boolean.
  * @returns {x is boolean} True if the value is boolean, false otherwise.
- *
  * @example
  *
  * const value1 = true;
@@ -18,7 +16,6 @@
  * console.log(isBoolean(value1)); // true
  * console.log(isBoolean(value2)); // false
  * console.log(isBoolean(value3)); // false
- *
  */
 export function isBoolean(x: unknown): x is boolean {
   return typeof x === 'boolean';

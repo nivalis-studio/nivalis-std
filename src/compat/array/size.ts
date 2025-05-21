@@ -6,11 +6,9 @@ import { isNil } from '../../predicate/isNil.ts';
  * This function takes an array, string, or object and returns its length.
  * For arrays and strings, it returns the number of elements or characters, respectively.
  * For objects, it returns the number of enumerable properties.
- *
  * @template T - The type of the input value.
  * @param {T[] | object | string | Map<unknown, T> | Set<T> | null | undefined } target - The value whose size is to be determined. It can be an array, string, or object.
  * @returns {number} The size of the input value.
- *
  * @example
  * const arr = [1, 2, 3];
  * const arrSize = size(arr);
@@ -36,7 +34,16 @@ import { isNil } from '../../predicate/isNil.ts';
  * const emptyObjSize = size(emptyObj);
  * // emptyObjSize will be 0
  */
-export function size<T>(target: readonly T[] | object | string | Map<unknown, T> | Set<T> | null | undefined): number {
+export function size<T>(
+  target:
+    | readonly T[]
+    | object
+    | string
+    | Map<unknown, T>
+    | Set<T>
+    | null
+    | undefined,
+): number {
   if (isNil(target)) {
     return 0;
   }

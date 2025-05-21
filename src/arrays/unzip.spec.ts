@@ -19,6 +19,7 @@ describe('unzip', () => {
   it('should handle empty arrays', () => {
     const zipped = [[], [], [], []];
     const result = unzip(zipped);
+
     expect(result).toEqual([]);
   });
 
@@ -28,6 +29,7 @@ describe('unzip', () => {
       ['b', 2, false],
     ];
     const result = unzip(zipped);
+
     expect(result).toEqual([
       ['a', 'b'],
       [1, 2],
@@ -38,6 +40,7 @@ describe('unzip', () => {
 
     const zipped2 = [['a', 1, true], ['b', 2, false, 32, 58], [1]];
     const result2 = unzip(zipped2);
+
     expect(result2).toEqual([
       ['a', 'b', 1],
       [1, 2, undefined],

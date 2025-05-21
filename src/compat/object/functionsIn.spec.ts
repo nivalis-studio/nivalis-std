@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { functionsIn } from './functionsIn';
 import { identity } from '../../function/identity';
 import { noop } from '../../function/noop';
+import { functionsIn } from './functionsIn';
 
 describe('functionsIn', () => {
   function Foo(this: any) {
     this.a = function () {
       return 'a';
     };
+
     this.b = function () {
       return 'b';
     };
@@ -52,10 +53,10 @@ describe('functionsIn', () => {
 
   it('should work with plain objects', () => {
     const object = {
-      a: function () {
+      a() {
         return 'a';
       },
-      b: function () {
+      b() {
         return 'b';
       },
     };
@@ -79,6 +80,7 @@ describe('functionsIn', () => {
       // @ts-ignore
       this.b = 'b';
     }
+
     Foo.prototype.c = noop;
 
     // eslint-disable-next-line

@@ -2,17 +2,18 @@ import { describe, expect, it } from 'vitest';
 import { ary } from './ary';
 
 describe('ary', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function fn(_a: unknown, _b: unknown, _c: unknown) {
     // eslint-disable-next-line prefer-rest-params
-    return Array.from(arguments);
+    return [...arguments];
   }
 
   it('should cap the number of arguments provided to `func`', () => {
-    const actual = ['6', '8', '10'].map(ary(parseInt, 1));
+    const actual = ['6', '8', '10'].map(ary(Number.parseInt, 1));
+
     expect(actual).toEqual([6, 8, 10]);
 
     const capped = ary(fn, 2);
+
     expect(capped('a', 'b', 'c', 'd')).toEqual(['a', 'b']);
   });
 
@@ -28,17 +29,17 @@ describe('ary', () => {
   });
 
   it('should use `this` binding of function', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const capped = ary(function (this: unknown, _a: unknown, _b: unknown) {
       return this;
     }, 1);
-    const object = { capped: capped };
+    const object = { capped };
 
     expect(object.capped()).toBe(object);
   });
 
   it('should use the existing `ary` if smaller', () => {
     const capped = ary(ary(fn, 1), 2);
+
     expect(capped('a', 'b', 'c', 'd')).toEqual(['a']);
   });
 });

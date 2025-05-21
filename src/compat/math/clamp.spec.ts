@@ -48,11 +48,11 @@ describe('clamp', () => {
   });
 
   it('should return `NaN` when `number` is `NaN`', () => {
-    expect(clamp(NaN, -5, 5)).toEqual(NaN);
+    expect(clamp(Number.NaN, -5, 5)).toEqual(Number.NaN);
   });
 
   it('should coerce `min` and `max` of `NaN` to `0`', () => {
-    expect(clamp(1, -5, NaN)).toEqual(0);
-    expect(clamp(-1, NaN, 5)).toEqual(0);
+    expect(clamp(1, -5, Number.NaN)).toEqual(0);
+    expect(clamp(-1, Number.NaN, 5)).toEqual(0);
   });
 });

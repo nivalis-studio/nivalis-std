@@ -2,11 +2,9 @@
  * Returns a random element from an array.
  *
  * This function takes an array and returns a single element selected randomly from the array.
- *
  * @template T - The type of elements in the array.
  * @param {T[]} arr - The array to sample from.
  * @returns {T} A random element from the array.
- *
  * @example
  * const array = [1, 2, 3, 4, 5];
  * const randomElement = sample(array);
@@ -14,5 +12,6 @@
  */
 export function sample<T>(arr: readonly T[]): T {
   const randomIndex = Math.floor(Math.random() * arr.length);
+
   return arr[randomIndex];
 }

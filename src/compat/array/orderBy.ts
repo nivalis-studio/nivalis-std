@@ -2,21 +2,25 @@ import { compareValues } from '../_internal/compareValues.ts';
 import { isKey } from '../_internal/isKey.ts';
 import { toPath } from '../util/toPath.ts';
 
-export type Criterion<T> = ((item: T) => unknown) | PropertyKey | PropertyKey[] | null | undefined;
+export type Criterion<T> =
+  | ((item: T) => unknown)
+  | PropertyKey
+  | PropertyKey[]
+  | null
+  | undefined;
+
 /**
  * Sorts an array of objects based on multiple properties and their corresponding order directions.
  *
  * This function takes an array of objects, an array of criteria to sort by, and an array of order directions.
  * It returns the sorted array, ordering by each key according to its corresponding direction ('asc' for ascending or 'desc' for descending).
  * If values for a key are equal, it moves to the next key to determine the order.
- *
  * @template T - The type of elements in the array.
  * @param {ArrayLike<T> | object | null | undefined} collection - The array of objects to be sorted.
  * @param {Criterion<T> | Array<Criterion<T>>} criteria - An array of criteria (property names or property paths or custom key functions) to sort by.
  * @param {unknown | unknown[]} orders - An array of order directions ('asc' for ascending or 'desc' for descending).
  * @param {unknown} [guard] Enables use as an iteratee for methods like `_.reduce`.
  * @returns {T[]} - The sorted array.
- *
  * @example
  * // Sort an array of objects by 'user' in ascending order and 'age' in descending order.
  * const users = [
@@ -38,7 +42,7 @@ export function orderBy<T = any>(
   collection: ArrayLike<T> | object | null | undefined,
   criteria?: Criterion<T> | Array<Criterion<T>>,
   orders?: unknown | unknown[],
-  guard?: unknown
+  guard?: unknown,
 ): T[] {
   if (collection == null) {
     return [];
@@ -53,6 +57,7 @@ export function orderBy<T = any>(
   if (!Array.isArray(criteria)) {
     criteria = criteria == null ? [null] : [criteria];
   }
+
   if (criteria.length === 0) {
     criteria = [null];
   }
@@ -62,7 +67,7 @@ export function orderBy<T = any>(
   }
 
   // For Object('desc') case
-  orders = (orders as unknown[]).map(order => String(order));
+  orders = (orders as unknown[]).map(String);
 
   const getValueByNestedPath = (object: object, path: PropertyKey[]) => {
     let target: object = object;
@@ -74,7 +79,10 @@ export function orderBy<T = any>(
     return target;
   };
 
-  const getValueByCriterion = (criterion: Criterion<T> | { key: PropertyKey; path: string[] }, object: T) => {
+  const getValueByCriterion = (
+    criterion: Criterion<T> | { key: PropertyKey; path: string[] },
+    object: T,
+  ) => {
     if (object == null || criterion == null) {
       return object;
     }
@@ -109,7 +117,12 @@ export function orderBy<T = any>(
       criterion = criterion[0];
     }
 
-    if (criterion == null || typeof criterion === 'function' || Array.isArray(criterion) || isKey(criterion)) {
+    if (
+      criterion == null ||
+      typeof criterion === 'function' ||
+      Array.isArray(criterion) ||
+      isKey(criterion)
+    ) {
       return criterion;
     }
 
@@ -120,14 +133,19 @@ export function orderBy<T = any>(
   // Array.prototype.sort() always shifts the `undefined` values to the end of the array. So we have to prevent it by using a wrapper object.
   const preparedCollection = (collection as T[]).map(item => ({
     original: item,
-    criteria: preparedCriteria.map(criterion => getValueByCriterion(criterion, item)),
+    criteria: preparedCriteria.map(criterion =>
+      getValueByCriterion(criterion, item),
+    ),
   }));
 
-  return preparedCollection
-    .slice()
+  return [...preparedCollection]
     .sort((a, b) => {
       for (let i = 0; i < preparedCriteria.length; i++) {
-        const comparedResult = compareValues(a.criteria[i], b.criteria[i], (orders as string[])[i]);
+        const comparedResult = compareValues(
+          a.criteria[i],
+          b.criteria[i],
+          (orders as string[])[i],
+        );
 
         if (comparedResult !== 0) {
           return comparedResult;

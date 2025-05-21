@@ -12,13 +12,16 @@ describe('isNull', () => {
 
   it('should return `false` for non `null` values', () => {
     const expected = falsey.map(value => value === null);
-    const actual = falsey.map((value, index) => (index ? isNull(value) : isNull(undefined)));
+    const actual = falsey.map((value, index) =>
+      index ? isNull(value) : isNull(),
+    );
 
     // eslint-disable-next-line
     (function (..._args: any[]) {
       // eslint-disable-next-line
       expect(isNull(arguments)).toBe(false);
     })(1, 2, 3);
+
     expect(actual).toEqual(expected);
     expect(isNull([1, 2, 3])).toBe(false);
     expect(isNull(true)).toBe(false);
@@ -30,6 +33,6 @@ describe('isNull', () => {
     expect(isNull(/x/)).toBe(false);
     expect(isNull('a')).toBe(false);
     expect(isNull(Symbol('a'))).toBe(false);
-    expect(isNull(undefined)).toBe(false);
+    expect(isNull()).toBe(false);
   });
 });

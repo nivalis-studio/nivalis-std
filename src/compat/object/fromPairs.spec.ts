@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fromPairs } from './fromPairs';
 import { falsey } from '../_internal/falsey';
+import { fromPairs } from './fromPairs';
 
 describe('fromPairs', () => {
   it('should convert an array of key-value pairs into an object', () => {
@@ -10,6 +10,7 @@ describe('fromPairs', () => {
       ['c', 3],
     ]);
     const expected = { a: 1, b: 2, c: 3 };
+
     expect(result).toEqual(expected);
   });
 
@@ -20,6 +21,7 @@ describe('fromPairs', () => {
       [3, 'three'],
     ]);
     const expected = { 1: 'one', 2: 'two', 3: 'three' };
+
     expect(result).toEqual(expected);
   });
 
@@ -31,6 +33,7 @@ describe('fromPairs', () => {
       [sym2, 'value2'],
     ]);
     const expected = { [sym1]: 'value1', [sym2]: 'value2' };
+
     expect(result).toEqual(expected);
   });
 
@@ -42,6 +45,7 @@ describe('fromPairs', () => {
     ]);
     const result = fromPairs(map);
     const expected = { a: 1, b: 2, c: 3 };
+
     expect(result).toEqual(expected);
   });
 
@@ -73,6 +77,7 @@ describe('fromPairs', () => {
 
   it('should not support deep paths', () => {
     const actual = fromPairs([['a.b', 1]]);
+
     expect(actual).toEqual({ 'a.b': 1 });
   });
 

@@ -25,17 +25,19 @@ describe('max', () => {
 
   it('should work with extremely large arrays', () => {
     const array = Array.from({ length: 5e5 }, (_, i) => i);
-    expect(max(array)).toBe(499999);
+
+    expect(max(array)).toBe(499_999);
   });
 
   it('should work when chaining on an array with only one value', () => {
     const array = [40];
+
     expect(max(array)).toBe(40);
   });
 
   it('should skip NaN values', () => {
-    expect(max([1, NaN, 2])).toBe(2);
-    expect(max([NaN, 1, 2])).toBe(2);
+    expect(max([1, Number.NaN, 2])).toBe(2);
+    expect(max([Number.NaN, 1, 2])).toBe(2);
   });
 
   it('should skip symbol values', () => {
@@ -50,6 +52,6 @@ describe('max', () => {
   });
 
   it('should return undefined when skipping all values', () => {
-    expect(max([Symbol('a'), null, NaN])).toBe(undefined);
+    expect(max([Symbol('a'), null, Number.NaN])).toBe(undefined);
   });
 });

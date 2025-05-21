@@ -7,6 +7,6 @@ describe('mean', () => {
   });
 
   it('returns NaN for empty arrays', () => {
-    expect(mean([])).toEqual(NaN);
+    expect(mean([])).toEqual(Number.NaN);
   });
 });

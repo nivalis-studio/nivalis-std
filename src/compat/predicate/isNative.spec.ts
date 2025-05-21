@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { isNative } from './isNative';
 import { noop } from '../../function/noop';
 import { args } from '../_internal/args';
 import { falsey } from '../_internal/falsey';
 import { symbol } from '../_internal/symbol';
 import { stubFalse } from '../util/stubFalse';
+import { isNative } from './isNative';
 
 /**
  * @see https://github.com/lodash/lodash/blob/main/test/isNative.spec.js
@@ -12,7 +12,14 @@ import { stubFalse } from '../util/stubFalse';
 
 describe('isNative', () => {
   it('should return `true` for native methods', () => {
-    const values = [Array, Object.create, encodeURI, Promise, Array.prototype.slice, Uint8Array];
+    const values = [
+      Array,
+      Object.create,
+      encodeURI,
+      Promise,
+      Array.prototype.slice,
+      Uint8Array,
+    ];
     const expected = values.map(() => true);
     const actual = values.map(isNative);
 
@@ -30,15 +37,17 @@ describe('isNative', () => {
       Math.max,
     ];
 
-    nativeFunctions.forEach(func => {
+    for (const func of nativeFunctions) {
       expect(isNative(func)).toBe(true);
-    });
+    }
   });
 
   it('should return `false` for non-native methods', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map((value, index) => (index ? isNative(value) : isNative()));
+    const actual = falsey.map((value, index) =>
+      index ? isNative(value) : isNative(),
+    );
 
     expect(actual).toEqual(expected);
 
@@ -77,9 +86,9 @@ describe('isNative', () => {
       new DataView(new ArrayBuffer(8)),
     ];
 
-    nonNativeValues.forEach(value => {
+    for (const value of nonNativeValues) {
       expect(isNative(value)).toBe(false);
-    });
+    }
   });
 
   it('should throw an error if core-js is detected', () => {
@@ -97,6 +106,7 @@ describe('isNative', () => {
   it('should detect methods masquerading as native', () => {
     // Create a fake native function
     const fakeNative = () => {};
+
     Object.defineProperty(fakeNative, 'toString', {
       value: () => 'function () { [native code] }',
     });

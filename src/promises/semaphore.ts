@@ -6,7 +6,6 @@
  * Each `release` operation adds a permit, potentially allowing a waiting task to proceed.
  *
  * The semaphore ensures fairness by maintaining a FIFO (First In, First Out) order for acquirers.
- *
  * @example
  * const sema = new Semaphore(2);
  *
@@ -40,7 +39,6 @@ export class Semaphore {
   /**
    * Creates an instance of Semaphore.
    * @param {number} capacity - The maximum number of concurrent operations allowed.
-   *
    * @example
    * const sema = new Semaphore(3); // Allows up to 3 concurrent operations.
    */
@@ -52,7 +50,6 @@ export class Semaphore {
   /**
    * Acquires a semaphore, blocking if necessary until one is available.
    * @returns {Promise<void>} A promise that resolves when the semaphore is acquired.
-   *
    * @example
    * const sema = new Semaphore(1);
    *
@@ -68,17 +65,17 @@ export class Semaphore {
   async acquire(): Promise<void> {
     if (this.available > 0) {
       this.available--;
+
       return;
     }
 
-    return new Promise<void>(resolve => {
+    await new Promise<void>(resolve => {
       this.deferredTasks.push(resolve);
     });
   }
 
   /**
    * Releases a semaphore, allowing one more operation to proceed.
-   *
    * @example
    * const sema = new Semaphore(1);
    *
@@ -96,6 +93,7 @@ export class Semaphore {
 
     if (deferredTask != null) {
       deferredTask();
+
       return;
     }
 

@@ -1,7 +1,6 @@
 /**
  * Returns an empty object.
- *
- * @returns {Object} An empty object.
+ * @returns {object} An empty object.
  * @example
  * stubObject() // Returns {}
  */
