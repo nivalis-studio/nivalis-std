@@ -30,6 +30,7 @@ export const httpStatus = {
   payloadTooLarge: 413,
   uriTooLong: 414,
   unsupportedMediaType: 415,
+  unprocessableEntity: 422,
   internalServerError: 500,
   notImplemented: 501,
   badGateway: 502,
