@@ -1,1 +1,0 @@
-export const MAX_ARRAY_LENGTH = 4_294_967_295;
