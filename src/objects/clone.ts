@@ -1,22 +1,27 @@
-import { isPrimitive } from '../is';
+import { isPrimitive } from '../predicate/isPrimitive.ts';
+import { isTypedArray } from '../predicate/isTypedArray.ts';
 
 /**
  * Creates a shallow clone of the given object.
+ *
  * @template T - The type of the object.
  * @param {T} obj - The object to clone.
  * @returns {T} - A shallow clone of the given object.
+ *
  * @example
  * // Clone a primitive values
  * const num = 29;
  * const clonedNum = clone(num);
  * console.log(clonedNum); // 29
  * console.log(clonedNum === num) ; // true
+ *
  * @example
  * // Clone an array
  * const arr = [1, 2, 3];
  * const clonedArr = clone(arr);
  * console.log(clonedArr); // [1, 2, 3]
  * console.log(clonedArr === arr); // false
+ *
  * @example
  * // Clone an object
  * const obj = { a: 1, b: 'es-toolkit', c: [1, 2, 3] };
@@ -29,41 +34,51 @@ export function clone<T>(obj: T): T {
     return obj;
   }
 
-  if (Array.isArray(obj)) {
-    return [...obj] as T;
+  if (
+    Array.isArray(obj) ||
+    isTypedArray(obj) ||
+    obj instanceof ArrayBuffer ||
+    (typeof SharedArrayBuffer !== 'undefined' && obj instanceof SharedArrayBuffer)
+  ) {
+    return obj.slice(0) as T;
   }
 
-  if (obj instanceof Date) {
-    return new Date(obj) as T;
+  const prototype = Object.getPrototypeOf(obj);
+  const Constructor = prototype.constructor;
+
+  if (obj instanceof Date || obj instanceof Map || obj instanceof Set) {
+    return new Constructor(obj);
   }
 
   if (obj instanceof RegExp) {
-    return new RegExp(obj.source, obj.flags) as T;
+    const newRegExp = new Constructor(obj);
+    newRegExp.lastIndex = obj.lastIndex;
+
+    return newRegExp;
   }
 
-  if (obj instanceof Map) {
-    const result = new Map();
-
-    for (const [key, value] of obj) {
-      result.set(key, value);
-    }
-
-    return result as T;
+  if (obj instanceof DataView) {
+    return new Constructor(obj.buffer.slice(0));
   }
 
-  if (obj instanceof Set) {
-    const result = new Set();
+  if (obj instanceof Error) {
+    const newError = new Constructor(obj.message);
 
-    for (const value of obj) {
-      result.add(value);
-    }
+    newError.stack = obj.stack;
+    newError.name = obj.name;
+    newError.cause = obj.cause;
 
-    return result as T;
+    return newError;
+  }
+
+  if (typeof File !== 'undefined' && obj instanceof File) {
+    const newFile = new Constructor([obj], obj.name, { type: obj.type, lastModified: obj.lastModified });
+    return newFile;
   }
 
   if (typeof obj === 'object') {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    return { ...obj } as T;
+    const newObject = Object.create(prototype);
+    return Object.assign(newObject, obj);
   }
 
   return obj;

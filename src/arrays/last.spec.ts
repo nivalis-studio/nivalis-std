@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 import { last } from './last';
 
 describe('last', () => {
@@ -6,7 +6,6 @@ describe('last', () => {
     expect(last([1, 2, 3])).toBe(3);
     expect(last(['a', 'b', 'c'])).toBe('c');
     expect(last([1, 'string', true])).toBe(true);
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     expect(last([])).toBeUndefined();
   });
   // Edge cases
@@ -15,10 +14,9 @@ describe('last', () => {
   });
 
   it('returns the last element of a large array', () => {
-    const largeArray = Array.from({ length: 1000 })
+    const largeArray = Array(1000)
       .fill(0)
       .map((_, i) => i);
-
     expect(last(largeArray)).toBe(999);
   });
 
@@ -28,7 +26,6 @@ describe('last', () => {
       [3, 2],
       [3, 3],
     ];
-
     expect(last(nestedArray)).toEqual([3, 3]);
   });
 });

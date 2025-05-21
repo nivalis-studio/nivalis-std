@@ -1,66 +1,153 @@
-import { describe, expect, mock, test } from 'bun:test';
+import { describe, expect, it, vi } from 'vitest';
 import { debounce } from './debounce';
-import { sleep } from './sleep';
-
-const ms = 10;
+// adjust the import path as necessary
+import { delay } from '../promise';
 
 describe('debounce', () => {
-  test('should call the debounced function after the specified delay', async () => {
-    const func = mock(() => {});
-    const debouncedFunc = debounce(func, ms);
+  it('should debounce function calls', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
 
     debouncedFunc();
-    expect(func).not.toHaveBeenCalled();
+    debouncedFunc();
+    debouncedFunc();
 
-    await sleep(ms + 5);
+    await delay(debounceMs * 2);
+
     expect(func).toHaveBeenCalledTimes(1);
   });
 
-  test('should reset the delay if called again before the delay is over', async () => {
-    const func = mock(() => {});
-    const debouncedFunc = debounce(func, ms);
+  it('should delay the function call by the specified wait time', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
 
     debouncedFunc();
+    await delay(debounceMs / 2);
     expect(func).not.toHaveBeenCalled();
 
-    await sleep(ms - 5);
-    debouncedFunc();
-    expect(func).not.toHaveBeenCalled();
-
-    await sleep(ms + 5);
+    await delay(debounceMs / 2 + 1);
     expect(func).toHaveBeenCalledTimes(1);
   });
 
-  test('should not call the function if cancel is called', async () => {
-    const func = mock(() => {});
-    const debouncedFunc = debounce(func, ms);
+  it('should reset the wait time if called again before wait time ends', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
+
+    debouncedFunc();
+    await delay(debounceMs / 2);
+    debouncedFunc();
+    await delay(debounceMs / 2);
+    debouncedFunc();
+    await delay(debounceMs / 2);
+    debouncedFunc();
+
+    expect(func).not.toHaveBeenCalled();
+
+    await delay(debounceMs + 1);
+    expect(func).toHaveBeenCalledTimes(1);
+  });
+
+  it('should cancel the debounced function call', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
 
     debouncedFunc();
     debouncedFunc.cancel();
-    await sleep(ms + 5);
+    await delay(debounceMs);
+
     expect(func).not.toHaveBeenCalled();
   });
 
-  test('should not call the function if signal is aborted', async () => {
-    const func = mock(() => {});
+  it('should work correctly if the debounced function is called after the wait time', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
+
+    debouncedFunc();
+    await delay(debounceMs + 1);
+    debouncedFunc();
+    await delay(debounceMs + 1);
+
+    expect(func).toHaveBeenCalledTimes(2);
+  });
+
+  it('should have no effect if we call cancel when the function is not executed', () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
+
+    expect(() => debouncedFunc.cancel()).not.toThrow();
+  });
+
+  it('should call the function with correct arguments', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs);
+
+    debouncedFunc('test', 123);
+
+    await delay(debounceMs * 2);
+
+    expect(func).toHaveBeenCalledTimes(1);
+    expect(func).toHaveBeenCalledWith('test', 123);
+  });
+
+  it('should cancel the debounced function call if aborted via AbortSignal', async () => {
+    const func = vi.fn();
+    const debounceMs = 50;
     const controller = new AbortController();
-    const debouncedFunc = debounce(func, ms, { signal: controller.signal });
+    const signal = controller.signal;
+    const debouncedFunc = debounce(func, debounceMs, { signal });
 
     debouncedFunc();
     controller.abort();
-    await sleep(ms + 5);
+
+    await delay(debounceMs);
+
     expect(func).not.toHaveBeenCalled();
   });
 
-  test('should not set a new timeout if the signal is already aborted', async () => {
-    const func = mock(() => {});
+  it('should not call the debounced function if it is already aborted by AbortSignal', async () => {
     const controller = new AbortController();
+    const signal = controller.signal;
 
     controller.abort();
-    const debouncedFunc = debounce(func, ms, { signal: controller.signal });
+
+    const func = vi.fn();
+
+    const debounceMs = 50;
+    const debouncedFunc = debounce(func, debounceMs, { signal });
 
     debouncedFunc();
-    await sleep(ms + 5);
+
+    await delay(debounceMs);
+
     expect(func).not.toHaveBeenCalled();
+  });
+
+  it('should not add multiple abort event listeners', async () => {
+    const func = vi.fn();
+    const debounceMs = 100;
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const addEventListenerSpy = vi.spyOn(signal, 'addEventListener');
+
+    const debouncedFunc = debounce(func, debounceMs, { signal });
+
+    debouncedFunc();
+    debouncedFunc();
+
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    expect(func).toHaveBeenCalledTimes(1);
+
+    const listenerCount = addEventListenerSpy.mock.calls.filter(([event]) => event === 'abort').length;
+    expect(listenerCount).toBe(1);
+
+    addEventListenerSpy.mockRestore();
   });
 });

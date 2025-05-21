@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 import { mean } from './mean';
 
 describe('mean', () => {
@@ -7,6 +7,6 @@ describe('mean', () => {
   });
 
   it('returns NaN for empty arrays', () => {
-    expect(mean([])).toEqual(Number.NaN);
+    expect(mean([])).toEqual(NaN);
   });
 });

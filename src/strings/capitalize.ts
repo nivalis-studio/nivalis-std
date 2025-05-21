@@ -1,19 +1,17 @@
 /**
- * Capitalize the first letter of a string.
- * @param {string} string - The string to capitalize.
- * @returns {string} The capitalized string.
+ * Converts the first character of string to upper case and the remaining to lower case.
+ *
+ * @template T - Literal type of the string.
+ * @param {T} str - The string to be converted to uppercase.
+ * @returns {Capitalize<T>} - The capitalized string.
+ *
  * @example
- * capitalize('hello'); // "Hello"
+ * const result = capitalize('fred') // returns 'Fred'
+ * const result2 = capitalize('FRED') // returns 'Fred'
  */
-export const capitalize = (string: string): string =>
-  string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
 
-/**
- * Capitalize the first letter of each word in a string.
- * @param {string} string - The string to capitalize.
- * @returns {string} The capitalized string.
- * @example
- * capitalizeWords('hello world'); // "Hello World"
- */
-export const capitalizeWords = (string: string): string =>
-  string.toLowerCase().replaceAll(/(?:^|\s)\S/g, match => match.toUpperCase());
+export function capitalize<T extends string>(str: T): Capitalize<T> {
+  return (str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()) as Capitalize<T>;
+}
+
+type Capitalize<T extends string> = T extends `${infer F}${infer R}` ? `${Uppercase<F>}${Lowercase<R>}` : T;

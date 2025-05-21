@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 import { uniq } from './uniq';
 
 describe('uniq', () => {
@@ -32,7 +32,6 @@ describe('uniq', () => {
   });
   it('uniq function should not mutate the original array.', () => {
     const array = [1, 2, 3, 2, 1, 3];
-
     uniq(array);
 
     expect(array).toEqual([1, 2, 3, 2, 1, 3]);

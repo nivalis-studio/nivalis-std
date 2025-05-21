@@ -1,56 +1,32 @@
-import { describe, expect, test } from 'bun:test';
-import { capitalize, capitalizeWords } from './capitalize';
+import { describe, expect, it } from 'vitest';
+import { capitalize } from './capitalize';
 
 describe('capitalize', () => {
-  test('should capitalize the first letter of a lowercase word', () => {
-    expect(capitalize('hello')).toBe('Hello');
+  it('should converts the first character of string to upper case', () => {
+    expect(capitalize('fred')).toEqual('Fred');
   });
 
-  test('should capitalize the first letter of an uppercase word and convert the rest to lowercase', () => {
-    expect(capitalize('HELLO')).toBe('Hello');
+  it('should converts the first character of string to upper case and the remaining to lower case.', () => {
+    expect(capitalize('FRED')).toEqual('Fred');
   });
 
-  test('should return an empty string if the input is empty', () => {
-    expect(capitalize('')).toBe('');
+  it('should handle special characters correctly', () => {
+    expect(capitalize('special@characters!')).toEqual('Special@characters!');
   });
 
-  test('should handle strings with only one character', () => {
-    expect(capitalize('a')).toBe('A');
-    expect(capitalize('A')).toBe('A');
+  it('should handle hyphen correctly', () => {
+    expect(capitalize('hyphen-text')).toEqual('Hyphen-text');
   });
 
-  test('should handle strings with special characters', () => {
-    expect(capitalize('!hello')).toBe('!hello');
-  });
-});
-
-describe('capitalizeWords', () => {
-  test('should capitalize the first letter of each word in a sentence', () => {
-    expect(capitalizeWords('hello world')).toBe('Hello World');
+  it('should handle leading whitespace', () => {
+    expect(capitalize(' fred')).toEqual(' fred');
   });
 
-  test('should handle multiple spaces between words', () => {
-    expect(capitalizeWords('hello   world')).toBe('Hello   World');
+  it('should handle strings that are already in capitalize', () => {
+    expect(capitalize('Fred')).toEqual('Fred');
   });
 
-  test('should handle strings that are already capitalized', () => {
-    expect(capitalizeWords('Hello World')).toBe('Hello World');
-  });
-
-  test('should capitalize words and convert the rest of the characters to lowercase', () => {
-    expect(capitalizeWords('hELLo WoRLD')).toBe('Hello World');
-  });
-
-  test('should handle a single word', () => {
-    expect(capitalizeWords('hello')).toBe('Hello');
-  });
-
-  test('should return an empty string if the input is empty', () => {
-    expect(capitalizeWords('')).toBe('');
-  });
-
-  test('should handle special characters correctly', () => {
-    expect(capitalizeWords('hello-world')).toBe('Hello-world');
-    expect(capitalizeWords('hello_world')).toBe('Hello_world');
+  it('should work with an empty string', () => {
+    expect(capitalize('')).toEqual('');
   });
 });
