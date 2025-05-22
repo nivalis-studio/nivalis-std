@@ -1,4 +1,4 @@
-import { differenceWith } from './differenceWith.ts';
+import { differenceWith } from './difference-with.ts';
 import { intersectionWith } from './intersectionWith.ts';
 import { unionWith } from './unionWith.ts';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { flatMap } from './flatMap';
+import { flatMap } from './flat-map';
 
 describe('flatMap', () => {
   const originArr = [1, 2, 3];

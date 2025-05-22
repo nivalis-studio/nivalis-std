@@ -1,4 +1,4 @@
-import { TimeoutError } from '../error/TimeoutError.ts';
+import { TimeoutError } from '../error/timeout-error.ts';
 import { delay } from './delay.ts';
 
 /**

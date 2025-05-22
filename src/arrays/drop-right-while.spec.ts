@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { dropRightWhile } from './dropRightWhile';
+import { dropRightWhile } from './drop-right-while';
 
 describe('dropRightWhile', () => {
   it('should drop elements from an array until `canContinueDropping` returns false, from the end', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { differenceBy } from './differenceBy';
+import { differenceBy } from './difference-by';
 
 describe('differenceBy', () => {
   it('should the difference of two arrays using the `mapper` function', () => {

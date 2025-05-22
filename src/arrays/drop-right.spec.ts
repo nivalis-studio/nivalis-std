@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { dropRight } from './dropRight';
+import { dropRight } from './drop-right';
 
 describe('dropRight', () => {
   it('should drop `itemsCount` elements from an array from the end', () => {

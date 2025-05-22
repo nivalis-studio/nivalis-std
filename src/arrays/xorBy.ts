@@ -1,4 +1,4 @@
-import { differenceBy } from './differenceBy.ts';
+import { differenceBy } from './difference-by.ts';
 import { intersectionBy } from './intersectionBy.ts';
 import { unionBy } from './unionBy.ts';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { asyncNoop } from './asyncNoop';
+import { asyncNoop } from './async-noop';
 
 describe('asyncNoop', () => {
   it('should be a function', () => {

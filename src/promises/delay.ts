@@ -1,4 +1,4 @@
-import { AbortError } from '../error/AbortError.ts';
+import { AbortError } from '../error/abort-error.ts';
 
 type DelayOptions = {
   signal?: AbortSignal;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { countBy } from './countBy.ts';
+import { countBy } from './count-by.ts';
 
 describe('countBy', () => {
   it('should count the occurrences of each item in an array', () => {

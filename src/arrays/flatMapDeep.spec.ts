@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { flatMapDeep } from './flatMapDeep';
+import { flatMapDeep } from './flat-map-deep';
 
 describe('flatMapDeep', () => {
   it('should map and deeply flatten an array', () => {

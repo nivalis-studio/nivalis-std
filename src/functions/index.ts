@@ -1,6 +1,6 @@
 export { after } from './after.ts';
 export { ary } from './ary.ts';
-export { asyncNoop } from './asyncNoop.ts';
+export { asyncNoop } from './async-noop.ts';
 export { before } from './before.ts';
 export { curry } from './curry.ts';
 export { curryRight } from './curryRight.ts';

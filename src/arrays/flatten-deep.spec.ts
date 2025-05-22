@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { flattenDeep } from './flattenDeep';
+import { flattenDeep } from './flatten-deep';
 
 describe('flattenDeep', () => {
   it('should flatten a deeply nested array of numbers', () => {

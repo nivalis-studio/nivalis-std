@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { differenceWith } from './differenceWith';
+import { differenceWith } from './difference-with';
 
 describe('differenceWith', () => {
   it('should return the difference of two arrays using the `areItemsEqual` function', () => {

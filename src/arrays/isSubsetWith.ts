@@ -1,4 +1,4 @@
-import { differenceWith } from './differenceWith.ts';
+import { differenceWith } from './difference-with.ts';
 
 /**
  * Checks if the `subset` array is entirely contained within the `superset` array based on a custom equality function.

@@ -24,12 +24,6 @@
  */
 export class Semaphore {
   /**
-   * The maximum number of concurrent operations allowed.
-   * @type {number}
-   */
-  public capacity: number;
-
-  /**
    * The number of available permits.
    * @type {number}
    */
@@ -42,7 +36,7 @@ export class Semaphore {
    * @example
    * const sema = new Semaphore(3); // Allows up to 3 concurrent operations.
    */
-  constructor(capacity: number) {
+  constructor(public capacity: number) {
     this.capacity = capacity;
     this.available = capacity;
   }
@@ -64,7 +58,7 @@ export class Semaphore {
    */
   async acquire(): Promise<void> {
     if (this.available > 0) {
-      this.available--;
+      this.available -= 1;
 
       return;
     }
@@ -91,6 +85,7 @@ export class Semaphore {
   release(): void {
     const deferredTask = this.deferredTasks.shift();
 
+    // eslint-disable-next-line no-eq-null
     if (deferredTask != null) {
       deferredTask();
 
@@ -98,7 +93,7 @@ export class Semaphore {
     }
 
     if (this.available < this.capacity) {
-      this.available++;
+      this.available += 1;
     }
   }
 }

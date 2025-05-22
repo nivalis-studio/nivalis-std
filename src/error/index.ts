@@ -1,2 +1,2 @@
-export { AbortError } from './AbortError.ts';
-export { TimeoutError } from './TimeoutError.ts';
+export { AbortError } from './abort-error.ts';
+export { TimeoutError } from './timeout-error.ts';
