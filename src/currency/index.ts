@@ -1,7 +1,7 @@
 import type { CurrencyCode } from './types';
 
 export type Currency = {
-  amount: string;
+  amount: string | number;
   currencyCode: CurrencyCode;
 };
 
@@ -11,7 +11,7 @@ export const formatPrice = (
   quantity = 1,
   disableCents = false,
 ): string => {
-  const price = Number.parseFloat(amount);
+  const price = typeof amount === 'number' ? amount : Number.parseFloat(amount);
 
   return new Intl.NumberFormat(locale, {
     style: 'currency',
