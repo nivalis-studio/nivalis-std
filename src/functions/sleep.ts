@@ -2,10 +2,11 @@ type SleepOptions = {
   signal?: AbortSignal;
 };
 
-// eslint-disable-next-line jsdoc/require-param
 /**
  * Sleep for a given amount of time
- * @param {number} ms Amount
+ * @param {number} ms - Amount of time to sleep in milliseconds
+ * @param {SleepOptions} options - Configuration options
+ * @param {AbortSignal} options.signal - Abort signal
  */
 export const sleep = async (
   ms: number,
