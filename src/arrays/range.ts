@@ -34,6 +34,8 @@ export function* range<T = number>(
   for (let i = start; i <= final; i += step) {
     yield mapper(i);
 
-    if (i + step > final) break;
+    if (i + step > final) {
+      break;
+    }
   }
 }

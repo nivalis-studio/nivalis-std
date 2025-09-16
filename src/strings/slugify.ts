@@ -1,4 +1,6 @@
-/* eslint-disable sonarjs/slow-regex */
+const dashRegex = /^-+/;
+const spaceRegex = /-+$/;
+
 /**
  * Formats the given string in slug url compatible fashion
  *
@@ -9,7 +11,7 @@
  * @param {string} text The string to format
  * @returns {string} The formatted String
  */
-export const slugify = (text: string) => {
+export const slugify = (text: string): string => {
   return text
     .normalize('NFD')
     .replaceAll(/[\u0300-\u036F]/g, '')
@@ -18,6 +20,6 @@ export const slugify = (text: string) => {
     .replaceAll(/\s+/g, '-')
     .replaceAll(/[^\w-]+/g, '')
     .replaceAll(/-{2,}/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '');
+    .replace(dashRegex, '')
+    .replace(spaceRegex, '');
 };

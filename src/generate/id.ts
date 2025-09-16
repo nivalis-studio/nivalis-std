@@ -15,9 +15,8 @@ export const generateId = (
   let code = '';
   let idx = size;
 
-  // eslint-disable-next-line no-plusplus
   while (idx--) {
-    // eslint-disable-next-line unicorn/prefer-math-trunc, no-bitwise, sonarjs/pseudo-random
+    // biome-ignore lint/suspicious/noBitwiseOperators: custom case
     code += alphabet[(Math.random() * alphabet.length) | 0];
   }
 

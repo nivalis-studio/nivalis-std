@@ -1,3 +1,7 @@
+/** biome-ignore-all lint/nursery/noShadow: okay-ish */
+/** biome-ignore-all lint/style/useReadonlyClassProperties: okay-ish */
+/** biome-ignore-all lint/suspicious/noThenProperty: okay-ish */
+/** biome-ignore-all lint/suspicious/useAwait: okay-ish */
 import { Err, Ok } from './result';
 import {
   combineResultAsyncList,

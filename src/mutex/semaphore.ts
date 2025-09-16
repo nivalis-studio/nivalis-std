@@ -1,4 +1,6 @@
-/* eslint-disable @typescript-eslint/parameter-properties */
+/** biome-ignore-all lint/suspicious/useAwait: on purpose */
+/** biome-ignore-all lint/style/useConsistentMemberAccessibility: public methods */
+
 /**
  * A counting semaphore for async functions that manages available permits.
  * Semaphores are mainly used to limit the number of concurrent async tasks.
@@ -35,7 +37,7 @@ export class Semaphore {
    * @type {number}
    */
   public available: number;
-  private deferredTasks: Array<() => void> = [];
+  private readonly deferredTasks: Array<() => void> = [];
 
   /**
    * Creates an instance of Semaphore.

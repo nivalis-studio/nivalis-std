@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noEmptyBlockStatements: mock fn */
 import { describe, expect, spyOn, test } from 'bun:test';
 import { SafeJson } from './index';
 

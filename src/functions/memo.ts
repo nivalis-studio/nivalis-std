@@ -12,7 +12,9 @@ const memoize = <TArgs extends any[], TResult>(
     const existing = cache[key];
 
     if (existing !== undefined) {
-      if (!existing.exp) return existing.value;
+      if (!existing.exp) {
+        return existing.value;
+      }
 
       if (existing.exp > Date.now()) {
         return existing.value;
@@ -52,7 +54,7 @@ export const memo = <TArgs extends any[], TResult>(
     key?: (...args: TArgs) => string;
     ttl?: number;
   } = {},
-) => {
+): ((...args: TArgs) => TResult) => {
   return memoize({}, func, options.key ?? null, options.ttl ?? null) as (
     ...args: TArgs
   ) => TResult;

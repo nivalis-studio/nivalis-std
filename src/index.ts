@@ -54,16 +54,18 @@ export {
 export {
   BadRequestException,
   ConflictException,
-  createCustomException,
-  Exception,
   ForbiddenException,
   GoneException,
   MethodNotAlloweddException,
   NotFoundException,
-  toDiscord,
   UnauthorizedException,
   UnknownException,
-} from './exceptions';
+} from './exceptions/common-errors';
+export {
+  createCustomException,
+  Exception,
+} from './exceptions/create-custom';
+export { toDiscord } from './exceptions/to-discord';
 export { debounce } from './functions/debounce';
 export { memo } from './functions/memo';
 export { noop } from './functions/noop';
@@ -76,36 +78,38 @@ export { generateId } from './generate/id';
 export { generateRandomNumber } from './generate/random-number';
 export { httpStatus, isHttpStatusError, isHttpStatusOk } from './http-status';
 export {
-  fieldNonNullable,
   isArray,
-  isBuffer,
   isDate,
   isEmpty,
-  isEqual,
-  isError,
   isFloat,
   isFunction,
   isInt,
   isNumber,
   isObject,
-  isObjectLike,
   isPrimitive,
   isPromise,
   isString,
   isSymbol,
-  nonNullable,
 } from './is';
+export { isBuffer } from './is/is-buffer';
+export { isEqual } from './is/is-equal';
+export { isError } from './is/is-error';
+export { isObjectLike } from './is/is-object-like';
+export {
+  fieldNonNullable,
+  nonNullable,
+} from './is/non-nullable';
 export {
   abs,
-  clamp,
   deg2rad,
   havercos,
   haversin,
-  mean,
   rad2deg,
-  round,
-  sum,
 } from './math';
+export { clamp } from './math/clamp';
+export { mean } from './math/mean';
+export { round } from './math/round';
+export { sum } from './math/sum';
 export { Mutex } from './mutex/mutex';
 export { Semaphore } from './mutex/semaphore';
 export { clone } from './objects/clone';
@@ -114,45 +118,33 @@ export { deepMerge } from './objects/deep-merge';
 export { invert } from './objects/invert';
 export { nativeClass } from './objects/native-class';
 export { omit } from './objects/omit';
+export { RE_EMAIL } from './regexp/email';
+export { RE_FUNCTION_NAME } from './regexp/function-name';
 export {
   RE_DETECT_JSON,
-  RE_EMAIL,
-  RE_FUNCTION_NAME,
   RE_JSON_SIG,
   RE_SUSPECT_CONSTRUCTOR_PROTO,
   RE_SUSPECT_JSON_PROTO,
-} from './regexp';
+} from './regexp/json';
 export {
-  Err,
-  err,
+  unwrap,
+  valuesFromResults,
+} from './result';
+export { Err, err, fromThrowable, Ok, ok, safeTry } from './result/result';
+export {
   errAsync,
   fromPromise,
   fromSafePromise,
-  fromThrowable,
-  Ok,
-  ok,
   okAsync,
   ResultAsync,
-  safeTry,
-  unwrap,
-  valuesFromResults,
-  wrap,
-  wrapSync,
-} from './result';
+} from './result/result-async';
+export { wrap, wrapSync } from './result/wrap';
 export { SafeJson } from './safe-json';
-export {
-  camel,
-  capitalize,
-  capitalizeWords,
-  dash,
-  htmlEscape,
-  htmlUnescape,
-  pascal,
-  slugify,
-  snake,
-  title,
-  truncate,
-} from './strings';
+export { capitalize, capitalizeWords } from './strings/capitalize';
+export { camel, dash, pascal, snake, title } from './strings/cases';
+export { htmlEscape, htmlUnescape } from './strings/escape';
+export { slugify } from './strings/slugify';
+export { truncate } from './strings/truncate';
 export { blockTimer, parseMs, since } from './time';
 export { toGb, toHumanBytes, toHumanCount, toKb, toMb } from './units';
 export type { CurrencyCode } from './currency';
@@ -160,9 +152,9 @@ export type {
   ExceptionConstructor,
   ExceptionOptions,
   FormattedException,
-} from './exceptions';
+} from './exceptions/create-custom';
 export type { HttpStatusError, HttpStatusOk } from './http-status';
-export type { Result } from './result';
+export type { Result } from './result/result';
 export type { InvariantOf } from './types/invariant';
 export type {
   JsonArray,

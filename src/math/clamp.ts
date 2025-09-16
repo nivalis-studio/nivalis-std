@@ -1,3 +1,4 @@
+// biome-ignore lint/style/useUnifiedTypeSignatures: Okay to overload here
 export function clamp(value: number, maximum: number): number;
 export function clamp(value: number, minimum: number, maximum: number): number;
 

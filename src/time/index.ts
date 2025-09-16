@@ -57,7 +57,7 @@ export const parseMs = (ms: number): string => {
  * @param {number} until - The ending time. Defaults to the current time.
  * @returns {string} A string representation of the time passed since `from` until `until`.
  */
-export const since = (from: number, until = Date.now()): string =>
+export const since = (from: number, until: number = Date.now()): string =>
   parseMs(until - from);
 
 /**
@@ -76,7 +76,7 @@ export const blockTimer = (name?: string): Disposable => {
     [Symbol.dispose](): void {
       const timeTaken = since(started);
 
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: on purpose
       console.debug(name, `took ${timeTaken}`);
     },
   };

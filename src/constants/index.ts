@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 export const EARTH_RADIUS_IN_METERS = 6_378_137;
 
 export const NS_IN_SECOND = 1e9;
@@ -42,7 +41,7 @@ export const CONST_180_DIV_PI = 57.295_779_513_082_32;
  * 2^{32} - 1
  * ```
  */
-// eslint-disable-next-line no-bitwise
+/** biome-ignore lint/suspicious/noBitwiseOperators: special case */
 export const MAX_ARRAY_LENGTH = 4_294_967_295 >>> 0;
 
 /**

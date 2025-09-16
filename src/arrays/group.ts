@@ -16,8 +16,10 @@ export const group = <T, Key extends string | number | symbol>(
     (acc, item) => {
       const groupId = getGroupId(item);
 
-      // eslint-disable-next-line no-param-reassign
-      if (!acc[groupId]) acc[groupId] = [];
+      if (!acc[groupId]) {
+        acc[groupId] = [];
+      }
+
       acc[groupId].push(item);
 
       return acc;

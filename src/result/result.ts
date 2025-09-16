@@ -1,5 +1,9 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
+/** biome-ignore-all lint/correctness/useYield: okay-ish */
+/** biome-ignore-all lint/style/noParameterProperties: okay-ish */
+/** biome-ignore-all lint/nursery/useConsistentTypeDefinitions: okay-ish */
+/** biome-ignore-all lint/nursery/noShadow: okay-ish */
+/** biome-ignore-all lint/style/noNamespace: okay-ish */
+
 import { errAsync, ResultAsync } from './result-async';
 import {
   combineResultList,
@@ -16,7 +20,6 @@ export const ok = <T, E = never>(value: T): Ok<T, E> => new Ok(value);
 
 export const err = <T = never, E = unknown>(err: E): Err<T, E> => new Err(err);
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Result {
   /**
    * Wraps a function with a try catch, creating a new function with the same
@@ -27,14 +30,12 @@ export namespace Result {
    * @param {(e: unknown) => E} errorFn when an error is thrown, this will wrap the error result if provided
    * @returns {(...args: Parameters<Fn>) => Result<ReturnType<Fn>, E>} A new function that wraps the original function with try catch.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export function fromThrowable<Fn extends (...args: readonly any[]) => any, E>(
     fn: Fn,
     errorFn?: (e: unknown) => E,
   ): (...args: Parameters<Fn>) => Result<ReturnType<Fn>, E> {
     return (...args) => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const result = fn(...args);
 
         return ok(result);
@@ -82,7 +83,6 @@ export namespace Result {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type Result<T, E> = Ok<T, E> | Err<T, E>;
 
 /**

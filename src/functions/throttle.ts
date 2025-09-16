@@ -1,3 +1,5 @@
+import type { FunctionLike } from '../types/primitive';
+
 /**
  * Creates a throttled function that only invokes the provided function at most once
  * per every `throttleMs` milliseconds. Subsequent calls to the throttled function
@@ -22,8 +24,7 @@
  *   throttledFunction(); // Will log 'Function executed'
  * }, 1000);
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function throttle<F extends (...args: any[]) => void>(
+export function throttle<F extends FunctionLike>(
   func: F,
   throttleMs: number,
 ): F {

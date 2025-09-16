@@ -1,3 +1,5 @@
+import type { FunctionLike } from '../types/primitive';
+
 /**
  * Creates a function that is restricted to invoking the provided function `func` once.
  * Repeated calls to the function will return the value from the first invocation.
@@ -13,14 +15,14 @@
  * initialize(); // Logs: 'Initialized!' and returns true
  * initialize(); // Returns true without logging
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function once<F extends () => any>(func: F): F {
+export function once<F extends FunctionLike>(func: F): F {
   let called = false;
   let cache: ReturnType<F> | undefined;
 
   return ((): ReturnType<F> => {
+    // biome-ignore lint/nursery/noUnnecessaryConditions: bool check
     if (called) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: we make sure cache is defined
       return cache!;
     }
 
@@ -29,7 +31,6 @@ export function once<F extends () => any>(func: F): F {
     called = true;
     cache = result;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result;
   }) as F;
 }

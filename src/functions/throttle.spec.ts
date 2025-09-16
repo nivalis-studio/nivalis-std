@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noEmptyBlockStatements: mock fn */
 import { describe, expect, mock, test } from 'bun:test';
 import { sleep } from '../functions/sleep';
 import { throttle } from './throttle';

@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/performance/useTopLevelRegex: no perf issue for testing */
+/** biome-ignore-all lint/suspicious/noEmptyBlockStatements: mock fn */
 import { describe, expect, spyOn, test } from 'bun:test';
 import { blockTimer, parseMs, since } from './index';
 

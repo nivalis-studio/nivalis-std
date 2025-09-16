@@ -1,5 +1,9 @@
 import { capitalize } from './capitalize';
 
+const wordSplitRegex = /(?=[A-Z])|[\s._-]/;
+const numberSplitRegex = /[a-z]\d/i;
+const dashSplitRegex = /[\s._-]/;
+
 /**
  * Formats the given string in camel case fashion
  *
@@ -13,12 +17,16 @@ export const camel = (str: string): string => {
   const parts =
     str
       ?.replace(/([A-Z])+/g, capitalize)
-      ?.split(/(?=[A-Z])|[\s._-]/)
+      ?.split(wordSplitRegex)
       .map(x => x.toLowerCase()) ?? [];
 
-  if (parts.length === 0) return '';
+  if (parts.length === 0) {
+    return '';
+  }
 
-  if (parts.length === 1) return parts[0];
+  if (parts.length === 1) {
+    return parts[0];
+  }
 
   return parts.reduce((acc, part) => {
     return `${acc}${part.charAt(0).toUpperCase()}${part.slice(1)}`;
@@ -45,19 +53,24 @@ export const snake = (
   const parts =
     str
       ?.replace(/([A-Z])+/g, capitalize)
-      .split(/(?=[A-Z])|[\s._-]/)
+      .split(wordSplitRegex)
       .map(x => x.toLowerCase()) ?? [];
 
-  if (parts.length === 0) return '';
+  if (parts.length === 0) {
+    return '';
+  }
 
-  if (parts.length === 1) return parts[0];
+  if (parts.length === 1) {
+    return parts[0];
+  }
+
   const result = parts.reduce((acc, part) => {
     return `${acc}_${part.toLowerCase()}`;
   }, '');
 
   return options?.splitOnNumber === false
     ? result
-    : result.replace(/[a-z]\d/i, val => `${val[0]}_${val[1]}`);
+    : result.replace(numberSplitRegex, val => `${val[0]}_${val[1]}`);
 };
 
 /**
@@ -73,12 +86,16 @@ export const dash = (str: string): string => {
   const parts =
     str
       ?.replace(/([A-Z])+/g, capitalize)
-      ?.split(/(?=[A-Z])|[\s._-]/)
+      ?.split(wordSplitRegex)
       .map(x => x.toLowerCase()) ?? [];
 
-  if (parts.length === 0) return '';
+  if (parts.length === 0) {
+    return '';
+  }
 
-  if (parts.length === 1) return parts[0];
+  if (parts.length === 1) {
+    return parts[0];
+  }
 
   return parts.reduce((acc, part) => {
     return `${acc}-${part.toLowerCase()}`;
@@ -94,9 +111,11 @@ export const dash = (str: string): string => {
  * @returns {string} The formatted String
  */
 export const pascal = (str: string): string => {
-  const parts = str?.split(/[\s._-]/).map(x => x.toLowerCase()) ?? [];
+  const parts = str?.split(dashSplitRegex).map(x => x.toLowerCase()) ?? [];
 
-  if (parts.length === 0) return '';
+  if (parts.length === 0) {
+    return '';
+  }
 
   return parts
     .map(substring => substring.charAt(0).toUpperCase() + substring.slice(1))
@@ -114,12 +133,14 @@ export const pascal = (str: string): string => {
  * @returns {string} The formatted String
  */
 export const title = (str: string | null | undefined): string => {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
 
   return str
-    .split(/(?=[A-Z])|[\s._-]/)
+    .split(wordSplitRegex)
     .map(char => char.trim())
-    .filter(char => !!char)
+    .filter(char => Boolean(char))
     .map(char => capitalize(char.toLowerCase()))
     .join(' ');
 };

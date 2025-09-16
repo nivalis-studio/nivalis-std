@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/noNestedTernary: okay-ish for now */
 import { err, ok } from './result';
 import { ResultAsync } from './result-async';
 import type { Result } from './result';

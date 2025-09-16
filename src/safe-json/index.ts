@@ -3,7 +3,7 @@ import {
   RE_JSON_SIG,
   RE_SUSPECT_CONSTRUCTOR_PROTO,
   RE_SUSPECT_JSON_PROTO,
-} from '../regexp';
+} from '../regexp/json';
 
 /**
  * Safe JSON utility functions.
@@ -50,7 +50,6 @@ export const SafeJson = {
    * @param {T} fallback - The fallback value if parsing fails.
    * @returns {T} The parsed value or the fallback.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseOr: <T>(value: any, fallback: T): T => {
     if (typeof value !== 'string') {
       return value as T;
@@ -66,11 +65,10 @@ export const SafeJson = {
       return _value.slice(1, -1) as T;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (_value.length <= 9) {
       const _lval = _value.toLowerCase();
 
-      // eslint-disable-next-line default-case
+      // biome-ignore lint/style/useDefaultSwitchClause: handle all cases
       switch (_lval) {
         case 'true': {
           return true as T;
@@ -113,7 +111,6 @@ export const SafeJson = {
         RE_SUSPECT_JSON_PROTO.test(value) ||
         RE_SUSPECT_CONSTRUCTOR_PROTO.test(value)
       ) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
         return JSON.parse(value, (key: string, val: any): any => {
           if (
             key === '__proto__' ||

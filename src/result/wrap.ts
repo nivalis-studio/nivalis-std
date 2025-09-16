@@ -1,6 +1,10 @@
-import { UnknownException } from '../exceptions';
+/** biome-ignore-all lint/suspicious/noExplicitAny: on purpose */
+import { UnknownException } from '../exceptions/common-errors';
 import { err, ok } from './result';
-import type { Exception, ExceptionConstructor } from '../exceptions';
+import type {
+  Exception,
+  ExceptionConstructor,
+} from '../exceptions/create-custom';
 import type { Result } from './result';
 
 /**

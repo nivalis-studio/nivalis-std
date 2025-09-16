@@ -1,5 +1,5 @@
-import { isBuffer } from '../is';
-import { RE_FUNCTION_NAME } from '../regexp';
+import { isBuffer } from '../is/is-buffer';
+import { RE_FUNCTION_NAME } from '../regexp/function-name';
 import { nativeClass } from './native-class';
 
 const CONSTRUCTOR_NAME_MIN_LENGTH = 8;

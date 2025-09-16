@@ -6,6 +6,9 @@
 			"style": {
 				"useConsistentArrayType": "off",
 				"noMagicNumbers": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
 			}
 		}
 	}

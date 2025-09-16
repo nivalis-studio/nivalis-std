@@ -60,8 +60,3 @@ export const rad2deg = (x: number): number => x * CONST_180_DIV_PI;
  * // returns 2.0
  */
 export const abs = (x: number): number => (x < 0 ? -x : x);
-
-export { clamp } from './clamp';
-export { mean } from './mean';
-export { round } from './round';
-export { sum } from './sum';

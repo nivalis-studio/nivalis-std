@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/useAwait: okay here */
 import { Semaphore } from './semaphore.ts';
 
 /**
@@ -19,7 +20,7 @@ import { Semaphore } from './semaphore.ts';
  * criticalSection(); // This call will wait until the first call releases the mutex.
  */
 export class Mutex {
-  private semaphore = new Semaphore(1);
+  private readonly semaphore = new Semaphore(1);
 
   /**
    * Checks if the mutex is currently locked.
@@ -49,7 +50,6 @@ export class Mutex {
    * }
    */
   async acquire(): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/return-await
     return this.semaphore.acquire();
   }
 

@@ -1,5 +1,5 @@
-/* eslint-disable no-eq-null */
-/* eslint-disable @typescript-eslint/prefer-optional-chain */
+import type { FunctionLike } from '../types/primitive';
+
 type DebounceOptions = {
   /**
    * An optional AbortSignal to cancel the debounced function.
@@ -74,7 +74,7 @@ export type DebouncedFunction<F extends (...args: unknown[]) => void> = {
  * // Will cancel the debounced function call
  * controller.abort();
  */
-export function debounce<F extends (...args: any[]) => void>(
+export function debounce<F extends FunctionLike>(
   func: F,
   debounceMs: number,
   { signal, edges }: DebounceOptions = {},
@@ -82,6 +82,7 @@ export function debounce<F extends (...args: any[]) => void>(
   let pendingThis: any;
   let pendingArgs: Parameters<F> | null = null;
 
+  // biome-ignore lint/complexity/useOptionalChain: explicit null check
   const leading = edges != null && edges.includes('leading');
   const trailing = edges == null || edges.includes('trailing');
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -131,13 +132,11 @@ export function debounce<F extends (...args: any[]) => void>(
     invoke();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const debounced = function deb(this: any, ...args: Parameters<F>) {
     if (signal?.aborted) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias, unicorn/no-this-assignment, consistent-this, @typescript-eslint/no-unsafe-assignment
     pendingThis = this;
     pendingArgs = args;
 

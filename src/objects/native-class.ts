@@ -15,6 +15,5 @@
  * var str = nativeClass( new Beep() );
  * // returns '[object Object]'
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nativeClass = (value: any): string =>
   Object.prototype.toString.call(value);

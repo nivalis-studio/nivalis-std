@@ -10,5 +10,4 @@ export type Primitive =
   | symbol
   | bigint;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FunctionLike = (...args: readonly unknown[]) => any;

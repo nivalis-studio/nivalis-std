@@ -1,20 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export { isBuffer } from './is-buffer';
-export { isEqual } from './is-equal';
-export { isError } from './is-error';
-export { isObjectLike } from './is-object-like';
-export { fieldNonNullable, nonNullable } from './non-nullable';
+/** biome-ignore-all lint/suspicious/noExplicitAny: explicit any */
+import type { FunctionLike, Primitive } from '../types/primitive';
 
 export const isSymbol = (value: any): value is symbol =>
-  !!value && value.constructor === Symbol;
+  Boolean(value) && value.constructor === Symbol;
 
 export const isArray = (value: any): value is any[] => Array.isArray(value);
 
 export const isObject = (value: any): value is object =>
-  !!value && value.constructor === Object;
-
-type Primitive = null | undefined | string | number | boolean | symbol | bigint;
+  Boolean(value) && value.constructor === Object;
 
 /**
  * Checks if the given value is primitive.
@@ -28,12 +21,10 @@ export const isPrimitive = (value: any): value is Primitive =>
   value === null ||
   (typeof value !== 'object' && typeof value !== 'function');
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export const isFunction = (value: any): value is Function =>
-  !!(value?.constructor && value.call && value.apply);
+export const isFunction = (value: any): value is FunctionLike =>
+  Boolean(value?.constructor && value.call && value.apply);
 
 export const isString = (value: any): value is string =>
-  // eslint-disable-next-line unicorn/no-instanceof-builtins
   typeof value === 'string' || value instanceof String;
 
 export const isNumber = (value: any): value is number => {
@@ -61,34 +52,54 @@ export const isDate = (value: any): value is Date =>
  * @returns {boolean} result
  */
 export const isPromise = (value: any): value is Promise<any> => {
-  if (!value) return false;
+  if (!value) {
+    return false;
+  }
 
-  if (!value.then) return false;
+  if (!value.then) {
+    return false;
+  }
 
   return isFunction(value.then);
 };
 
 export const isEmpty = (value: any) => {
-  if (value === true || value === false) return true;
+  if (value === true || value === false) {
+    return true;
+  }
 
-  if (value === null || value === undefined) return true;
+  if (value === null || value === undefined) {
+    return true;
+  }
 
-  if (isNumber(value)) return value === 0;
+  if (isNumber(value)) {
+    return value === 0;
+  }
 
-  if (isDate(value)) return Number.isNaN(value.getTime());
+  if (isDate(value)) {
+    return Number.isNaN(value.getTime());
+  }
 
-  if (isFunction(value)) return false;
+  if (isFunction(value)) {
+    return false;
+  }
 
-  if (isSymbol(value)) return false;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  if (isSymbol(value)) {
+    return false;
+  }
+
   const length = value.length;
 
-  if (isNumber(length)) return length === 0;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  if (isNumber(length)) {
+    return length === 0;
+  }
+
   const size = value.size;
 
-  if (isNumber(size)) return size === 0;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  if (isNumber(size)) {
+    return size === 0;
+  }
+
   const keys = Object.keys(value).length;
 
   return keys === 0;
