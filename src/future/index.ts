@@ -22,7 +22,7 @@ export class Future<T> implements Promise<T> {
     return this.#reject;
   }
 
-  // eslint-disable-next-line unicorn/no-thenable
+  // biome-ignore lint/suspicious/noThenProperty: Intentional
   async then<Result1 = T, Result2 = never>(
     onfulfilled?: ((value: T) => Result1 | PromiseLike<Result1>) | null,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

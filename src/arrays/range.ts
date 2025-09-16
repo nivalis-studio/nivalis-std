@@ -23,7 +23,7 @@ export function* range<T = number>(
   startOrLength: number,
   end?: number,
   valueOrMapper: T | ((i: number) => T) = i => i as T,
-  step: number = 1,
+  step = 1,
 ): Generator<T> {
   const mapper = isFunction(valueOrMapper)
     ? valueOrMapper

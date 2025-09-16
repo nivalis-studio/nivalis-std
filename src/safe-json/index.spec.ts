@@ -87,11 +87,11 @@ describe('SafeJson', () => {
     });
 
     test('should return Infinity for "infinity"', () => {
-      expect(SafeJson.parseOr('infinity', 0)).toBe(Infinity);
+      expect(SafeJson.parseOr('infinity', 0)).toBe(Number.POSITIVE_INFINITY);
     });
 
     test('should return -Infinity for "-infinity"', () => {
-      expect(SafeJson.parseOr('-infinity', 0)).toBe(-Infinity);
+      expect(SafeJson.parseOr('-infinity', 0)).toBe(Number.NEGATIVE_INFINITY);
     });
 
     test('should handle strings with escaped characters correctly', () => {

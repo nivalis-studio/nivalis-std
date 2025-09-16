@@ -1,4 +1,4 @@
-import { ensureIsArray } from '../arrays';
+import { ensureIsArray } from '../arrays/ensure-is-array';
 
 export const toDiscord = (err: {
   traceId: string;

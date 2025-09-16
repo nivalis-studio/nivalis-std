@@ -4,7 +4,7 @@
  * @param {number} precision - precision
  * @returns {number} rounded number
  */
-export const round = (x: number, precision: number = 0): number => {
+export const round = (x: number, precision = 0): number => {
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   const factor = 10 ** precision;
 

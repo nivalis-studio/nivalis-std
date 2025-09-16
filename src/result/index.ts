@@ -1,15 +1,15 @@
 import type { Exception } from '../exceptions';
 import type { Result } from './result';
 
-export { ok, Ok, err, Err, fromThrowable, safeTry } from './result';
-export { wrap, wrapSync } from './wrap';
+export { Err, err, fromThrowable, Ok, ok, safeTry } from './result';
 export {
-  ResultAsync,
-  okAsync,
   errAsync,
   fromPromise,
   fromSafePromise,
+  okAsync,
+  ResultAsync,
 } from './result-async';
+export { wrap, wrapSync } from './wrap';
 export type { Result } from './result';
 
 export const valuesFromResults = <T, E>(results: Array<Result<T, E>>): T[] => {

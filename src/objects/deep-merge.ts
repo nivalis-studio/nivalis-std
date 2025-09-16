@@ -14,7 +14,9 @@ export const deepMerge = <T extends { [key: string]: unknown }>(
   const result = { ...base };
 
   for (const [key, value] of Object.entries(additional)) {
-    if (value === null || value === undefined) continue;
+    if (value === null || value === undefined) {
+      continue;
+    }
 
     const baseValue = base[key];
 
@@ -24,11 +26,15 @@ export const deepMerge = <T extends { [key: string]: unknown }>(
       typeof baseValue === 'object' &&
       !Array.isArray(baseValue)
     ) {
+      // biome-ignore lint/nursery/noShadow: Invalid rule
       (result as { [key: string]: unknown })[key] = deepMerge(
+        // biome-ignore lint/nursery/noShadow: Invalid rule
         baseValue as { [key: string]: unknown },
+        // biome-ignore lint/nursery/noShadow: Invalid rule
         value as { [key: string]: unknown },
       );
     } else {
+      // biome-ignore lint/nursery/noShadow: Invalid rule
       (result as { [key: string]: unknown })[key] = value;
     }
   }

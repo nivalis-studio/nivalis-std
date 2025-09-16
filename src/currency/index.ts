@@ -23,4 +23,4 @@ export const formatPrice = (
   }).format(price * quantity);
 };
 
-export { type CurrencyCode } from './types';
+export type { CurrencyCode } from './types';

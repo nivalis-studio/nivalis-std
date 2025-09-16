@@ -31,10 +31,12 @@ export type ExtractErrAsyncTypes<
 export type InferOkTypes<R> = R extends Result<infer T, unknown> ? T : never;
 export type InferErrTypes<R> = R extends Result<unknown, infer E> ? E : never;
 
-export type InferAsyncOkTypes<R> =
-  R extends ResultAsync<infer T, unknown> ? T : never;
-export type InferAsyncErrTypes<R> =
-  R extends ResultAsync<unknown, infer E> ? E : never;
+export type InferAsyncOkTypes<R> = R extends ResultAsync<infer T, unknown>
+  ? T
+  : never;
+export type InferAsyncErrTypes<R> = R extends ResultAsync<unknown, infer E>
+  ? E
+  : never;
 
 const appendValueToEndOfList =
   <T>(value: T) =>

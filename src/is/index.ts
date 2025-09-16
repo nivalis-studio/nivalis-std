@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export { isBuffer } from './is-buffer';
+export { isEqual } from './is-equal';
 export { isError } from './is-error';
 export { isObjectLike } from './is-object-like';
-export { nonNullable, fieldNonNullable } from './non-nullable';
-export { isEqual } from './is-equal';
+export { fieldNonNullable, nonNullable } from './non-nullable';
 
 export const isSymbol = (value: any): value is symbol =>
   !!value && value.constructor === Symbol;

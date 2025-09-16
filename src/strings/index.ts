@@ -1,5 +1,5 @@
-export { camel, snake, dash, pascal, title } from './cases';
 export { capitalize, capitalizeWords } from './capitalize';
-export { truncate } from './truncate';
+export { camel, dash, pascal, snake, title } from './cases';
 export { htmlEscape, htmlUnescape } from './escape';
 export { slugify } from './slugify';
+export { truncate } from './truncate';

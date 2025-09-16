@@ -1,7 +1,6 @@
-/* eslint-disable max-classes-per-file */
-import { generateId } from '../generate';
-import { SafeJson } from '../safe-json';
+import { generateId } from '../generate/id';
 import { httpStatus } from '../http-status';
+import { SafeJson } from '../safe-json';
 import type { HttpStatusError } from '../http-status';
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';

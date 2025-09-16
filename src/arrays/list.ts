@@ -1,6 +1,6 @@
 import { average } from './average';
 import { chunk } from './chunk';
-import { countOccurrences } from './count-occurences';
+import { countOccurrences } from './count-occurrences';
 import { difference } from './difference';
 import { group } from './group';
 import { intersection } from './intersection';
