@@ -20,7 +20,6 @@ export function once<F extends FunctionLike>(func: F): F {
   let cache: ReturnType<F> | undefined;
 
   return ((): ReturnType<F> => {
-    // biome-ignore lint/nursery/noUnnecessaryConditions: bool check
     if (called) {
       // biome-ignore lint/style/noNonNullAssertion: we make sure cache is defined
       return cache!;

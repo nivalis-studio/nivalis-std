@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-
 /**
  * @param {number} ms - The number of milliseconds to convert to a string.
  * @returns {string} A string representation of the input number of milliseconds.
@@ -76,7 +74,6 @@ export const blockTimer = (name?: string): Disposable => {
     [Symbol.dispose](): void {
       const timeTaken = since(started);
 
-      // biome-ignore lint/suspicious/noConsole: on purpose
       console.debug(name, `took ${timeTaken}`);
     },
   };

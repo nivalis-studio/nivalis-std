@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/correctness/useYield: okay-ish */
 /** biome-ignore-all lint/style/noParameterProperties: okay-ish */
-/** biome-ignore-all lint/nursery/useConsistentTypeDefinitions: okay-ish */
 /** biome-ignore-all lint/nursery/noShadow: okay-ish */
 /** biome-ignore-all lint/style/noNamespace: okay-ish */
 
@@ -134,6 +133,7 @@ export function safeTry<T, E>(
   return next.value;
 }
 
+// biome-ignore lint/style/useConsistentTypeDefinitions: .
 interface IResult<T, E> {
   /**
    * Used to check if a `Result` is an `OK`
@@ -565,22 +565,20 @@ export type Transpose<
 //
 // T     - The array of the results
 // Depth - The maximum depth.
-export type Combine<T, Depth extends number = 5> = Transpose<
-  CollectResults<T>,
-  [],
-  Depth
-> extends [infer L, infer R]
-  ? [UnknownMembersToNever<L>, UnknownMembersToNever<R>]
-  : Transpose<CollectResults<T>, [], Depth> extends []
-    ? [[], []]
-    : never;
+export type Combine<T, Depth extends number = 5> =
+  Transpose<CollectResults<T>, [], Depth> extends [infer L, infer R]
+    ? [UnknownMembersToNever<L>, UnknownMembersToNever<R>]
+    : Transpose<CollectResults<T>, [], Depth> extends []
+      ? [[], []]
+      : never;
 
 // Deduplicates the result, as the result type is a union of Err and Ok types.
-export type Dedup<T> = T extends Result<infer RL, infer RR>
-  ? [unknown] extends [RL]
-    ? Err<RL, RR>
-    : Ok<RL, RR>
-  : T;
+export type Dedup<T> =
+  T extends Result<infer RL, infer RR>
+    ? [unknown] extends [RL]
+      ? Err<RL, RR>
+      : Ok<RL, RR>
+    : T;
 
 // Given a union, this gives the array of the union members.
 export type MemberListOf<T> = (
@@ -634,21 +632,17 @@ export type IsLiteralArray<T> = T extends { length: infer L }
 
 // Traverses an array of results and returns a single result containing
 // the oks and errs union-ed/combined.
-type Traverse<T, Depth extends number = 5> = Combine<T, Depth> extends [
-  infer Oks,
-  infer Errs,
-]
-  ? Result<EmptyArrayToNever<Oks, 1>, MembersToUnion<Errs>>
-  : never;
+type Traverse<T, Depth extends number = 5> =
+  Combine<T, Depth> extends [infer Oks, infer Errs]
+    ? Result<EmptyArrayToNever<Oks, 1>, MembersToUnion<Errs>>
+    : never;
 
 // Traverses an array of results and returns a single result containing
 // the oks combined and the array of errors combined.
-type TraverseWithAllErrors<T, Depth extends number = 5> = Combine<
-  T,
-  Depth
-> extends [infer Oks, infer Errs]
-  ? Result<EmptyArrayToNever<Oks>, EmptyArrayToNever<Errs>>
-  : never;
+type TraverseWithAllErrors<T, Depth extends number = 5> =
+  Combine<T, Depth> extends [infer Oks, infer Errs]
+    ? Result<EmptyArrayToNever<Oks>, EmptyArrayToNever<Errs>>
+    : never;
 
 // Combines the array of results into one result.
 export type CombineResults<T extends ReadonlyArray<Result<unknown, unknown>>> =
@@ -659,8 +653,9 @@ export type CombineResults<T extends ReadonlyArray<Result<unknown, unknown>>> =
 // Combines the array of results into one result with all errors.
 export type CombineResultsWithAllErrorsArray<
   T extends ReadonlyArray<Result<unknown, unknown>>,
-> = IsLiteralArray<T> extends 1
-  ? TraverseWithAllErrors<T>
-  : Result<ExtractOkTypes<T>, Array<ExtractErrTypes<T>[number]>>;
+> =
+  IsLiteralArray<T> extends 1
+    ? TraverseWithAllErrors<T>
+    : Result<ExtractOkTypes<T>, Array<ExtractErrTypes<T>[number]>>;
 
 // #endregion
